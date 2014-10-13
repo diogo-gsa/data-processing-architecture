@@ -17,13 +17,14 @@ public class AppMainController {
 	public static void main(String args[]){
 
 
-		SimulatorClient dbms_versionImpl = new DBMS_VersionImpl();
+		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl(); 
 		
-		Simulator simTest = new SimulatorImpl(EnergyMeter.TEST_FIRST);
-		System.out.println(simTest);
+		Simulator simTestTable = new SimulatorImpl(EnergyMeter.TEST_FIRST);
+		System.out.println(simTestTable);
 		
-		simTest.registerNewClient(dbms_versionImpl);
-		simTest.start();
+		simTestTable.registerNewClient(dbms_versionImpl);
+		dbms_versionImpl.truncateAll_DatapointReadingTable();
+		simTestTable.start();
 
 		
 	}

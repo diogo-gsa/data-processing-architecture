@@ -38,11 +38,11 @@ public enum DataPoint_PK {
  	}
  	
  	public int getPh2_PK(){
- 		return Ph1_PK;
+ 		return Ph2_PK;
  	}
  	
  	public int getPh3_PK(){
- 		return Ph1_PK;
+ 		return Ph3_PK;
  	}
  	
  	public static DataPoint_PK getDataPoint_PKByLocation(String location) throws ThereIsNoDataPoint_PKwithThisLocaionException{

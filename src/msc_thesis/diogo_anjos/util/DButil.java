@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DButil {
 	
@@ -30,20 +29,13 @@ public class DButil {
 	}
 
 	public static ResultSet executeQuery(String queryStatement, Connection database) throws SQLException {
-		ResultSet rs = null;
-		Statement st = database.createStatement();
-		
-		
-		try{
-			rs = st.executeQuery(queryStatement);
-		}catch(org.postgresql.util.PSQLException e){
-			//TODO FIX THIS. this is not a solution 
-			//tens de ter dois metodos um para o o execute query (return rs) outro para o excute querStatement (return boolean)
-			//e.printStackTrace();
-			return null;
-		}
-		return rs;
+		return database.createStatement().executeQuery(queryStatement);			
 	}
 
+	//Returns: either 	(1) the row count for SQL Data Manipulation Language (DML) statements or 
+	//					(2) 0 for SQL statements that return nothing
+	public static int executeUpdate(String queryStatement, Connection database) throws SQLException{
+		return database.createStatement().executeUpdate(queryStatement);
+	}
 
 }

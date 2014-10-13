@@ -10,20 +10,17 @@ public class DBMS_VersionImpl implements SimulatorClient {
 	
 	
 
+	public void truncateAll_DatapointReadingTable(){
+		dbAPI.truncateAll_DatapointReadingTable();
+	}
 	
 	/*
 	 * SimulatorClient's Interface Implementation
 	 */
 	@Override
 	public void receiveDatastream(EnergyMeasureTupleDTO tuple) {
-		System.out.println("Received: "+tuple);
-		
-		//TODO DEBUG TUNCATE TABLE before TEST insertInto ----
-		dbAPI.truncateAllTable_DatapointReading();
-		//TODO DEBUG TUNCATE TABLE before TEST insertInto ----
-		
-		
-		//dbAPI.insertInto_DatapointReading(tuple);
+		System.out.println("Received: "+tuple); //DEBUG
+		dbAPI.insertInto_DatapointReadingTable(tuple);
 	}
 	
 }

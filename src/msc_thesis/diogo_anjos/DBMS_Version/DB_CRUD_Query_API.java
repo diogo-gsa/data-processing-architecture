@@ -20,7 +20,7 @@ public class DB_CRUD_Query_API {
 	/*
 	 *  INSERT a the given record into DBMS_EMS_Schema.DataPointReading
 	 */
-	public void insertInto_DatapointReading(EnergyMeasureTupleDTO reading){	
+	public void insertInto_DatapointReadingTable(EnergyMeasureTupleDTO reading){	
 		String queryStatement = "";		
 		String measure_ts = reading.getMeasureTS();
 		
@@ -32,7 +32,6 @@ public class DB_CRUD_Query_API {
 			System.exit(1); //non-zero status program = program terminate with errors 
 		}
 	
-		
 		Map<Integer,Double> datapointPKToConsumptionValueMap = new TreeMap<Integer,Double>();
 		datapointPKToConsumptionValueMap.put(dpPK.getPh1_PK(), reading.getPh1Consumption());
 		datapointPKToConsumptionValueMap.put(dpPK.getPh2_PK(), reading.getPh2Consumption());
@@ -43,7 +42,7 @@ public class DB_CRUD_Query_API {
 		   for(Integer pk : datapointPKToConsumptionValueMap.keySet()){
 			   queryStatement =  "INSERT INTO \"DBMS_EMS_Schema\".\"DataPointReading\"(measure_timestamp, measure, datapoint_fk)"
 					   			+ "VALUES ('"+measure_ts+"',"+datapointPKToConsumptionValueMap.get(pk)+","+pk+")";
-			   DButil.executeQuery(queryStatement, database);
+			   DButil.executeUpdate(queryStatement, database);
 		   }
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -53,10 +52,10 @@ public class DB_CRUD_Query_API {
 	/*
 	 *  TRUNCATE ALL records from table DBMS_EMS_Schema.DataPointReading
 	 */
-	public void truncateAllTable_DatapointReading() {
+	public void truncateAll_DatapointReadingTable() {
 		String queryStatement = "TRUNCATE TABLE \"DBMS_EMS_Schema\".\"DataPointReading\"";
 		try{
-			DButil.executeQuery(queryStatement, database);
+			DButil.executeUpdate(queryStatement, database);
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
