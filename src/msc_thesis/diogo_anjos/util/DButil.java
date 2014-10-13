@@ -32,7 +32,16 @@ public class DButil {
 	public static ResultSet executeQuery(String queryStatement, Connection database) throws SQLException {
 		ResultSet rs = null;
 		Statement st = database.createStatement();
-		rs = st.executeQuery(queryStatement);
+		
+		
+		try{
+			rs = st.executeQuery(queryStatement);
+		}catch(org.postgresql.util.PSQLException e){
+			//TODO FIX THIS. this is not a solution 
+			//tens de ter dois metodos um para o o execute query (return rs) outro para o excute querStatement (return boolean)
+			//e.printStackTrace();
+			return null;
+		}
 		return rs;
 	}
 

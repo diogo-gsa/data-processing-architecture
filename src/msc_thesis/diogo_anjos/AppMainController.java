@@ -17,12 +17,12 @@ public class AppMainController {
 	public static void main(String args[]){
 
 
-		SimulatorClient DBMS_SimCient = new DBMS_VersionImpl();
+		SimulatorClient dbms_versionImpl = new DBMS_VersionImpl();
 		
 		Simulator simTest = new SimulatorImpl(EnergyMeter.TEST_FIRST);
 		System.out.println(simTest);
 		
-		simTest.registerNewClient(DBMS_SimCient);
+		simTest.registerNewClient(dbms_versionImpl);
 		simTest.start();
 
 		
