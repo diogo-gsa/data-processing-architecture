@@ -22,6 +22,11 @@ public class DBMS_VersionImpl implements SimulatorClient {
 		dbAPI.deleteSpecificInterval_DatapointReadingTable(initialMeasure_ts, finalMeasure_ts, datapoint_pk);
 	}
 	
+	
+	public void deleteSpecificInterval_DatapointReadingTable(String initialMeasure_ts, String finalMeasure_ts){
+		dbAPI.deleteSpecificInterval_DatapointReadingTable(initialMeasure_ts, finalMeasure_ts);
+	}
+	
 	/*
 	 * SimulatorClient's Interface Implementation
 	 */

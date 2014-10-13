@@ -86,5 +86,16 @@ public class DB_CRUD_Query_API {
 			e.printStackTrace();
 		}
 	}
+	
+	public void deleteSpecificInterval_DatapointReadingTable(String initialMeasure_ts, String finalMeasure_ts) {
+		String queryStatement =	"DELETE FROM \"DBMS_EMS_Schema\".\"DataPointReading\""+
+								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
+									  " measure_timestamp <= '"+finalMeasure_ts+"';";
+		try{
+			DButil.executeUpdate(queryStatement, database);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
 
 }
