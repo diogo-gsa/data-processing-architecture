@@ -24,7 +24,9 @@ public class AppMainController {
 		
 		simTestTable.registerNewClient(dbms_versionImpl);
 		
-		dbms_versionImpl.deleteSpecificRow_DatapointReadingTable("2014-01-01 00:00:02", 117);
+		
+		dbms_versionImpl.deleteSpecificInterval_DatapointReadingTable("2014-01-01 00:00:06", "2014-01-01 00:00:10", 118);
+		
 		
 		//dbms_versionImpl.truncateAll_DatapointReadingTable();
 		//simTestTable.start();

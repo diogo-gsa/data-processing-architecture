@@ -61,7 +61,10 @@ public class DB_CRUD_Query_API {
 		}
 	}
 
-	//TODO test this!
+	/*
+	 *  DELETE from DBMS_EMS_Schema.DataPointReading the (unique) record 
+	 *  that match the measure_timestamp AND the datapoint_pk  
+	 */
 	public void deleteSpecificRow_DatapointReadingTable(String measure_ts, int datapoint_pk) {
 		String queryStatement =	"DELETE FROM \"DBMS_EMS_Schema\".\"DataPointReading\""+
 								" WHERE measure_timestamp = '"+measure_ts+"' AND datapoint_fk ="+datapoint_pk+";";
@@ -71,4 +74,17 @@ public class DB_CRUD_Query_API {
 			e.printStackTrace();
 		}
 	}
+
+	public void deleteSpecificInterval_DatapointReadingTable(String initialMeasure_ts, String finalMeasure_ts , int datapoint_pk) {
+		String queryStatement =	"DELETE FROM \"DBMS_EMS_Schema\".\"DataPointReading\""+
+								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
+									  " measure_timestamp <= '"+finalMeasure_ts+"' AND " +
+									  " datapoint_fk ="+datapoint_pk+";";
+		try{
+			DButil.executeUpdate(queryStatement, database);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+
 }
