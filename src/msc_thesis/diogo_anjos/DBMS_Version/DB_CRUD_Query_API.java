@@ -1,14 +1,16 @@
 package msc_thesis.diogo_anjos.DBMS_Version;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.naming.NameAlreadyBoundException;
-
 import msc_thesis.diogo_anjos.DBMS_Version.exceptions.ThereIsNoDataPoint_PKwithThisLocaionException;
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
+import msc_thesis.diogo_anjos.simulator.EnergyMeter;
 import msc_thesis.diogo_anjos.util.DButil;
 import msc_thesis.diogo_anjos.util.DataPoint_PK;
 
@@ -75,7 +77,13 @@ public class DB_CRUD_Query_API {
 		}
 	}
 
-	public void deleteSpecificInterval_DatapointReadingTable(String initialMeasure_ts, String finalMeasure_ts , int datapoint_pk) {
+	
+	/*
+	 *  DELETE from DBMS_EMS_Schema.DataPointReading the records 
+	 *  that match the initialMeasure_ts <= measure_timestamp <= finalMeasure_ts 
+	 *  AND the datapoint_pk  
+	 */
+	public void deleteSpecificInterval_DatapointReadingTable(String initialMeasure_ts, String finalMeasure_ts, int datapoint_pk) {
 		String queryStatement =	"DELETE FROM \"DBMS_EMS_Schema\".\"DataPointReading\""+
 								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
 									  " measure_timestamp <= '"+finalMeasure_ts+"' AND " +
@@ -87,6 +95,10 @@ public class DB_CRUD_Query_API {
 		}
 	}
 	
+	/*
+	 *  DELETE from DBMS_EMS_Schema.DataPointReading the records 
+	 *  that match the initialMeasure_ts <= measure_timestamp <= finalMeasure_ts  
+	 */
 	public void deleteSpecificInterval_DatapointReadingTable(String initialMeasure_ts, String finalMeasure_ts) {
 		String queryStatement =	"DELETE FROM \"DBMS_EMS_Schema\".\"DataPointReading\""+
 								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
@@ -98,4 +110,59 @@ public class DB_CRUD_Query_API {
 		}
 	}
 
+	public void insertInto_DatapointReadingTable_BatchMode(String initialMeasure_ts, String finalMeasure_ts, EnergyMeter meterDBtable){
+		
+		String queryStatement = "SELECT * " + 
+								"FROM " + meterDBtable.getDatabaseTable() + 
+								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
+								" measure_timestamp <= '"+finalMeasure_ts+"'"; 
+		
+		ResultSet batchResult = null;
+		try{
+			batchResult = DButil.executeQuery(queryStatement, database);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}	
+		
+		List<EnergyMeasureTupleDTO> dtosList = buildDtoFromResultSet(batchResult);
+		System.out.println("EvaTest:"+dtosList.size());
+		for(EnergyMeasureTupleDTO dto : dtosList){
+			System.out.println(dto);
+		}
+  }
+	
+	
+	private List<EnergyMeasureTupleDTO> buildDtoFromResultSet(ResultSet rs) {
+		
+		List<EnergyMeasureTupleDTO> resListofDTOs = new ArrayList<EnergyMeasureTupleDTO>();
+		EnergyMeasureTupleDTO auxDTO = null;
+		try {
+			if(rs.next()) { 
+				// TODO BUGFIX isto só itera uma unica vez (em vez de 5) BugFIx Hipotese: 
+				// ve se na DButil tens de criar um CreateStatement especial (passando params no construtor
+				// para retornar RS com mais mais de uma row
+				String measure_ts = rs.getString(1);
+				String location = rs.getString(2);
+				auxDTO = new EnergyMeasureTupleDTO(measure_ts, location);
+				auxDTO.setPh1Ampere(rs.getString(3));
+				auxDTO.setPh1PowerFactor(rs.getString(4));
+				auxDTO.setPh1Volt(rs.getString(5));
+				auxDTO.setPh2Ampere(rs.getString(6));
+				auxDTO.setPh2PowerFactor(rs.getString(7));
+				auxDTO.setPh2Volt(rs.getString(8));
+				auxDTO.setPh3Ampere(rs.getString(9));
+				auxDTO.setPh3PowerFactor(rs.getString(10));
+				auxDTO.setPh3Volt(rs.getString(11));
+				resListofDTOs.add(auxDTO);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return resListofDTOs;
+	}
+
+	
+	
+	
 }

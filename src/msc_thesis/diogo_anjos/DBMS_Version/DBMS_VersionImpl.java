@@ -1,6 +1,7 @@
 package msc_thesis.diogo_anjos.DBMS_Version;
 
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
+import msc_thesis.diogo_anjos.simulator.EnergyMeter;
 import msc_thesis.diogo_anjos.simulator.SimulatorClient;
 
 public class DBMS_VersionImpl implements SimulatorClient {
@@ -26,6 +27,12 @@ public class DBMS_VersionImpl implements SimulatorClient {
 	public void deleteSpecificInterval_DatapointReadingTable(String initialMeasure_ts, String finalMeasure_ts){
 		dbAPI.deleteSpecificInterval_DatapointReadingTable(initialMeasure_ts, finalMeasure_ts);
 	}
+	
+	
+	public void insertInto_DatapointReadingTable_BatchMode(String initialMeasure_ts, String finalMeasure_ts, EnergyMeter meterDBtable){
+		dbAPI.insertInto_DatapointReadingTable_BatchMode(initialMeasure_ts, finalMeasure_ts, meterDBtable);
+	} 
+	
 	
 	/*
 	 * SimulatorClient's Interface Implementation

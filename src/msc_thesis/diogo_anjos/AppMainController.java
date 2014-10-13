@@ -19,13 +19,14 @@ public class AppMainController {
 
 		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl(); 
 		
-		Simulator simTestTable = new SimulatorImpl(EnergyMeter.TEST_FIRST);
-		System.out.println(simTestTable);
+//		Simulator simTestTable = new SimulatorImpl(EnergyMeter.TEST_FIRST);
+//		System.out.println(simTestTable);
 		
-		simTestTable.registerNewClient(dbms_versionImpl);
+//		simTestTable.registerNewClient(dbms_versionImpl);
 		
 		dbms_versionImpl.truncateAll_DatapointReadingTable();
-		simTestTable.start();
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-01-01 00:00:02", "2014-01-01 00:00:09", EnergyMeter.TEST_FIRST);
+//		simTestTable.start();
 
 		
 	}
