@@ -16,7 +16,7 @@ public class DB_CRUD_Query_API {
 
 	private final String className = "BD_CRUD_Query_API"; //debug purposes
 	private final Connection database = DButil.connectToDB("localhost", "5432", "lumina_db", "postgres", "root", className);;
-	
+		
 	/*
 	 *  INSERT a the given record into DBMS_EMS_Schema.DataPointReading
 	 */
@@ -54,6 +54,17 @@ public class DB_CRUD_Query_API {
 	 */
 	public void truncateAll_DatapointReadingTable() {
 		String queryStatement = "TRUNCATE TABLE \"DBMS_EMS_Schema\".\"DataPointReading\"";
+		try{
+			DButil.executeUpdate(queryStatement, database);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+
+	//TODO test this!
+	public void deleteSpecificRow_DatapointReadingTable(String measure_ts, int datapoint_pk) {
+		String queryStatement =	"DELETE FROM \"DBMS_EMS_Schema\".\"DataPointReading\""+
+								" WHERE measure_timestamp = '"+measure_ts+"' AND datapoint_fk ="+datapoint_pk+";";
 		try{
 			DButil.executeUpdate(queryStatement, database);
 		}catch(SQLException e){

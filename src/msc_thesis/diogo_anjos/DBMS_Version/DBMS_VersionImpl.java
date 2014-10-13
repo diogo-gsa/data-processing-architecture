@@ -13,6 +13,10 @@ public class DBMS_VersionImpl implements SimulatorClient {
 	public void truncateAll_DatapointReadingTable(){
 		dbAPI.truncateAll_DatapointReadingTable();
 	}
+		
+	public void deleteSpecificRow_DatapointReadingTable(String measure_ts, int datapoint_pk){
+		dbAPI.deleteSpecificRow_DatapointReadingTable(measure_ts, datapoint_pk);
+	}
 	
 	/*
 	 * SimulatorClient's Interface Implementation

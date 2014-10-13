@@ -23,8 +23,11 @@ public class AppMainController {
 		System.out.println(simTestTable);
 		
 		simTestTable.registerNewClient(dbms_versionImpl);
-		dbms_versionImpl.truncateAll_DatapointReadingTable();
-		simTestTable.start();
+		
+		dbms_versionImpl.deleteSpecificRow_DatapointReadingTable("2014-01-01 00:00:02", 117);
+		
+		//dbms_versionImpl.truncateAll_DatapointReadingTable();
+		//simTestTable.start();
 
 		
 	}
