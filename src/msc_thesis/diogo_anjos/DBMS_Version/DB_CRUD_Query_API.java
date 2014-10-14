@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import msc_thesis.diogo_anjos.DBMS_Version.exceptions.ThereIsNoDataPoint_PKwithThisLocaionException;
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
+import msc_thesis.diogo_anjos.util.AppUtil;
 import msc_thesis.diogo_anjos.util.DButil;
 import msc_thesis.diogo_anjos.util.DataPoint_PK;
 
@@ -111,7 +112,7 @@ public class DB_CRUD_Query_API {
 	}
 
 	public void insertInto_DatapointReadingTable_BatchMode(String initialMeasure_ts, String finalMeasure_ts, EnergyMeter meterDBtable){
-		
+		System.out.println(AppUtil.getMemoryStatus());
 		String queryStatement = "SELECT * " + 
 								"FROM " + meterDBtable.getDatabaseTable() + 
 								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
@@ -125,10 +126,9 @@ public class DB_CRUD_Query_API {
 		}	
 		
 		List<EnergyMeasureTupleDTO> dtosList = buildDtoFromResultSet(batchResult);
-		System.out.println("EvaTest:"+dtosList.size());
-		for(EnergyMeasureTupleDTO dto : dtosList){
-			System.out.println(dto);
-		}
+		System.out.println("ArraListSize:"+dtosList.size());
+		System.out.println(AppUtil.getMemoryStatus());
+		
   }
 	
 	
@@ -137,10 +137,7 @@ public class DB_CRUD_Query_API {
 		List<EnergyMeasureTupleDTO> resListofDTOs = new ArrayList<EnergyMeasureTupleDTO>();
 		EnergyMeasureTupleDTO auxDTO = null;
 		try {
-			if(rs.next()) { 
-				// TODO BUGFIX isto só itera uma unica vez (em vez de 5) BugFIx Hipotese: 
-				// ve se na DButil tens de criar um CreateStatement especial (passando params no construtor
-				// para retornar RS com mais mais de uma row
+			while(rs.next()) { 
 				String measure_ts = rs.getString(1);
 				String location = rs.getString(2);
 				auxDTO = new EnergyMeasureTupleDTO(measure_ts, location);

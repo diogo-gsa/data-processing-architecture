@@ -29,7 +29,6 @@ public class DButil {
 	}
 
 	public static ResultSet executeQuery(String queryStatement, Connection database) throws SQLException {
-		//TODO BUGFIX HIPOSTES
 		return database.createStatement().executeQuery(queryStatement);			
 	}
 
@@ -38,8 +37,4 @@ public class DButil {
 	public static int executeUpdate(String queryStatement, Connection database) throws SQLException{
 		return database.createStatement().executeUpdate(queryStatement);
 	}
-
-	
-
-
 }
