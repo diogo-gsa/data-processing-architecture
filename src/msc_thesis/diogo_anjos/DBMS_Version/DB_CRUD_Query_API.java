@@ -112,7 +112,7 @@ public class DB_CRUD_Query_API {
 	}
 
 	public void insertInto_DatapointReadingTable_BatchMode(String initialMeasure_ts, String finalMeasure_ts, EnergyMeter meterDBtable){
-		System.out.println(AppUtil.getMemoryStatus());
+		System.out.println("1:"+AppUtil.getMemoryStatus(true)); //TODO DEBUG
 		String queryStatement = "SELECT * " + 
 								"FROM " + meterDBtable.getDatabaseTable() + 
 								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
@@ -125,14 +125,17 @@ public class DB_CRUD_Query_API {
 			e.printStackTrace();
 		}	
 		
-		List<EnergyMeasureTupleDTO> dtosList = buildDtoFromResultSet(batchResult);
-		System.out.println("ArraListSize:"+dtosList.size());
-		System.out.println(AppUtil.getMemoryStatus());
+		List<EnergyMeasureTupleDTO> listDTOs = buildDtoListFromResultSet(batchResult);
+		System.out.println("2:"+AppUtil.getMemoryStatus(true)); //TODO DEBUG
+		for(EnergyMeasureTupleDTO dto : listDTOs){
+			this.insertInto_DatapointReadingTable(dto);
+		}
 		
+		System.out.println("3:"+AppUtil.getMemoryStatus(true)); //TODO DEBUG
   }
 	
 	
-	private List<EnergyMeasureTupleDTO> buildDtoFromResultSet(ResultSet rs) {
+	private List<EnergyMeasureTupleDTO> buildDtoListFromResultSet(ResultSet rs) {
 		
 		List<EnergyMeasureTupleDTO> resListofDTOs = new ArrayList<EnergyMeasureTupleDTO>();
 		EnergyMeasureTupleDTO auxDTO = null;
