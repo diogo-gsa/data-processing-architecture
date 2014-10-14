@@ -3,6 +3,7 @@ package msc_thesis.diogo_anjos.DBMS_Version;
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
 import msc_thesis.diogo_anjos.simulator.SimulatorClient;
+import msc_thesis.diogo_anjos.util.AppUtil;
 
 public class DBMS_VersionImpl implements SimulatorClient {
 

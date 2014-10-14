@@ -24,8 +24,9 @@ public class AppMainController {
 		
 //		simTestTable.registerNewClient(dbms_versionImpl);
 		
-		dbms_versionImpl.truncateAll_DatapointReadingTable();
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-02-05 12:30:00", "2014-09-03 17:56:00", EnergyMeter.LIBRARY);
+//		dbms_versionImpl.truncateAll_DatapointReadingTable();
+//		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-02-05 12:30:00", "2014-09-03 17:56:00", EnergyMeter.LIBRARY);
+		
 //		simTestTable.start();
 
 		

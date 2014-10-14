@@ -112,7 +112,6 @@ public class DB_CRUD_Query_API {
 	}
 
 	public void insertInto_DatapointReadingTable_BatchMode(String initialMeasure_ts, String finalMeasure_ts, EnergyMeter meterDBtable){
-		System.out.println("1:"+AppUtil.getMemoryStatus(true)); //TODO DEBUG
 		String queryStatement = "SELECT * " + 
 								"FROM " + meterDBtable.getDatabaseTable() + 
 								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
@@ -126,12 +125,9 @@ public class DB_CRUD_Query_API {
 		}	
 		
 		List<EnergyMeasureTupleDTO> listDTOs = buildDtoListFromResultSet(batchResult);
-		System.out.println("2:"+AppUtil.getMemoryStatus(true)); //TODO DEBUG
 		for(EnergyMeasureTupleDTO dto : listDTOs){
 			this.insertInto_DatapointReadingTable(dto);
 		}
-		
-		System.out.println("3:"+AppUtil.getMemoryStatus(true)); //TODO DEBUG
   }
 	
 	
