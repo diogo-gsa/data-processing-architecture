@@ -11,7 +11,6 @@ import java.util.TreeMap;
 import msc_thesis.diogo_anjos.DBMS_Version.exceptions.ThereIsNoDataPoint_PKwithThisLocaionException;
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
-import msc_thesis.diogo_anjos.util.AppUtil;
 import msc_thesis.diogo_anjos.util.DButil;
 import msc_thesis.diogo_anjos.util.DataPoint_PK;
 
