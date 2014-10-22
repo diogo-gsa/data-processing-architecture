@@ -3,6 +3,7 @@
 
 DROP VIEW IF EXISTS library_aggegrated_phases;
 CREATE VIEW library_aggegrated_phases AS
+
 SELECT measure_timestamp, SUM(measure) AS measure
 FROM 	"DBMS_EMS_Schema"."DataPointReading" 	 AS dpr,
 	"DBMS_EMS_Schema"."DataPoint" 		 AS dp,
@@ -21,7 +22,7 @@ GROUP BY dpr.measure_timestamp;
  
     
     
-	
+		
 
 	
 	
