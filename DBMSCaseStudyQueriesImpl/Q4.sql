@@ -28,10 +28,10 @@ WHERE rel.rank = 1
 */
 
 -- Q4.2
-SELECT measure_timestamp, measure, unit, description, location, area_m2, avg(measure) OVER w
+SELECT measure_timestamp, measure, unit, description, location, area_m2, avg(measure) OVER w, rank() over w
 FROM "DBMS_EMS_Schema"."DenormalizedAggPhases"
 WINDOW w AS (	PARTITION BY location 
 		ORDER BY measure_timestamp DESC
-		ROWS BETWEEN CURRENT ROW AND 3 FOLLOWING 
+		ROWS BETWEEN CURRENT ROW AND 3 FOLLOWING -- ESTOU AQUI: RANGE WITH INTERVAL IS NOT YET IMPLEMENTED, WHAT A FUCK???
 	    )
 	    
