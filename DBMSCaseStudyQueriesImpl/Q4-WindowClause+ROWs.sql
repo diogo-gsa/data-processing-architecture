@@ -1,13 +1,8 @@
-﻿-- Correct Output
--- measure_timestamp; ratio; locatio
--- "2014-03-17 10:02:05"; -0.0093; "LECTUREHALL_A4"
--- "2014-03-17 11:59:05"; -0.0139; "LIBRARY"
-
------------------------------------------------------
--- Q4 with WINDOW clause + ROW (Integration Query) --
------------------------------------------------------
+﻿--------------------------------------------------------
+-- Q11 : Integration Query (with WINDOW clause + ROW) --
+--------------------------------------------------------
 SELECT	now.measure_timestamp, 
-	ROUND(((now.measureNow::float / timeWin10min.measureAVG10min::float) -1 )::numeric, 4) AS ratio,
+	ROUND(((now.measureNow / timeWin10min.measureAVG10min) -1 )::numeric, 5) AS ratio,
 	now.device_location
 FROM   	(SELECT measure_timestamp, measureAVG10min, measure_unit, measure_description, device_location, location_area_m2 --GET avg over last 10 measures
 	FROM 	(SELECT measure_timestamp, measure, measure_unit, measure_description, device_location, location_area_m2, avg(measure) OVER w AS measureAVG10min, rank() over w
@@ -27,3 +22,8 @@ FROM   	(SELECT measure_timestamp, measureAVG10min, measure_unit, measure_descri
 		WHERE rel.rank = 1
 	)AS now
 WHERE now.device_location = timeWin10min.device_location
+
+
+-- Correct Output
+-- "2014-03-17 11:59:05"|-0.01393|"LIBRARY"
+-- "2014-03-17 10:02:05"|-0.00925|"LECTUREHALL_A4"

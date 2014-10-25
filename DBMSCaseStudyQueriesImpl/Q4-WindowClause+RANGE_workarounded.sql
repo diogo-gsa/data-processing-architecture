@@ -1,6 +1,6 @@
-﻿---------------------------------------------------------
--- Q4 : Integration Query (with WINDOW clause + RANGE) --
----------------------------------------------------------
+﻿----------------------------------------------------------------------
+-- Q4 : Integration Query (with WINDOW clause + RANGE"workaounded") --
+----------------------------------------------------------------------
 
 SELECT device_pk, device_location, measure_timestamp, ROUND(((last_measure / win_avg_measure) - 1)::numeric, 5) AS variation_10min_win
 FROM	(SELECT  rel1.device_pk, rel1.device_location, rel1.measure_timestamp, rel1.measure AS last_measure, avg(rel1.measure) OVER w AS win_avg_measure, rank() OVER w
