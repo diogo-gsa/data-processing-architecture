@@ -5,7 +5,7 @@
 SELECT 	rel.device_pk,
 	rel.device_location,
 	rel.measure_timestamp, 
-	ROUND(((rel.last_measure / rel.last10min_avg_measure) -1 )::numeric, 5) AS win_ratio
+	ROUND(((rel.last_measure / rel.last10min_avg_measure) -1 )::numeric, 5) AS variation_10min_win
 FROM 	(SELECT *, 
 		measure 	AS last_measure, 
 		avg(measure) 	OVER w 	AS last10min_avg_measure, 

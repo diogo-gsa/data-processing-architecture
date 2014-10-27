@@ -51,6 +51,30 @@ public class DB_CRUD_Query_API {
 		}
 	}
 	
+	
+	/*
+	 *  INSERT a the the specified specified batch of readings into DBMS_EMS_Schema.DataPointReading
+	 */
+	public void insertInto_DatapointReadingTable_BatchMode(String initialMeasure_ts, String finalMeasure_ts, EnergyMeter meterDBtable){
+		String queryStatement = "SELECT * " + 
+								"FROM " + meterDBtable.getDatabaseTable() + 
+								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
+								" measure_timestamp <= '"+finalMeasure_ts+"'"; 
+		
+		ResultSet batchResult = null;
+		try{
+			batchResult = DButil.executeQuery(queryStatement, database);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}	
+		
+		List<EnergyMeasureTupleDTO> listDTOs = buildDtoListFromResultSet(batchResult);
+		for(EnergyMeasureTupleDTO dto : listDTOs){
+			this.insertInto_DatapointReadingTable(dto);
+		}
+  }
+	
+	
 	/*
 	 *  TRUNCATE ALL records from table DBMS_EMS_Schema.DataPointReading
 	 */
@@ -110,25 +134,44 @@ public class DB_CRUD_Query_API {
 		}
 	}
 
-	public void insertInto_DatapointReadingTable_BatchMode(String initialMeasure_ts, String finalMeasure_ts, EnergyMeter meterDBtable){
-		String queryStatement = "SELECT * " + 
-								"FROM " + meterDBtable.getDatabaseTable() + 
-								" WHERE measure_timestamp >= '"+initialMeasure_ts+"' AND " +
-								" measure_timestamp <= '"+finalMeasure_ts+"'"; 
-		
-		ResultSet batchResult = null;
+	
+	public void executeEvaluationQuery_Q11_NoWindows_10min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\"";
+//								+ "WHERE 	variation_10min_win > 0.05";
+		ResultSet rs = null;
 		try{
-			batchResult = DButil.executeQuery(queryStatement, database);
+			
+			rs = DButil.executeQuery(queryStatement, database);
+			
 		}catch(SQLException e){
 			e.printStackTrace();
-		}	
-		
-		List<EnergyMeasureTupleDTO> listDTOs = buildDtoListFromResultSet(batchResult);
-		for(EnergyMeasureTupleDTO dto : listDTOs){
-			this.insertInto_DatapointReadingTable(dto);
 		}
-  }
+		
+		String res = "";
+		try {
+			
+			while(rs.next()) { 
+				System.out.println("");
+				res = res + rs.getString(1);
+				res = res + "|" + rs.getString(2);
+				res = res + "|" + rs.getString(3);
+				res = res + "|" + rs.getString(4) + "\n";
+			}
+			System.out.println(res);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	
+	}
+	
+	public void executeEvaluationQuery_Q11_SizeWindows_10min(){
+		//TODO implement this
+	}
+	
+	public void executeEvaluationQuery_Q11_TimeWindows_10min(){
+		//TODO implement this
+	}
 	
 	private List<EnergyMeasureTupleDTO> buildDtoListFromResultSet(ResultSet rs) {
 		
