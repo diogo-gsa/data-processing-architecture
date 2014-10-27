@@ -2,7 +2,8 @@
 -- Q11 : Integration Query ( *NO* window clause) --
 ---------------------------------------------------
 
-SELECT 	last_reading.measure_timestamp, 
+SELECT 	last_reading.device_pk,
+	last_reading.measure_timestamp, 
 	ROUND(((last_reading.measure/last10min_avg_reading.measure) - 1)::numeric, 5) AS ratio, 
 	last_reading.device_location
 
