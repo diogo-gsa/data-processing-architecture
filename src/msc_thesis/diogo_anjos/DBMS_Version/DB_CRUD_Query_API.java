@@ -2,6 +2,7 @@ package msc_thesis.diogo_anjos.DBMS_Version;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,30 +140,23 @@ public class DB_CRUD_Query_API {
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\"";
 //								+ "WHERE 	variation_10min_win > 0.05";
-		ResultSet rs = null;
+		
+		QueryEvaluationReport report = executeEvaluationQuery(queryStatement);	
+		System.out.println(report);
+	}
+	
+	private QueryEvaluationReport executeEvaluationQuery(String queryStatement){
+		ResultSet queryExecutionResultSet = null;
+		long queryExecutionTime = 0;
 		try{
-			
-			rs = DButil.executeQuery(queryStatement, database);
-			
+			long initTS = System.currentTimeMillis();
+			queryExecutionResultSet = DButil.executeQuery(queryStatement, database);
+			queryExecutionTime = System.currentTimeMillis() - initTS;
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 		
-		String res = "";
-		try {
-			
-			while(rs.next()) { 
-				System.out.println("");
-				res = res + rs.getString(1);
-				res = res + "|" + rs.getString(2);
-				res = res + "|" + rs.getString(3);
-				res = res + "|" + rs.getString(4) + "\n";
-			}
-			System.out.println(res);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	
+		return new QueryEvaluationReport(queryStatement, queryExecutionResultSet, queryExecutionTime);
 	}
 	
 	public void executeEvaluationQuery_Q11_SizeWindows_10min(){
