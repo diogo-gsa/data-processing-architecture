@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/simulator"/>
 	<classpathentry kind="lib" path="C:/Tecnico/MScThesis/mainDeliverables/MScDissertation/eclipse-jee-kepler-SR2/workspace/simulator/libs/postgresql-9.3-1102.jdbc3.jar"/>
+	<classpathentry kind="lib" path="C:/Tecnico/MScThesis/mainDeliverables/MScDissertation/eclipse-jee-kepler-SR2/workspace/DataProcessingFW/libs/esper-5.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
