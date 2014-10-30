@@ -1,6 +1,7 @@
 package msc_thesis.diogo_anjos;
 
 import msc_thesis.diogo_anjos.DBMS_Version.DBMS_VersionImpl;
+import msc_thesis.diogo_anjos.DBMS_Version.QueryEvaluationReport;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
 import msc_thesis.diogo_anjos.simulator.Simulator;
 import msc_thesis.diogo_anjos.simulator.SimulatorClient;
@@ -14,24 +15,24 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 public class AppMainController {
 
 	
-	public static void main(String args[]){
-
-
+	public static void main(String args[]) throws Exception{
+		
+		// Prepare Database  ====================================================
 		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl(); 
+		dbms_versionImpl.truncateAll_DatapointReadingTable();
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 10:00:00", "2014-03-17 12:00:05", EnergyMeter.LIBRARY); // 2h
+//		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 10:00:00", "2014-03-19 10:00:06", EnergyMeter.LIBRARY); // 48h
 		
-//		Simulator simTestTable = new SimulatorImpl(EnergyMeter.TEST_FIRST);
-//		System.out.println(simTestTable);
+		//  Prepare Simulator  ====================================================
+		Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  12:10:05");	//2h
+//		Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");	//48h
 		
-//		simTestTable.registerNewClient(dbms_versionImpl);
+		simulatorLibrary.setSpeedTimeFactor(2);
+		System.out.println(simulatorLibrary); 
+		simulatorLibrary.registerNewClient(dbms_versionImpl);
 		
-//		dbms_versionImpl.truncateAll_DatapointReadingTable();
-//		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 10:00:00", "2014-03-17 12:00:00", EnergyMeter.LIBRARY);
-		
-		dbms_versionImpl.executeEvaluationQuery_Q11_NoWindows_10min();
-		
-		
-//		simTestTable.start();
-
+		// Init Simulation  ====================================================
+		simulatorLibrary.start();
 		
 	}
 	

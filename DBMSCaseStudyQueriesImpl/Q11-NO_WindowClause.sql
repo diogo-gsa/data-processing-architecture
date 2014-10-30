@@ -1,11 +1,10 @@
-﻿---------------------------------------------------
+---------------------------------------------------
 -- Q11 : Integration Query ( *NO* window clause) --
 ---------------------------------------------------
-
 SELECT 	last_reading.device_pk,
-	last_reading.device_location,
 	last_reading.measure_timestamp, 
-	ROUND(((last_reading.measure/last10min_avg_reading.measure) - 1)::numeric, 5) AS variation_10min_win
+	ROUND(((last_reading.measure/last10min_avg_reading.measure) - 1)::numeric, 5) AS ratio, 
+	last_reading.device_location
 
 FROM	(SELECT	dap.device_pk, dap.measure_timestamp, dap.measure, dap.device_location
 	FROM	"DBMS_EMS_Schema"."DenormalizedAggPhases" AS dap,

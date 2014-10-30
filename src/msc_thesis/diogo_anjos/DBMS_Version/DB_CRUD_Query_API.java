@@ -132,18 +132,57 @@ public class DB_CRUD_Query_API {
 			DButil.executeUpdate(queryStatement, database);
 		}catch(SQLException e){
 			e.printStackTrace();
-		}
+		}	
 	}
 
 	
-	public void executeEvaluationQuery_Q11_NoWindows_10min(){
+	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_10min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\"";
-//								+ "WHERE 	variation_10min_win > 0.05";
-		
-		QueryEvaluationReport report = executeEvaluationQuery(queryStatement);	
-		System.out.println(report);
+		return executeEvaluationQuery(queryStatement);	
 	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_60min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_60min\"";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_SizeWindows_10min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"Q11_Size_Win_10min\"";
+		return executeEvaluationQuery(queryStatement);
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_SizeWindows_60min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"Q11_Size_Win_60min\"";
+		return executeEvaluationQuery(queryStatement);
+	}
+	
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_TimeWindows_10min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"Q11_Time_Win_10min\"";
+		return executeEvaluationQuery(queryStatement);
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_TimeWindows_60min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"Q11_Time_Win_60min\"";
+		return executeEvaluationQuery(queryStatement);
+	}
+	
+	
+	
+	/*public QueryEvaluationReport executeEvaluationQuery_Q4_NoWindows_10min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\""
+								+ "WHERE 	variation_10min_win > 0.05";
+		return executeEvaluationQuery(queryStatement);	
+	}*/
+	
 	
 	private QueryEvaluationReport executeEvaluationQuery(String queryStatement){
 		ResultSet queryExecutionResultSet = null;
@@ -155,17 +194,10 @@ public class DB_CRUD_Query_API {
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-		
 		return new QueryEvaluationReport(queryStatement, queryExecutionResultSet, queryExecutionTime);
 	}
 	
-	public void executeEvaluationQuery_Q11_SizeWindows_10min(){
-		//TODO implement this
-	}
 	
-	public void executeEvaluationQuery_Q11_TimeWindows_10min(){
-		//TODO implement this
-	}
 	
 	private List<EnergyMeasureTupleDTO> buildDtoListFromResultSet(ResultSet rs) {
 		

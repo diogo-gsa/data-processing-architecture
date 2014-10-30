@@ -59,8 +59,36 @@ public class DBMS_VersionImpl implements SimulatorClient {
 		dbAPI.deleteSpecificInterval_DatapointReadingTable(initialMeasure_ts, finalMeasure_ts);
 	}
 	
-	public void executeEvaluationQuery_Q11_NoWindows_10min(){
-		dbAPI.executeEvaluationQuery_Q11_NoWindows_10min();
+	
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_10min(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_NoWindows_10min();
+		return report;
+	}
+
+	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_60min(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_NoWindows_60min();
+		return report;
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_SizeWindows_10min(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_SizeWindows_10min();
+		return report;
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_SizeWindows_60min(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_SizeWindows_60min();
+		return report;
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_TimeWindows_10min(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_TimeWindows_10min();
+		return report;
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q11_TimeWindows_60min(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_TimeWindows_60min();
+		return report;
 	}
 	
 	
@@ -71,6 +99,14 @@ public class DBMS_VersionImpl implements SimulatorClient {
 	public void receiveDatastream(EnergyMeasureTupleDTO tuple) {
 		System.out.println("Received: "+tuple); //DEBUG
 		this.insertInto_DatapointReadingTable(tuple);
+	
+		// Execute QUERY
+		QueryEvaluationReport report = this.executeEvaluationQuery_Q11_SizeWindows_60min();
+		
+		System.out.println(report);
 	}
+	
+	
+	
 	
 }
