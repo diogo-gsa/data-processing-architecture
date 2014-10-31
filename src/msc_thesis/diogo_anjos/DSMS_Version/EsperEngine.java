@@ -40,8 +40,9 @@ public class EsperEngine {
     }
        
     public void pushInput(Measure event){        
-    	//TODO fazer um adapter SimulatorDTO -> Measure
-    	//build a new constructor SimulatorDTO(Measure m) 
+    	if(countInitializedQueries==0){
+    		System.out.println("There is any query installed in the Esper's Engine");
+    	}
         engineRuntime.sendEvent(event);
     }
     

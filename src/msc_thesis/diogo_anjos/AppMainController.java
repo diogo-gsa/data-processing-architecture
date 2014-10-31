@@ -33,8 +33,5 @@ public class AppMainController {
 		
 		// Init Simulation  ====================================================
 		simulatorLibrary.start();
-		
-	}
-	
-	
+	}	
 }
