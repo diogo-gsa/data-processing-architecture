@@ -11,14 +11,26 @@ import Datastream.Measure;
 
 public class DSMS_VersionImpl implements SimulatorClient{
 
+	//Note the comparison/analogy between components 
+	//	EsperEngine			--> DSMS_versionImpl
+	//	DBMS_CRUD_Query_API --> DBMS_VersionImpl		
+	
 	EsperEngine esperEngine = new EsperEngine();
+	
+	
+	/* ============================================
+	 * 
+	 * TODO Implement QueryDeployment Methods here!
+	 * 
+	 * ============================================
+	 */
 	
 	
 	@Override
 	public void receiveDatastream(EnergyMeasureTupleDTO dto) {
 		List<Measure> datastreamTuples = inputAdapter(dto);
 		for(Measure m : datastreamTuples){
-			System.out.println("Pushing into engine "+m);
+			System.out.println("Pushing into Esper's engine -> "+m);
 			esperEngine.pushInput(m);
 		}
 	}
