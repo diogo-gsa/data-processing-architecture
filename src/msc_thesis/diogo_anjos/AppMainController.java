@@ -1,5 +1,7 @@
 package msc_thesis.diogo_anjos;
 
+import java.util.ArrayList;
+
 import msc_thesis.diogo_anjos.DBMS_Version.DBMS_VersionImpl;
 import msc_thesis.diogo_anjos.DBMS_Version.QueryEvaluationReport;
 import msc_thesis.diogo_anjos.DSMS_Version.DSMS_VersionImpl;
@@ -16,8 +18,8 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 public class AppMainController {
 
 	public static void main(String args[]) throws Exception{
-		execute_DSMS_experiment();
-//		execute_DBMS_experiment();	
+//		execute_DSMS_experiment();
+//		execute_DBMS_experiment();
 	}	
 	
 	
@@ -28,7 +30,7 @@ public class AppMainController {
 		//  Prepare Simulator  ====================================================
 		Simulator simulator = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  12:10:05");		//2h
 		// Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");		//48h
-		simulator.setSpeedTimeFactor(2);
+		simulator.setSpeedTimeFactor(600);
 		System.out.println(simulator); 
 			
 		// Init Simulation  ====================================================
@@ -46,7 +48,7 @@ public class AppMainController {
 		//  Prepare Simulator  ====================================================
 		Simulator simulator = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  12:10:05");				//2h
 		//Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");				//48h		
-		simulator.setSpeedTimeFactor(2);
+		simulator.setSpeedTimeFactor(600);
 		System.out.println(simulator); 
 		
 		// Init Simulation  ====================================================

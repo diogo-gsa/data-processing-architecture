@@ -1,14 +1,26 @@
 package msc_thesis.diogo_anjos.DBMS_Version;
 
+import java.util.LinkedList;
+
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
 import msc_thesis.diogo_anjos.simulator.SimulatorClient;
-import msc_thesis.diogo_anjos.util.AppUtil;
 
-public class DBMS_VersionImpl implements SimulatorClient {
+public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 
 
-	DB_CRUD_Query_API dbAPI = new DB_CRUD_Query_API();
+	private DB_CRUD_Query_API dbAPI = new DB_CRUD_Query_API();
+	private volatile boolean simulationHasFinished = false;
+	
+	
+	//producerConsumerQueueOfTuples
+	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
+	
+	
+	public DBMS_VersionImpl(){
+		Thread bufferConsumerThread = new Thread(this);
+		bufferConsumerThread.start();
+	}
 	
 	
 	/*
@@ -94,19 +106,59 @@ public class DBMS_VersionImpl implements SimulatorClient {
 	
 	/*
 	 * SimulatorClient's Interface Implementation
+	 * And Producer and consumer Functions
 	 */
-	@Override
-	public void receiveDatastream(EnergyMeasureTupleDTO tuple) {
+	
+	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
 		System.out.println("Received: "+tuple); //DEBUG
 		this.insertInto_DatapointReadingTable(tuple);
-	
+
 		// Execute QUERY
 		QueryEvaluationReport report = this.executeEvaluationQuery_Q11_SizeWindows_60min();
-		
-		System.out.println(report);
+		System.out.println(report);	
 	}
 	
 	
+	@Override
+	public void receiveDatastream(EnergyMeasureTupleDTO tuple) {
+		produceTuple(tuple);
+	}
 	
+	private synchronized void produceTuple(EnergyMeasureTupleDTO tuple){
+		bufferOfTuples.addLast(tuple);
+		notifyAll();
+	}
+	
+	private void consumeTuple(){
+		EnergyMeasureTupleDTO tuple;
+		while(true){
+			synchronized (this) {			
+				while(bufferOfTuples.isEmpty()){
+					//1st IF eval. is redundant but helps to clearly understand the END condition
+					if(bufferOfTuples.isEmpty() && simulationHasFinished){
+						return; //otherwise thread will be waiting forever
+					}
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			tuple = bufferOfTuples.pollFirst();
+			}
+			processConsumedTuple(tuple);
+		}
+	}
+	
+	@Override
+	public void run() {
+		consumeTuple();
+	}
+
+	@Override
+	public synchronized void simulationHasFinishedNotification() {
+		simulationHasFinished = true;
+		notifyAll(); //wake up waiting threads so they can check the flag
+	}
 	
 }
