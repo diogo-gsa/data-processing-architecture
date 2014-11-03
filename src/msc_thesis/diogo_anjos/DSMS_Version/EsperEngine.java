@@ -55,7 +55,8 @@ public class EsperEngine {
         QueryListener listener = new QueryListener(qmd);
         queryEngineObject.addListener(listener);
             
-        queryCatalog.put(qmd.getQueryID(), qmd);        
+        queryCatalog.put(qmd.getQueryID(), qmd);
+        System.out.println("Query: "+ eplQueryExpression + " installed\n");
     }          
 
     

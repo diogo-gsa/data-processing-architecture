@@ -26,16 +26,22 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public DSMS_VersionImpl(){
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
+	
+		installHelloWorldQuery();
+	}
+	
+	
+	/*  TODO Implement QueryDeployment Methods here! */
+	public void installHelloWorldQuery(){
+		String statement = 	"SELECT * " +
+							"FROM Datastream.Measure";
+		esperEngine.installQuery(statement);
 	}
 	
 	
 	
-	/* ============================================
-	 * 
-	 * TODO Implement QueryDeployment Methods here!
-	 * 
-	 * ============================================
-	 */
+	/* EOF Implement QueryDeployment Methods */
+	 
 	
 	
 	
@@ -97,7 +103,6 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	@Override
 	public void run() {
 		consumeTuple();
-		
 	}
 	
 	private List<Measure> inputAdapter(EnergyMeasureTupleDTO dto){
@@ -117,6 +122,5 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 		return measures;
 	}
-	
 
 }

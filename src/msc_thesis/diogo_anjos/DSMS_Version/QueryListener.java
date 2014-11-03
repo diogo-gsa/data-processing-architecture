@@ -13,25 +13,24 @@ public class QueryListener implements UpdateListener {
     
     
     public QueryListener(QueryMetadata metadata) {
-        qMD = metadata;    
+        qMD = metadata;
     }
 
     @Override
     public void update(EventBean[] newEvents, EventBean[] oldEvents) {
-        if (newEvents != null) {
-            printToOutputMonitor(newEvents,"NEW");
+    	if (newEvents != null) {
+            printOutput(newEvents,"NEW");
         }
-
         if (oldEvents != null) {
-            printToOutputMonitor(oldEvents,"OLD");
+            printOutput(oldEvents,"OLD");
         }
     }
     
-    private void printToOutputMonitor(EventBean[] events, String typeOfEvent){
-        String res = "Query " + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events:";
+    private void printOutput(EventBean[] events, String typeOfEvent){
+        String res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events:";
         for (EventBean eb : events) {
             res += "\n| " + eb.getUnderlying() + "\n";
         }
-    }   
-
+        System.out.println(res);
+    }       
 }
