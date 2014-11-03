@@ -18,7 +18,7 @@ import msc_thesis.diogo_anjos.util.DataPoint_PK;
 public class DB_CRUD_Query_API {
 
 	private final String className = "BD_CRUD_Query_API"; //debug purposes
-	private final Connection database = DButil.connectToDB("localhost", "5432", "lumina_db", "postgres", "root", className);;
+	private final Connection database = DButil.connectToDB("localhost", "5432", "lumina_db", "postgres", "root", className);
 		
 	/*
 	 *  INSERT a the given record into DBMS_EMS_Schema.DataPointReading

@@ -18,6 +18,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	private EsperEngine esperEngine = new EsperEngine();
 	private volatile boolean simulationHasFinished = false;
+
 	
 	//producerConsumerQueueOfTuples
 	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
@@ -26,21 +27,32 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public DSMS_VersionImpl(){
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
-	
-		installHelloWorldQuery();
+//		installHelloWorldQuery();
+		installHelloWorldDatabaseQuery();
+		
 	}
 	
 	
-	/*  TODO Implement QueryDeployment Methods here! */
+	/*  TODO Implement QueryDeployment Methods here! ===============================*/
 	public void installHelloWorldQuery(){
 		String statement = 	"SELECT * " +
 							"FROM Datastream.Measure";
 		esperEngine.installQuery(statement);
 	}
 	
+	public void installHelloWorldDatabaseQuery(){
+		String statement = 	"SELECT ts, measure, datapoint_pk, datapoint_description_fk "		+
+							"FROM	Datastream.Measure, " 										+
+									"sql:database['SELECT datapoint_description_fk " 			+
+									             "FROM \"DSMS_EMS_Schema\".\"DataPoint\""		+	
+									             "WHERE datapoint_pk = 82']";			
+		esperEngine.installQuery(statement);
+	}
 	
 	
-	/* EOF Implement QueryDeployment Methods */
+	
+	
+	/* EOF Implement QueryDeployment Methods ===============================*/
 	 
 	
 	

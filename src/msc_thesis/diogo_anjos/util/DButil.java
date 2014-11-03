@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class DButil {
 	
 	public static Connection connectToDB(String hostname, String port, String dbname, String username, String password, String className) {
-		System.out.print(className+"is Connecting to DB: " + hostname + ":" + port + "/" + dbname + " with user/pass=" + username + "/" + password + "... ");
+		System.out.print(className+" is Connecting to DB: " + hostname + ":" + port + "/" + dbname + " with user/pass=" + username + "/" + password + "... ");
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
