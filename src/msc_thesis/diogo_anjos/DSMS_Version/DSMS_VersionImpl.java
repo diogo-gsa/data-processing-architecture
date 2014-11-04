@@ -41,16 +41,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void installHelloWorldDatabaseQuery(){
-		String statement = 	"SELECT ts, measure, datapoint_pk, datapoint_description_fk "		+
+		String statement = 	"SELECT measureTS, measure, datapointPk, datapoint_description_fk "		+
 							"FROM	Datastream.Measure, " 										+
-									"sql:database['SELECT datapoint_description_fk " 			+
-									             "FROM \"DSMS_EMS_Schema\".\"DataPoint\""		+	
+									"sql:database ['SELECT datapoint_description_fk " 			+
+									             "FROM \"DSMS_EMS_Schema\".\"DataPoint\" "		+	
 									             "WHERE datapoint_pk = 82']";			
 		esperEngine.installQuery(statement);
 	}
-	
-	
-	
 	
 	/* EOF Implement QueryDeployment Methods ===============================*/
 	 
@@ -66,7 +63,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
 		List<Measure> datastreamTuples = inputAdapter(tuple);
 		for(Measure m : datastreamTuples){
-			System.out.println("Pushing into Esper's engine -> "+m);
+			System.out.println("Pushing into Esper's engine -> "+m+"\n");
 			esperEngine.pushInput(m);
 		}	
 	}

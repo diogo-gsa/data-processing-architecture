@@ -2,7 +2,6 @@ package msc_thesis.diogo_anjos.DBMS_Version;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

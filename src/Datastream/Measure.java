@@ -8,31 +8,31 @@ public class Measure{
 
 	// Unlike the DBMS, the DSMS will NOT use this timestamp.
 	// We only keep TS to maintain the consistency between the two solution implementations. 
-	private String measure_ts;
+	private String measureTS;
 	private double measure;
-	private int datapoint_pk;
+	private int datapointPk;
 	
-	public Measure(String measure_ts, double measure, int datapoint_pk){
-		this.measure_ts = measure_ts;
+	public Measure(String ts, double measure, int datapoint_pk){
+		this.measureTS = ts;
 		this.measure = measure;
-		this.datapoint_pk = datapoint_pk;
+		this.datapointPk = datapoint_pk;
 	}
 	
 	public String getMeasureTS(){
-		return measure_ts;
+		return measureTS;
 	}
 	
 	public double getMeasure(){
 		return measure;
 	}
 	
-	public int getDatapointPK(){
-		return datapoint_pk;
+	public int getDatapointPk(){
+		return datapointPk;
 	}
 	
     @Override
 	public String toString() {
-		return "Datastream.Measure:<ts="+measure_ts+", measure="+measure+", datapoint_pk="+datapoint_pk+">";
+		return "Datastream.Measure:<ts="+measureTS+", measure="+measure+", datapoint_pk="+datapointPk+">";
 	}
 	
 	

@@ -32,33 +32,20 @@ public class EsperEngine {
     
      
     
-    public EsperEngine(){
-        esperEngine = EPServiceProviderManager.getDefaultProvider();
+    public EsperEngine(){ 
+        ConfigurationDBRef dbConfig = new ConfigurationDBRef();
+        dbConfig.setDriverManagerConnection("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/lumina_db", "postgres", "root");
+        
+        Configuration engineConfig = new Configuration();
+        engineConfig.addDatabaseReference("database", dbConfig);
+  
+        esperEngine = EPServiceProviderManager.getDefaultProvider(engineConfig); //NEW CODE, applying config!    
+  
         engineRuntime = esperEngine.getEPRuntime();
         engineAdmin = esperEngine.getEPAdministrator();
         
         queryCatalog = new TreeMap<Integer,QueryMetadata>(); 
         countInitializedQueries = 0;        
-    
-    
-        //TEST ZONE
-        String className = "org.postgresql.Driver";
-        String url = "jdbc:postgresql://localhost:5432/lumina_db";
-        String username = "postgres";
-        String password= "root";
-        
-        
-        ConfigurationDBRef dbConfig = new ConfigurationDBRef();
-        dbConfig.setDriverManagerConnection(className, url, username, password);
-        
-        Configuration engineConfig = new Configuration();
-        engineConfig.addDatabaseReference("database", dbConfig);
-        EPServiceProviderManager.getDefaultProvider(engineConfig); // TODO <------- ISTO é a linha 36 
-        /*
-        	An instance of Configuration allows the application to specify properties to be used when creating a EPServiceProvider. 
-        	Usually an application will create a single Configuration, then get one or more instances of EPServiceProvider via EPServiceProviderManager. 
-        	The Configuration is meant only as an initialization-time object. EPServiceProviders are immutable and do not retain any association back to the Configuration. 
-    	*/
     }
        
     public void pushInput(Measure event){        
