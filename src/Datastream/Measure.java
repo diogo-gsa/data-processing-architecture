@@ -12,10 +12,10 @@ public class Measure{
 	private double measure;
 	private int datapointPk;
 	
-	public Measure(String ts, double measure, int datapoint_pk){
+	public Measure(String ts, double measure, int datapointPk){
 		this.measureTS = ts;
 		this.measure = measure;
-		this.datapointPk = datapoint_pk;
+		this.datapointPk = datapointPk;
 	}
 	
 	public String getMeasureTS(){
@@ -32,7 +32,7 @@ public class Measure{
 	
     @Override
 	public String toString() {
-		return "Datastream.Measure:<ts="+measureTS+", measure="+measure+", datapoint_pk="+datapointPk+">";
+		return "Datastream.Measure:<ts="+measureTS+", measure="+measure+", datapointPk="+datapointPk+">";
 	}
 	
 	

@@ -28,7 +28,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 //		installHelloWorldQuery();
-		installHelloWorldDatabaseQuery();
+//		installHelloWorldDatabaseQuery();
+		installQ0_BaseView();
 		
 	}
 	
@@ -48,6 +49,41 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									             "WHERE datapoint_pk = 82']";			
 		esperEngine.installQuery(statement);
 	}
+	
+	
+	public void installQ0_BaseView(){
+		
+		String sqlQuery =	"SELECT  dev.device_pk 			 AS device_pk, "						+
+        							"dpu.unit                AS measure_unit, "						+
+        							"dpd.description         AS measure_description, "				+
+        							"dl.location             AS device_location, "					+
+        							"dl.area_m2              AS location_area_m2 "					+
+
+        					"FROM    \"DBMS_EMS_Schema\".\"DataPoint\"            dp, "				+
+        							"\"DBMS_EMS_Schema\".\"Device\"               dev, "			+
+        							"\"DBMS_EMS_Schema\".\"DeviceLocation\"       dl, " 			+
+        							"\"DBMS_EMS_Schema\".\"DataPointDescription\" dpd, "			+
+        							"\"DBMS_EMS_Schema\".\"DataPointUnit\"        dpu "				+
+        					"WHERE   ${datapointPk} = dp.datapoint_pk " 							+
+        						"AND dp.device_fk = dev.device_pk " 								+
+        						"AND dev.device_location_fk = dl.device_location_pk  "				+
+        						"AND dp.datapoint_description_fk = dpd.datapoint_description_pk " 	+ 
+        						"AND dp.datapoint_unit_fk = dpu.datapoint_unit_pk ";			  	/*+
+        						"AND (dpd.description::text   = 'Phase1_EnergyConsumption'::text " 	+
+        							"OR dpd.description::text = 'Phase2_EnergyConsumption'::text " 	+
+        							"OR dpd.description::text = 'Phase3_EnergyConsumption'::text)";*/
+		
+		String statement = 	"SELECT rel.device_location "							+
+							"FROM	Datastream.Measure, " 				+
+									"sql:database ['"+sqlQuery+"'] AS rel";
+        					
+		
+		
+		
+		
+		esperEngine.installQuery(statement);
+	}
+	
 	
 	/* EOF Implement QueryDeployment Methods ===============================*/
 	 

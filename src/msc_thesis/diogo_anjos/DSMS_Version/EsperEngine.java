@@ -34,12 +34,13 @@ public class EsperEngine {
     
     public EsperEngine(){ 
         ConfigurationDBRef dbConfig = new ConfigurationDBRef();
+        //configure Esper's connection to lumina_db to enable join streams with static data
         dbConfig.setDriverManagerConnection("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/lumina_db", "postgres", "root");
         
         Configuration engineConfig = new Configuration();
         engineConfig.addDatabaseReference("database", dbConfig);
   
-        esperEngine = EPServiceProviderManager.getDefaultProvider(engineConfig); //NEW CODE, applying config!    
+        esperEngine = EPServiceProviderManager.getDefaultProvider(engineConfig); 
   
         engineRuntime = esperEngine.getEPRuntime();
         engineAdmin = esperEngine.getEPAdministrator();
