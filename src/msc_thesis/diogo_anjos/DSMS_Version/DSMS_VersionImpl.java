@@ -59,23 +59,31 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
         							"dl.location             AS device_location, "					+
         							"dl.area_m2              AS location_area_m2 "					+
 
-        					"FROM    \"DBMS_EMS_Schema\".\"DataPoint\"            dp, "				+
-        							"\"DBMS_EMS_Schema\".\"Device\"               dev, "			+
-        							"\"DBMS_EMS_Schema\".\"DeviceLocation\"       dl, " 			+
-        							"\"DBMS_EMS_Schema\".\"DataPointDescription\" dpd, "			+
-        							"\"DBMS_EMS_Schema\".\"DataPointUnit\"        dpu "				+
+        					"FROM    \"DSMS_EMS_Schema\".\"DataPoint\"            dp, "				+ 
+        							"\"DSMS_EMS_Schema\".\"Device\"               dev, "			+
+        							"\"DSMS_EMS_Schema\".\"DeviceLocation\"       dl, " 			+
+        							"\"DSMS_EMS_Schema\".\"DataPointDescription\" dpd, "			+
+        							"\"DSMS_EMS_Schema\".\"DataPointUnit\"        dpu "				+
+        							
         					"WHERE   ${datapointPk} = dp.datapoint_pk " 							+
         						"AND dp.device_fk = dev.device_pk " 								+
         						"AND dev.device_location_fk = dl.device_location_pk  "				+
         						"AND dp.datapoint_description_fk = dpd.datapoint_description_pk " 	+ 
-        						"AND dp.datapoint_unit_fk = dpu.datapoint_unit_pk ";			  	/*+
-        						"AND (dpd.description::text   = 'Phase1_EnergyConsumption'::text " 	+
-        							"OR dpd.description::text = 'Phase2_EnergyConsumption'::text " 	+
-        							"OR dpd.description::text = 'Phase3_EnergyConsumption'::text)";*/
-		
-		String statement = 	"SELECT rel.device_location "							+
-							"FROM	Datastream.Measure, " 				+
-									"sql:database ['"+sqlQuery+"'] AS rel";
+        						"AND dp.datapoint_unit_fk = dpu.datapoint_unit_pk "					+
+        						//testing PK because with dpd.description=".." weirdly does NOT work
+        						"AND (	dpd.datapoint_description_pk = 10" 							+ 
+        							"OR dpd.datapoint_description_pk = 11" 							+
+        							"OR dpd.datapoint_description_pk = 11)";
+        						
+		String statement = 	"SELECT  bd.device_pk, " 												+
+									"stream.measureTS, "											+
+									"stream.measure, "												+
+									"bd.measure_unit, " 											+
+									"bd.measure_description, "										+
+									"bd.device_location,  " 										+		
+									"bd.location_area_m2 " 											+
+							"FROM	Datastream.Measure 				AS stream , " 					+
+									"sql:database ['"+sqlQuery+"'] 	AS bd";
         					
 		
 		
