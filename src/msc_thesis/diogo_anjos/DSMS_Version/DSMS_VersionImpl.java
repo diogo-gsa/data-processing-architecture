@@ -73,7 +73,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
         						//testing PK because with dpd.description=".." weirdly does NOT work
         						"AND (	dpd.datapoint_description_pk = 10" 							+ 
         							"OR dpd.datapoint_description_pk = 11" 							+
-        							"OR dpd.datapoint_description_pk = 11)";
+        							"OR dpd.datapoint_description_pk = 12)";
         						
 		String statement = 	"SELECT  bd.device_pk, " 												+
 									"stream.measureTS, "											+
