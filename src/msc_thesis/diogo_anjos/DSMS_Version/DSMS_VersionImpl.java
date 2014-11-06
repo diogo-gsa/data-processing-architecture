@@ -53,42 +53,46 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void installQ0_BaseView(){
 		
-		String sqlQuery =	"SELECT  dev.device_pk 			 AS device_pk, "						+
-        							"dpu.unit                AS measure_unit, "						+
-        							"dpd.description         AS measure_description, "				+
-        							"dl.location             AS device_location, "					+
-        							"dl.area_m2              AS location_area_m2 "					+
-
-        					"FROM    \"DSMS_EMS_Schema\".\"DataPoint\"            dp, "				+ 
-        							"\"DSMS_EMS_Schema\".\"Device\"               dev, "			+
-        							"\"DSMS_EMS_Schema\".\"DeviceLocation\"       dl, " 			+
-        							"\"DSMS_EMS_Schema\".\"DataPointDescription\" dpd, "			+
-        							"\"DSMS_EMS_Schema\".\"DataPointUnit\"        dpu "				+
-        							
-        					"WHERE   ${datapointPk} = dp.datapoint_pk " 							+
-        						"AND dp.device_fk = dev.device_pk " 								+
-        						"AND dev.device_location_fk = dl.device_location_pk  "				+
-        						"AND dp.datapoint_description_fk = dpd.datapoint_description_pk " 	+ 
-        						"AND dp.datapoint_unit_fk = dpu.datapoint_unit_pk "					+
-        						//testing PK because with dpd.description=".." weirdly does NOT work
-        						"AND (	dpd.datapoint_description_pk = 10" 							+ 
-        							"OR dpd.datapoint_description_pk = 11" 							+
-        							"OR dpd.datapoint_description_pk = 12)";
+		
+		String sqlQuery="SELECT  dev.device_pk 			 AS device_pk, "						+
+								"dpu.unit                AS measure_unit, "						+
+								"dpd.description         AS measure_description, "				+
+								"dl.location             AS device_location,"					+
+								"dl.area_m2              AS location_area_m2 "					+
+						
+						"FROM    \"DSMS_EMS_Schema\".\"DataPoint\"            dp, "				+ 
+								"\"DSMS_EMS_Schema\".\"Device\"               dev, "			+
+								"\"DSMS_EMS_Schema\".\"DeviceLocation\"       dl, " 			+
+								"\"DSMS_EMS_Schema\".\"DataPointDescription\" dpd, "			+
+								"\"DSMS_EMS_Schema\".\"DataPointUnit\"        dpu "				+
+								
+						//testing PK because with dpd.description=".." weirdly does NOT work
+						"WHERE   ${datapointPk} = dp.datapoint_pk " 							+
+							"AND dp.device_fk = dev.device_pk " 								+
+							"AND dev.device_location_fk = dl.device_location_pk "				+
+							"AND dp.datapoint_description_fk = dpd.datapoint_description_pk "	+ 
+							"AND dp.datapoint_unit_fk = dpu.datapoint_unit_pk "					+
+							"AND (dpd.datapoint_description_pk = 10 " 							+ 
+									"OR dpd.datapoint_description_pk = 11 " 					+
+									"OR dpd.datapoint_description_pk = 12) ";
+		
         						
-		String statement = 	"SELECT  bd.device_pk, " 												+
-									"stream.measureTS, "											+
-									"stream.measure, "												+
-									"bd.measure_unit, " 											+
-									"bd.measure_description, "										+
-									"bd.device_location,  " 										+		
-									"bd.location_area_m2 " 											+
-							"FROM	Datastream.Measure 				AS stream , " 					+
-									"sql:database ['"+sqlQuery+"'] 	AS bd";
-        					
-		
-		
-		
-		
+		String statement = 	"SELECT 	 bd.device_pk 				AS device_pk, "				+
+										"stream.measureTS          	AS measure_timestamp, "		+
+										"sum(stream.measure) 		AS measure, "				+
+										"\"WATT.HOUR\"	 			AS measure_unit, "			+
+										"\"EnergyConsumptionPh123\" AS measure_description, "	+
+										"bd.device_location  		AS device_location, "		+		
+										"bd.location_area_m2        AS location_area_m2 "		+
+										
+							"FROM		Datastream.Measure 				AS stream , " 			+
+										"sql:database ['"+sqlQuery+"'] 	AS bd "					+
+							
+							"GROUP BY	bd.device_pk," 											+
+										"stream.measureTS "										+
+							
+							"HAVING		count(stream.measureTS) = 3";
+		 			
 		esperEngine.installQuery(statement);
 	}
 	
