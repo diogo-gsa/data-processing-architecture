@@ -29,7 +29,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 //		installHelloWorldQuery();
 //		installHelloWorldDatabaseQuery();
-		installQ0_BaseView();
+		install_Q0_BaseView();
 		
 	}
 	
@@ -51,7 +51,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	
-	public void installQ0_BaseView(){
+	public void install_Q0_BaseView(){
 		
 		
 		String sqlQuery="SELECT  dev.device_pk 			 AS device_pk, "						+
@@ -91,7 +91,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							"GROUP BY	bd.device_pk," 											+
 										"stream.measureTS "										+
 							
-							"HAVING		count(stream.measureTS) = 3";
+							"HAVING		count(stream.measureTS) = 3"; //3 Phases 
 		 			
 		esperEngine.installQuery(statement);
 	}

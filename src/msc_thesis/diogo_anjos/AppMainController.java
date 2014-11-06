@@ -24,14 +24,15 @@ public class AppMainController {
 		DSMS_VersionImpl dsms_versionImpl = new DSMS_VersionImpl();
 		
 		//  Prepare Simulator  ====================================================
-		Simulator simulator = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  12:3:05");		//2h
+		Simulator simulatorBib = new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  12:01:05", "2014-03-17  12:10:05");		//2h
+		
 		// Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");		//48h
-		simulator.setSpeedTimeFactor(100);
-		System.out.println(simulator); 
+		simulatorBib.setSpeedTimeFactor(100);
+		System.out.println(simulatorBib);
 			
 		// Init Simulation  ====================================================
-		simulator.registerNewClient(dsms_versionImpl);
-		simulator.start();
+		simulatorBib.registerNewClient(dsms_versionImpl);
+		simulatorBib.start();
 	}
 
 	public static void execute_DBMS_experiment() throws Exception{
