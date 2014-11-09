@@ -56,14 +56,16 @@ public class EsperEngine {
         engineRuntime.sendEvent(event);
     }
     
-    public void installQuery(String eplQueryExpression) throws EPStatementException {
+    public void installQuery(String eplQueryExpression, boolean addListener) throws EPStatementException {
         
         EPStatement queryEngineObject = engineAdmin.createEPL(eplQueryExpression);
         countInitializedQueries++; //get queryID        
         QueryMetadata qmd = new QueryMetadata(countInitializedQueries, eplQueryExpression, queryEngineObject);
         
-        QueryListener listener = new QueryListener(qmd);
-        queryEngineObject.addListener(listener);
+        if(addListener){
+        	QueryListener listener = new QueryListener(qmd);
+        	queryEngineObject.addListener(listener);
+        }
             
         queryCatalog.put(qmd.getQueryID(), qmd);
         System.out.println("Query: "+ eplQueryExpression + " installed\n");

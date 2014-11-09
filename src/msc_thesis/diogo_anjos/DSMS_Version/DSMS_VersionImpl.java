@@ -27,33 +27,29 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public DSMS_VersionImpl(){
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
-//		installHelloWorldQuery();
-//		installHelloWorldDatabaseQuery();
-		install_Q0_BaseView();
-		
+		install_Q0_BaseView(false);
+		install_Q11_IntegrationQuery(true);
 	}
 	
 	
-	/*  TODO Implement QueryDeployment Methods here! ===============================*/
-	public void installHelloWorldQuery(){
+	/*  Implement QueryDeployment Methods here! ===============================*/
+	public void installHelloWorldQuery(boolean addListener){
 		String statement = 	"SELECT * " +
 							"FROM Datastream.Measure";
-		esperEngine.installQuery(statement);
+		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void installHelloWorldDatabaseQuery(){
+	public void installHelloWorldDatabaseQuery(boolean addListener){
 		String statement = 	"SELECT measureTS, measure, datapointPk, datapoint_description_fk "		+
 							"FROM	Datastream.Measure, " 										+
 									"sql:database ['SELECT datapoint_description_fk " 			+
 									             "FROM \"DSMS_EMS_Schema\".\"DataPoint\" "		+	
 									             "WHERE datapoint_pk = 82']";			
-		esperEngine.installQuery(statement);
+		esperEngine.installQuery(statement, addListener);
 	}
 	
 	
-	public void install_Q0_BaseView(){
-		
-		
+	public void install_Q0_BaseView(boolean addListener){
 		String sqlQuery="SELECT  dev.device_pk 			 AS device_pk, "						+
 								"dpu.unit                AS measure_unit, "						+
 								"dpd.description         AS measure_description, "				+
@@ -77,7 +73,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"OR dpd.datapoint_description_pk = 12) ";
 		
         						
-		String statement = 	"SELECT 	 bd.device_pk 				AS device_pk, "				+
+		String statement = 	"INSERT INTO DenormalizedAggPhases "								+
+							"SELECT 	bd.device_pk 				AS device_pk, "				+
 										"stream.measureTS          	AS measure_timestamp, "		+
 										"sum(stream.measure) 		AS measure, "				+
 										"\"WATT.HOUR\"	 			AS measure_unit, "			+
@@ -93,9 +90,16 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							
 							"HAVING		count(stream.measureTS) = 3"; //3 Phases 
 		 			
-		esperEngine.installQuery(statement);
+		esperEngine.installQuery(statement,addListener);
 	}
 	
+	
+	public void install_Q11_IntegrationQuery(boolean addListener){
+		String statement = 	"SELECT (avg(now.measure)/avg(win.measure)) - 1 AS variation "		+
+							"FROM	DenormalizedAggPhases(device_pk=1).win:time(10 min) AS win, " +
+							"		DenormalizedAggPhases(device_pk=1).win:length(1)	AS now ";			
+		esperEngine.installQuery(statement, addListener);
+	}
 	
 	/* EOF Implement QueryDeployment Methods ===============================*/
 	 
