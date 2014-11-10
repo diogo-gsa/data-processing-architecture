@@ -10,14 +10,20 @@ import com.espertech.esper.client.UpdateListener;
 public class QueryListener implements UpdateListener {
 
     private QueryMetadata qMD;    
+    private EsperEngine esperEngine;
+    private boolean printElapsedTime = true;
+    long queryExecutionTime;
     
-    
-    public QueryListener(QueryMetadata metadata) {
+    public QueryListener(QueryMetadata metadata, EsperEngine engine) {
         qMD = metadata;
+        esperEngine = engine;
     }
 
     @Override
     public void update(EventBean[] newEvents, EventBean[] oldEvents) {
+    	
+    	queryExecutionTime = System.currentTimeMillis() - esperEngine.lastPushedEventSystemTS;
+    	
     	if (newEvents != null) {
             printOutput(newEvents,"NEW");
         }
@@ -27,8 +33,16 @@ public class QueryListener implements UpdateListener {
     }
     
     private void printOutput(EventBean[] events, String typeOfEvent){
-        String res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events:";
-        for (EventBean eb : events) {
+    	String res;
+    	
+    	if(printElapsedTime){
+    		res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events, ElapsedTime = "+queryExecutionTime+" ms";
+    	}
+    	else{
+    		res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events, ElapsedTime = not measured";
+    	}
+    	
+    	for (EventBean eb : events) {
             res += "\n| " + eb.getUnderlying();
         }
         System.out.println(res);

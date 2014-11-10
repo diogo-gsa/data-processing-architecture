@@ -23,13 +23,20 @@ import com.espertech.esper.client.EPStatementException;
 
 public class EsperEngine {
 
-    EPServiceProvider   esperEngine;
-    EPRuntime           engineRuntime;
-    EPAdministrator     engineAdmin;
+    private EPServiceProvider   esperEngine;
+    private EPRuntime           engineRuntime;
+    private EPAdministrator     engineAdmin;
     
-    int countInitializedQueries;// serves as QueryID/key in the map
-    Map<Integer,QueryMetadata> queryCatalog; 
+    private int countInitializedQueries;// serves as QueryID/key in the map
+    private Map<Integer,QueryMetadata> queryCatalog; 
     
+    //public field (to be accesible by the listeners) to measure elapse time 
+    // between the time that the engine takes to evaluate an pushed event
+    // TODO:Esta solução apenas funionas para cliente isolados,
+    //		i.e. se existirem dois sensores a enviar measures para o engine
+    //		esta abordagem deixa de funionar. Nessa altura tem de se passar 
+    //		para um Map<DatapointReadingPK:key, TS:value> 
+    public long lastPushedEventSystemTS = 0;
      
     
     public EsperEngine(){ 
@@ -53,6 +60,7 @@ public class EsperEngine {
     	if(countInitializedQueries==0){
     		System.out.println("There is any query installed in the Esper's Engine");
     	}
+    	lastPushedEventSystemTS = System.currentTimeMillis();
         engineRuntime.sendEvent(event);
     }
     
@@ -63,7 +71,7 @@ public class EsperEngine {
         QueryMetadata qmd = new QueryMetadata(countInitializedQueries, eplQueryExpression, queryEngineObject);
         
         if(addListener){
-        	QueryListener listener = new QueryListener(qmd);
+        	QueryListener listener = new QueryListener(qmd, this);
         	queryEngineObject.addListener(listener);
         }
             

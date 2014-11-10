@@ -15,7 +15,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	//Note the comparison/analogy between components 
 	//	EsperEngine			--> DSMS_versionImpl
 	//	DBMS_CRUD_Query_API --> DBMS_VersionImpl		
-	
+
 	private boolean printPushedInput = false;
 	private EsperEngine esperEngine = new EsperEngine();
 	private volatile boolean simulationHasFinished = false;
@@ -126,6 +126,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 			if(printPushedInput){
 				System.out.println("Pushing into Esper's engine -> "+m+"\n");
 			}
+			
 			esperEngine.pushInput(m);
 		}	
 	}
