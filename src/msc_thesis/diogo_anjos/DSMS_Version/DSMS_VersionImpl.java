@@ -16,6 +16,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	//	EsperEngine			--> DSMS_versionImpl
 	//	DBMS_CRUD_Query_API --> DBMS_VersionImpl		
 	
+	private boolean printPushedInput = false;
 	private EsperEngine esperEngine = new EsperEngine();
 	private volatile boolean simulationHasFinished = false;
 
@@ -95,9 +96,16 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	
 	public void install_Q11_IntegrationQuery(boolean addListener){
-		String statement = 	"SELECT (avg(now.measure)/avg(win.measure)) - 1 AS variation "		+
-							"FROM	DenormalizedAggPhases(device_pk=1).win:time(10 min) AS win, " +
-							"		DenormalizedAggPhases(device_pk=1).win:length(1)	AS now ";			
+		String statement = 	"SELECT (now.measure/avg(win.measure) - 1) AS variation, "	+
+									"now.device_pk AS device_pk, "						+
+									"now.device_location AS device_location, "			+
+									"now.measure_timestamp AS measure_timestamp "		+
+							"FROM	DenormalizedAggPhases.win:time(10 min)	AS win, " 	+
+							"		DenormalizedAggPhases.std:lastevent()	AS now "	+
+							"WHERE 	win.device_pk = now.device_pk "						+
+							"OUTPUT LAST EVERY 1 EVENTS ";			
+		
+		
 		esperEngine.installQuery(statement, addListener);
 	}
 	
@@ -115,7 +123,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
 		List<Measure> datastreamTuples = inputAdapter(tuple);
 		for(Measure m : datastreamTuples){
-			System.out.println("Pushing into Esper's engine -> "+m+"\n");
+			if(printPushedInput){
+				System.out.println("Pushing into Esper's engine -> "+m+"\n");
+			}
 			esperEngine.pushInput(m);
 		}	
 	}

@@ -29,7 +29,7 @@ public class QueryListener implements UpdateListener {
     private void printOutput(EventBean[] events, String typeOfEvent){
         String res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events:";
         for (EventBean eb : events) {
-            res += "\n| " + eb.getUnderlying() + "\n";
+            res += "\n| " + eb.getUnderlying();
         }
         System.out.println(res);
     }       
