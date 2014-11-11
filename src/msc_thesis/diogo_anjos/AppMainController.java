@@ -24,10 +24,10 @@ public class AppMainController {
 		DSMS_VersionImpl dsms_versionImpl = new DSMS_VersionImpl();
 		
 		//  Prepare Simulator  ====================================================
-		Simulator simulatorBib = new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  12:01:05", "2014-03-17  12:10:05");		//2h
+		Simulator simulatorBib = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  13:20:05");		//60min
 		
 		// Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");		//48h
-		simulatorBib.setSpeedTimeFactor(100);
+		simulatorBib.setSpeedTimeFactor(1);
 		System.out.println(simulatorBib);
 			
 		// Init Simulation  ====================================================

@@ -12,7 +12,7 @@ public class QueryListener implements UpdateListener {
     private QueryMetadata qMD;    
     private EsperEngine esperEngine;
     private boolean printElapsedTime = true;
-    long queryExecutionTime;
+    private double queryExecutionTime = 0;
     
     public QueryListener(QueryMetadata metadata, EsperEngine engine) {
         qMD = metadata;
@@ -22,7 +22,9 @@ public class QueryListener implements UpdateListener {
     @Override
     public void update(EventBean[] newEvents, EventBean[] oldEvents) {
     	
-    	queryExecutionTime = System.currentTimeMillis() - esperEngine.lastPushedEventSystemTS;
+    	// 1 nanoSecond / (10^6) = 1 milliSecond
+    	// measure with nano resolution, but present the result in milliseconds
+    	queryExecutionTime = (double) (System.nanoTime() - esperEngine.lastPushedEventSystemTS)/1000000; 
     	
     	if (newEvents != null) {
             printOutput(newEvents,"NEW");

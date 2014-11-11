@@ -133,8 +133,10 @@ public class DB_CRUD_Query_API {
 			e.printStackTrace();
 		}	
 	}
-
 	
+// 	==========================================================================================
+//								Case Study Queries Implementation 
+//	==========================================================================================
 	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_10min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\"";
@@ -175,21 +177,29 @@ public class DB_CRUD_Query_API {
 	
 	
 	
-	/*public QueryEvaluationReport executeEvaluationQuery_Q4_NoWindows_10min(){
+	public QueryEvaluationReport executeEvaluationQuery_Q4_NoWindows_10min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\""
 								+ "WHERE 	variation_10min_win > 0.05";
 		return executeEvaluationQuery(queryStatement);	
-	}*/
+	}
+	
+	
+//	==========================================================================================
+//						End Of Case Study Queries Implementation Zone 
+//	==========================================================================================
+
 	
 	
 	private QueryEvaluationReport executeEvaluationQuery(String queryStatement){
 		ResultSet queryExecutionResultSet = null;
-		long queryExecutionTime = 0;
+		double queryExecutionTime = 0;
 		try{
-			long initTS = System.currentTimeMillis();
+			long initTS = System.nanoTime();
 			queryExecutionResultSet = DButil.executeQuery(queryStatement, database);
-			queryExecutionTime = System.currentTimeMillis() - initTS;
+			// 1 nanoSecond / (10^6) = 1 milliSecond
+	    	// measure with nano resolution, but present the result in milliseconds 
+			queryExecutionTime = (double) (System.nanoTime() - initTS)/1000000;
 		}catch(SQLException e){
 			e.printStackTrace();
 		}

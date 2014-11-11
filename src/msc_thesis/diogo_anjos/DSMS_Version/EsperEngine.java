@@ -60,7 +60,7 @@ public class EsperEngine {
     	if(countInitializedQueries==0){
     		System.out.println("There is any query installed in the Esper's Engine");
     	}
-    	lastPushedEventSystemTS = System.currentTimeMillis();
+    	lastPushedEventSystemTS = System.nanoTime();
         engineRuntime.sendEvent(event);
     }
     

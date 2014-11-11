@@ -16,10 +16,11 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	//	EsperEngine			--> DSMS_versionImpl
 	//	DBMS_CRUD_Query_API --> DBMS_VersionImpl		
 
-	private boolean printPushedInput = false;
 	private EsperEngine esperEngine = new EsperEngine();
 	private volatile boolean simulationHasFinished = false;
 
+	//TODO to turn off some input event push
+	private boolean printPushedInput = false;
 	
 	//producerConsumerQueueOfTuples
 	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
@@ -33,7 +34,10 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	
-	/*  Implement QueryDeployment Methods here! ===============================*/
+// 	==========================================================================================
+//	Case Study Queries Implementation 
+//	==========================================================================================
+	
 	public void installHelloWorldQuery(boolean addListener){
 		String statement = 	"SELECT * " +
 							"FROM Datastream.Measure";
@@ -41,7 +45,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void installHelloWorldDatabaseQuery(boolean addListener){
-		String statement = 	"SELECT measureTS, measure, datapointPk, datapoint_description_fk "		+
+		String statement = 	"SELECT measureTS, measure, datapointPk, datapoint_description_fk "	+
 							"FROM	Datastream.Measure, " 										+
 									"sql:database ['SELECT datapoint_description_fk " 			+
 									             "FROM \"DSMS_EMS_Schema\".\"DataPoint\" "		+	
@@ -100,7 +104,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"now.device_pk AS device_pk, "						+
 									"now.device_location AS device_location, "			+
 									"now.measure_timestamp AS measure_timestamp "		+
-							"FROM	DenormalizedAggPhases.win:time(10 min)	AS win, " 	+
+							"FROM	DenormalizedAggPhases.win:time(60 min)	AS win, " 	+
 							"		DenormalizedAggPhases.std:lastevent()	AS now "	+
 							"WHERE 	win.device_pk = now.device_pk "						+
 							"OUTPUT LAST EVERY 1 EVENTS ";			
@@ -109,7 +113,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	/* EOF Implement QueryDeployment Methods ===============================*/
+//	==========================================================================================
+//	End Of Case Study Queries Implementation Zone 
+//	==========================================================================================
 	 
 	
 	

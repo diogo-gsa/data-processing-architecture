@@ -8,9 +8,9 @@ public class QueryEvaluationReport {
 
 	private String executedQueryStatement = null;
 	private String resultSetDump = null;
-	private long queryExecutionTime = 0;
+	private double queryExecutionTime = 0;
 
-	public QueryEvaluationReport(String queryStatement, ResultSet resultSet, long executionTime){
+	public QueryEvaluationReport(String queryStatement, ResultSet resultSet, double executionTime){
 		this.executedQueryStatement = queryStatement;
 		this.resultSetDump = buildResulSetDump(resultSet);
 		this.queryExecutionTime = executionTime;
@@ -37,7 +37,7 @@ public class QueryEvaluationReport {
 		return resultSetDump;
 	}
 
-	public long getQueryExecutionTime() {
+	public double getQueryExecutionTime() {
 		return queryExecutionTime;
 	}
 	
