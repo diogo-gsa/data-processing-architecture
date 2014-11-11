@@ -27,7 +27,7 @@ public class AppMainController {
 		Simulator simulatorBib = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  13:20:05");		//60min
 		
 		// Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");		//48h
-		simulatorBib.setSpeedTimeFactor(1);
+		simulatorBib.setSpeedTimeFactor(100);
 		System.out.println(simulatorBib);
 			
 		// Init Simulation  ====================================================
@@ -45,7 +45,7 @@ public class AppMainController {
 		//  Prepare Simulator  ====================================================
 		Simulator simulator = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  12:10:05");				//2h
 		//Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");				//48h		
-		simulator.setSpeedTimeFactor(600);
+		simulator.setSpeedTimeFactor(1);
 		System.out.println(simulator); 
 		
 		// Init Simulation  ====================================================

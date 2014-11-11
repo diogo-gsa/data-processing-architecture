@@ -31,6 +31,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
 		install_Q11_IntegrationQuery(true);
+		install_Q4_EvaluationQuery(true);
 	}
 	
 	
@@ -100,7 +101,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	
 	public void install_Q11_IntegrationQuery(boolean addListener){
-		String statement = 	"SELECT (now.measure/avg(win.measure) - 1) AS variation, "	+
+		String statement = 	"INSERT INTO Q11_VariationStream " +
+							"SELECT (now.measure/avg(win.measure) - 1) AS variation, "	+
 									"now.device_pk AS device_pk, "						+
 									"now.device_location AS device_location, "			+
 									"now.measure_timestamp AS measure_timestamp "		+
@@ -108,10 +110,21 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							"		DenormalizedAggPhases.std:lastevent()	AS now "	+
 							"WHERE 	win.device_pk = now.device_pk "						+
 							"OUTPUT LAST EVERY 1 EVENTS ";			
-		
-		
+	
 		esperEngine.installQuery(statement, addListener);
 	}
+	
+	public void install_Q4_EvaluationQuery(boolean addListener){
+		String statement = 	"SELECT variation          		AS variationAlarm, "		+
+									"device_pk         		AS device_pk, "				+
+									"device_location   		AS device_location, "		+
+									"measure_timestamp 		AS measure_timestamp "		+
+							"FROM	Q11_VariationStream	"								+
+							"WHERE 	variation > 0.01 ";			
+	
+		esperEngine.installQuery(statement, addListener);
+	}
+	
 	
 //	==========================================================================================
 //	End Of Case Study Queries Implementation Zone 
