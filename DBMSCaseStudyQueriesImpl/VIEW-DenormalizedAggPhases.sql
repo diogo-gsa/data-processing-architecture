@@ -1,17 +1,17 @@
 ﻿SELECT	dev.device_pk,
-	dpr.measure_timestamp,
-	sum(dpr.measure) 	 AS measure,
-	'WATT.HOUR' 		 AS measure_unit,
-	'EnergyConsumptionPh123' AS measure_description,
-	dl.location 		 AS device_location,
-	dl.area_m2 		 AS location_area_m2
+		dpr.measure_timestamp,
+		sum(dpr.measure) 	 		AS measure,
+		'WATT.HOUR' 		 		AS measure_unit,
+		'EnergyConsumptionPh123'	AS measure_description,
+		dpl.location 		 		AS device_location,
+		dl.area_m2 		 			AS location_area_m2
 	
 FROM	"DBMS_EMS_Schema"."DataPointReading" 	 dpr,
-	"DBMS_EMS_Schema"."DataPoint" 		 dp,
-	"DBMS_EMS_Schema"."Device" 		 dev,
-	"DBMS_EMS_Schema"."DeviceLocation" 	 dl,
-	"DBMS_EMS_Schema"."DataPointDescription" dpd,
-	"DBMS_EMS_Schema"."DataPointUnit" 	 dpu
+		"DBMS_EMS_Schema"."DataPoint" 		 dp,
+		"DBMS_EMS_Schema"."Device" 		 dev,
+		"DBMS_EMS_Schema"."DeviceLocation" 	 dl,
+		"DBMS_EMS_Schema"."DataPointDescription" dpd,
+		"DBMS_EMS_Schema"."DataPointUnit" 	 dpu
 	
 WHERE 	dpr.datapoint_fk = dp.datapoint_pk 
     AND dp.device_fk = dev.device_pk 
@@ -23,4 +23,3 @@ WHERE 	dpr.datapoint_fk = dp.datapoint_pk
 	  OR dpd.description = 'Phase3_EnergyConsumption')			
 	  
 GROUP BY dev.device_pk, dpr.measure_timestamp, dl.location, dl.area_m2
---ORDER BY dpr.measure_timestamp ASC --DEBUG

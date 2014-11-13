@@ -176,7 +176,6 @@ public class DB_CRUD_Query_API {
 	}
 	
 	
-	
 	public QueryEvaluationReport executeEvaluationQuery_Q4_NoWindows_10min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\""
