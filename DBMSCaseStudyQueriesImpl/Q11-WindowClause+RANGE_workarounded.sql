@@ -13,13 +13,13 @@ FROM	(SELECT dga.device_pk,
 				dga.measure 	  			AS last_measure, 
 				avg(dga.measure)  	OVER w 	AS win_avg_measure, 
 				rank() 		  		OVER w
-		FROM	"DBMS_EMS_Schema"."DenormalizedAggPhases" AS dga,
-				(SELECT device_pk, MAX(measure_timestamp) AS ts
+		FROM	"DBMS_EMS_Schema"."DenormalizedAggPhases" AS dga,	-- Q0 View
+				(SELECT device_pk, MAX(measure_timestamp) AS ts   	-- Most Recent TS per Device
 				FROM "DBMS_EMS_Schema"."DenormalizedAggPhases" 
 				GROUP BY device_pk
 				) AS dga_last_ts
 		WHERE	dga.device_pk = dga_last_ts.device_pk
-			AND dga.measure_timestamp >= dga_last_ts.ts - interval '10 minutes'
+			AND dga.measure_timestamp >= dga_last_ts.ts - interval '10 minutes' -- Filter Readings "outside" windo
 		WINDOW w AS 
 			(PARTITION BY dga.device_pk 
 			ORDER BY measure_timestamp DESC

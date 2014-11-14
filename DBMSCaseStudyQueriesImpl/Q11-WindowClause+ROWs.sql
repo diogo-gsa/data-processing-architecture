@@ -3,18 +3,18 @@
 --------------------------------------------------------
 
 SELECT 	rel.device_pk,
-	rel.device_location,
-	rel.measure_timestamp, 
-	ROUND(((rel.last_measure / rel.last10min_avg_measure) -1 )::numeric, 5) AS variation_10min_win
+		rel.device_location,
+		rel.measure_timestamp, 
+		ROUND(((rel.last_measure / rel.last10min_avg_measure) -1 )::numeric, 5) AS variation_10min_win
 FROM 	(SELECT *, 
-		measure 	AS last_measure, 
-		avg(measure) 	OVER w 	AS last10min_avg_measure, 
-		rank()	 	OVER w
-	FROM "DBMS_EMS_Schema"."DenormalizedAggPhases"
-	WINDOW w AS (	PARTITION BY device_pk 
-			ORDER BY measure_timestamp DESC
-			ROWS BETWEEN CURRENT ROW AND 10 FOLLOWING)
-	) AS rel
+		 measure 				AS last_measure, 
+		 avg(measure) 	OVER w 	AS last10min_avg_measure, 
+		 rank()	 		OVER w
+		FROM "DBMS_EMS_Schema"."DenormalizedAggPhases"
+		WINDOW w AS (PARTITION BY device_pk 
+					ORDER BY measure_timestamp DESC
+					ROWS BETWEEN CURRENT ROW AND 10 FOLLOWING)
+	    ) AS rel
 WHERE rel.rank = 1
 
 -- Correct Output
