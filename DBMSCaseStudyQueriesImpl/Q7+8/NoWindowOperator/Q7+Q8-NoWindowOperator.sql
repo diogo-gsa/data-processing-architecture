@@ -1,12 +1,10 @@
 ﻿SELECT 	all_measures.device_pk, 
-	last_measure.ts,
-	avg(all_measures.measure) AS  measure_avg_10min,
-	all_measures.measure_unit::text,
-	all_measures.measure_description::text,
-	all_measures.device_location,
-	all_measures.location_area_m2,
-	avg(all_measures.measure)/all_measures.location_area_m2 AS normalized_measure_avg_10min
-
+	last_measure.ts 					AS measure_timestamp,
+	avg(all_measures.measure)/all_measures.location_area_m2 AS normalized_measure_avg_10min,
+	'WATT.HOUR/m^2'						AS measure_unit, 
+	'NormalizedEnergyConsumptionPh123'			AS measure_description,
+	all_measures.device_location
+	
 FROM 	"DBMS_EMS_Schema"."DenormalizedAggPhases"	AS all_measures,
 	(SELECT device_pk, 
 		MAX(measure_timestamp) 	AS ts
@@ -22,4 +20,5 @@ GROUP BY all_measures.device_pk,
 	 all_measures.measure_description::text,
 	 all_measures.device_location,
 	 all_measures.location_area_m2
+	 
 	

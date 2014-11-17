@@ -1,5 +1,10 @@
-﻿SELECT 	device_pk, ts, measure_avg_10min, measure_unit, measure_description, device_location, location_area_m2,
-	measure_avg_10min/location_area_m2 AS normalized_measure_avg_10min
+﻿SELECT 	device_pk, 
+	ts 					AS measure_timestamp, 
+	measure_avg_10min/location_area_m2 	AS normalized_measure_avg_10min,
+	'WATT.HOUR/m^2'				AS measure_unit, 
+	'NormalizedEnergyConsumptionPh123'	AS measure_description, 
+	device_location
+
 FROM(	SELECT 	all_measures.device_pk, 
 		last_measure.ts,
 		avg(all_measures.measure)		OVER w AS  measure_avg_10min,

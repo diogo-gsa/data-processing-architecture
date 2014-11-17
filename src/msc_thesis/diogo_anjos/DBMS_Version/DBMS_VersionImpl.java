@@ -100,8 +100,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		return report;
 	}
 	
-	public QueryEvaluationReport executeIntegrationQuery_Q8_7_10minAVG_WithWindowOp(){
-		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q8_7_10minAVG_WithWindowOperator();
+	public QueryEvaluationReport executeIntegrationQuery_Q8_7_10minAVG_WindowOp(){
+		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q8_7_10minAVG_WindowOperator();
 		return report;
 	}
 /* EOF Data Integration and Evaluation Queries ==============================================================*/
@@ -116,7 +116,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		this.insertInto_DatapointReadingTable(tuple);
 
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_Q8_7_10minAVG_WithWindowOp();
+		QueryEvaluationReport report = this.executeIntegrationQuery_Q8_7_10minAVG_NoWindowOp();
 		System.out.println(report);	
 	}
 /* EOF Push Datastream and Queries execution ==============================================================*/
