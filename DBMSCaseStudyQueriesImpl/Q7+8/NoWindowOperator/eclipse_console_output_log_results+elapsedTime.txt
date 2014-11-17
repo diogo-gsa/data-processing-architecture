@@ -1,4 +1,4 @@
---Dump da consola do Eclipse
+--Dump da consola do Eclipse: Q7+8 NO_WIndows
 ExecTime: 7.217731 ms 
 |device_pk|ts|measure_avg_10min|device_location|location_area_m2|normalized_measure_avg_10min
 |6|2014-03-17 08:10:02|152.73529999999997|DEPARTMENT_14|225|0.6788235555555554
