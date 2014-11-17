@@ -14,8 +14,8 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 public class AppMainController {
 
 	public static void main(String args[]) throws Exception{
-		execute_DSMS_experiment();
-//		execute_DBMS_experiment();
+//		execute_DSMS_experiment();
+		execute_DBMS_experiment();	
 	}	
 	
 	
@@ -37,20 +37,46 @@ public class AppMainController {
 
 	public static void execute_DBMS_experiment() throws Exception{
 		// Prepare Database  ====================================================
-		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl(); 
+		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl();
 		dbms_versionImpl.truncateAll_DatapointReadingTable();
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 10:00:00", "2014-03-17 12:00:05", EnergyMeter.LIBRARY); 	// 2h
-		// dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 10:00:00", "2014-03-19 10:00:06", EnergyMeter.LIBRARY); 	// 48h
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 08:00:00", "2014-03-17 08:10:00", EnergyMeter.LIBRARY); 		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 08:00:00", "2014-03-17 08:10:00", EnergyMeter.LECTUREHALL_A4); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 08:00:00", "2014-03-17 08:10:00", EnergyMeter.LECTUREHALL_A5); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 08:00:00", "2014-03-17 08:10:00", EnergyMeter.CLASSROOM_1_17); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 08:00:00", "2014-03-17 08:10:00", EnergyMeter.CLASSROOM_1_19);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 08:00:00", "2014-03-17 08:10:00", EnergyMeter.DEPARTMENT_14);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 08:00:00", "2014-03-17 08:10:00", EnergyMeter.DEPARTMENT_16);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 08:00:00", "2014-03-17 08:10:00", EnergyMeter.LAB_1_58_MIT);
 				
 		//  Prepare Simulator  ====================================================
-		Simulator simulator = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  12:10:05");				//2h
-		//Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");				//48h		
-		simulator.setSpeedTimeFactor(1);
-		System.out.println(simulator); 
+		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17 08:10:00", "2014-03-17 08:20:30");				
+		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17 08:10:00", "2014-03-17 08:20:30");
+		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-03-17 08:10:00", "2014-03-17 08:20:30");
+		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-03-17 08:10:00", "2014-03-17 08:20:30");
+		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-03-17 08:10:00", "2014-03-17 08:20:30");
+		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-03-17 08:10:00", "2014-03-17 08:20:30");
+		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-03-17 08:10:00", "2014-03-17 08:20:30");
+		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-03-17 08:10:00", "2014-03-17 08:20:30");
+		
+		simLIB.setSpeedTimeFactor(100); 	System.out.println(simLIB);
+		simA4.setSpeedTimeFactor(100); 		System.out.println(simA4);
+		simA5.setSpeedTimeFactor(100); 		System.out.println(simA5);
+		sim1_17.setSpeedTimeFactor(100);	System.out.println(sim1_17);
+		sim1_19.setSpeedTimeFactor(100); 	System.out.println(sim1_19);
+		simDEPT_14.setSpeedTimeFactor(100); System.out.println(simDEPT_14);
+		simDEPT_16.setSpeedTimeFactor(100); System.out.println(simDEPT_16);
+		simMIT_LAB.setSpeedTimeFactor(100); System.out.println(simMIT_LAB);
+		
 		
 		// Init Simulation  ====================================================
-		simulator.registerNewClient(dbms_versionImpl);
-		simulator.start();
+		simLIB.registerNewClient(dbms_versionImpl); 	simLIB.start();
+		simA4.registerNewClient(dbms_versionImpl); 		simA4.start();
+		simA5.registerNewClient(dbms_versionImpl); 		simA5.start();
+		sim1_17.registerNewClient(dbms_versionImpl); 	sim1_17.start();
+		sim1_19.registerNewClient(dbms_versionImpl); 	sim1_19.start();
+		simDEPT_14.registerNewClient(dbms_versionImpl); simDEPT_14.start();
+		simDEPT_16.registerNewClient(dbms_versionImpl); simDEPT_16.start();
+		simMIT_LAB.registerNewClient(dbms_versionImpl); simMIT_LAB.start();
 	}
 
 }
