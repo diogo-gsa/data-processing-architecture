@@ -104,6 +104,11 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q8_7_10minAVG_WindowOperator();
 		return report;
 	}
+	
+	public QueryEvaluationReport executeIntegrationQuery_Q9_Percentage(){
+		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q9_Percentage();
+		return report;
+	}
 /* EOF Data Integration and Evaluation Queries ==============================================================*/
 	
 
@@ -116,7 +121,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		this.insertInto_DatapointReadingTable(tuple);
 
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_Q8_7_10minAVG_NoWindowOp();
+		QueryEvaluationReport report = this.executeIntegrationQuery_Q9_Percentage();
 		System.out.println(report);	
 	}
 /* EOF Push Datastream and Queries execution ==============================================================*/
