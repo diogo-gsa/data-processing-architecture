@@ -204,6 +204,12 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);
 	}
 	
+	public QueryEvaluationReport executeIntegrationQuery_Q10_SortedMeasures(){
+		String queryStatement =	"SELECT * " 										+					
+								"FROM 	\"DBMS_EMS_Schema\".\"Q10_SortedMeasures\" ";	
+		return executeEvaluationQuery(queryStatement);	
+	}
+
 	
 	
 //	==========================================================================================
