@@ -70,6 +70,7 @@ public class EsperEngine {
         countInitializedQueries++; //get queryID        
         QueryMetadata qmd = new QueryMetadata(countInitializedQueries, eplQueryExpression, queryEngineObject);
         
+        // I may don't want to listen the output of integration/intermediate queries 
         if(addListener){
         	QueryListener listener = new QueryListener(qmd, this);
         	queryEngineObject.addListener(listener);

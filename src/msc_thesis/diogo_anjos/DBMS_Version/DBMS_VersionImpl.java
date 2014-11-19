@@ -177,8 +177,5 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		simulationHasFinished = true;
 		notifyAll(); //wake up waiting threads so they can check the flag
 	}
-/* EOF Producer and Consumer Buffer Code ====================================================*/
-
-	
-	
+/* EOF Producer and Consumer Buffer Code ====================================================*/	
 }

@@ -26,18 +26,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
 		
 	
-	public DSMS_VersionImpl(){
-		Thread bufferConsumerThread = new Thread(this);
-		bufferConsumerThread.start();
-		install_Q0_BaseView(false);
-		install_Q11_IntegrationQuery(true);
-		install_Q4_EvaluationQuery(true);
-	}
-	
-	
-// 	==========================================================================================
-//	Case Study Queries Implementation 
-//	==========================================================================================
+/* ==========================================================================================================
+ * 										Data Integration and Evaluation Queries
+ * ========================================================================================================*/
 	
 	public void installHelloWorldQuery(boolean addListener){
 		String statement = 	"SELECT * " +
@@ -125,32 +116,50 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	public void install_Q7_8_Normalization_IntegrationQuery(boolean addListener){
+		String statement = 	"SELECT device_pk, " 																+
+									"measure_timestamp, " 														+
+									"avg(measure)/location_area_m2			AS normalized_measure_avg_10min, " 	+
+									"\"WATT.HOUR/m^2\"	 					AS measure_unit, "					+
+									"\"NormalizedEnergyConsumptionPh123\"	AS measure_description, "			+
+									"device_location "															+
+							"FROM	DenormalizedAggPhases.win:time(10 min) " +
+							"GROUP BY device_pk";
 	
-//	==========================================================================================
-//	End Of Case Study Queries Implementation Zone 
-//	==========================================================================================
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	
+/* EOF Data Integration and Evaluation Queries ==============================================================*/	
+	
+
 	 
-	
-	
-	
-	
-	/*
-	 * SimulatorClient's Interface Implementation
-	 * And Producer and consumer Functions
-	 */
+/*=========================================================================================================== 
+ * 			Push Datastream into DBMS and Execute Data Integration/Evaluation Queries 
+ *=========================================================================================================*/		
+	public DSMS_VersionImpl(){
+		Thread bufferConsumerThread = new Thread(this);
+		bufferConsumerThread.start();
+		install_Q0_BaseView(false);
+//		install_Q11_IntegrationQuery(true); install_Q4_EvaluationQuery(true);
+		install_Q7_8_Normalization_IntegrationQuery(true);
+	}
 	
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
 		List<Measure> datastreamTuples = inputAdapter(tuple);
 		for(Measure m : datastreamTuples){
 			if(printPushedInput){
 				System.out.println("Pushing into Esper's engine -> "+m+"\n");
-			}
-			
+			}	
 			esperEngine.pushInput(m);
 		}	
 	}
+/* EOF Push Datastream and Queries execution ==============================================================*/
+
 	
-	
+/*=========================================================================================================== 
+ * 			SimulatorClient's Interface Implementation and Producer and Consumer Buffer Code
+ *=========================================================================================================*/		
 	@Override
 	public void receiveDatastream(EnergyMeasureTupleDTO tuple) {
 		produceTuple(tuple);
@@ -213,5 +222,5 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 		return measures;
 	}
-
+/* EOF Producer and Consumer Buffer Code ====================================================*/
 }

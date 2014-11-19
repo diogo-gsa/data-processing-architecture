@@ -14,8 +14,8 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 public class AppMainController {
 
 	public static void main(String args[]) throws Exception{
-//		execute_DSMS_experiment();
-		execute_DBMS_experiment();	
+		execute_DSMS_experiment();
+//		execute_DBMS_experiment();	
 	}	
 	
 	
@@ -24,15 +24,35 @@ public class AppMainController {
 		DSMS_VersionImpl dsms_versionImpl = new DSMS_VersionImpl();
 		
 		//  Prepare Simulator  ====================================================
-		Simulator simulatorBib = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-17  12:01:05", "2014-03-17  13:20:05");		//60min
+		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  12:00:00", "2014-03-17  12:20:30");			//60min
+		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17  12:00:00", "2014-03-17  12:20:30");			//60min
+		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-03-17  12:00:00", "2014-03-17  12:20:30");			//60min
+		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-03-17  12:00:00", "2014-03-17  12:20:30");			//60min
+		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-03-17  12:00:00", "2014-03-17  12:20:30");			//60min
+		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-03-17  12:00:00", "2014-03-17  12:20:30");			//60min
+		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16,	"2014-03-17  12:00:00", "2014-03-17  12:20:30");			//60min
+		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT, 	"2014-03-17  12:00:00", "2014-03-17  12:20:30");			//60min
+		
 		
 		// Simulator simulatorLibrary = new SimulatorImpl(EnergyMeter.LIBRARY, "2014-03-19 10:01:00", "2014-03-19 10:10:05");		//48h
-		simulatorBib.setSpeedTimeFactor(100);
-		System.out.println(simulatorBib);
-			
+		simLIB.setSpeedTimeFactor(1);
+		simA4.setSpeedTimeFactor(1);
+		simA5.setSpeedTimeFactor(1);
+		sim1_17.setSpeedTimeFactor(1);
+		sim1_19.setSpeedTimeFactor(1);
+		simDEPT_14.setSpeedTimeFactor(1);
+		simDEPT_16.setSpeedTimeFactor(1);
+		simMIT_LAB.setSpeedTimeFactor(1);
+
 		// Init Simulation  ====================================================
-		simulatorBib.registerNewClient(dsms_versionImpl);
-		simulatorBib.start();
+		simLIB.registerNewClient(dsms_versionImpl); 	simLIB.start();
+		simA4.registerNewClient(dsms_versionImpl); 		simA4.start();
+		simA5.registerNewClient(dsms_versionImpl); 		simA5.start();
+		sim1_17.registerNewClient(dsms_versionImpl); 	sim1_17.start();
+		sim1_19.registerNewClient(dsms_versionImpl); 	sim1_19.start();
+		simDEPT_14.registerNewClient(dsms_versionImpl); simDEPT_14.start();
+		simDEPT_16.registerNewClient(dsms_versionImpl); simDEPT_16.start();
+		simMIT_LAB.registerNewClient(dsms_versionImpl); simMIT_LAB.start();
 	}
 
 	public static void execute_DBMS_experiment() throws Exception{
