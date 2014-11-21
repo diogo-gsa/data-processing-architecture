@@ -117,19 +117,31 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q7_8_Normalization_IntegrationQuery(boolean addListener){
-		String statement = 	"SELECT device_pk, " 																+
+		String statement = 	"INSERT INTO LocationNormalizedMeasures "	 +
+							"SELECT device_pk, " 																+
 									"measure_timestamp, " 														+
 									"avg(measure)/location_area_m2			AS normalized_measure_avg_10min, " 	+
 									"\"WATT.HOUR/m^2\"	 					AS measure_unit, "					+
 									"\"NormalizedEnergyConsumptionPh123\"	AS measure_description, "			+
 									"device_location "															+
-							"FROM	DenormalizedAggPhases.win:time(10 min) " +
+							"FROM  DenormalizedAggPhases.win:time(10 min) " 									+
 							"GROUP BY device_pk";
 	
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	public void install_Q9_Percentage_EvaluationQuery(boolean addListener){		
+		String statement = 	"SELECT device_pk, " 																		+
+									"measure_timestamp, "																+
+									"(normalized_measure_avg_10min/SUM(normalized_measure_avg_10min))*100 AS measure, "	+
+									"\"percentage\" AS measure_unit, "													+
+									"\"%ofTotalNormalizedEnergyConsumption\" AS measure_description, "					+
+									"device_location "																	+	
+							"FROM LocationNormalizedMeasures.std:unique(device_pk).win:time(2 min) "					+
+							"OUTPUT SNAPSHOT EVERY 1 EVENTS ";
 	
+		esperEngine.installQuery(statement, addListener);
+	}
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	
 
@@ -142,7 +154,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
 //		install_Q11_IntegrationQuery(true); install_Q4_EvaluationQuery(true);
-		install_Q7_8_Normalization_IntegrationQuery(true);
+		install_Q7_8_Normalization_IntegrationQuery(false);
+		install_Q9_Percentage_EvaluationQuery(true);
 	}
 	
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
