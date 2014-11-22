@@ -130,7 +130,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_Q9_Percentage_EvaluationQuery(boolean addListener){		
+	public void install_Q9_Percentage(boolean addListener){		
 		String statement = 	"SELECT device_pk, " 																		+
 									"measure_timestamp, "																+
 									"(normalized_measure_avg_10min/SUM(normalized_measure_avg_10min))*100 AS measure, "	+
@@ -142,10 +142,24 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 		esperEngine.installQuery(statement, addListener);
 	}
+	
+	public void install_Q10_OrderBy(boolean addListener){		
+		String statement = 	"SELECT device_pk, " 																		+
+									"measure_timestamp, "																+
+									"normalized_measure_avg_10min		AS normalized_measure, "						+
+									"\"WATT.HOUR/m^2\" 					AS measure_unit, "								+
+									"\"NormalizedEnergyConsumption\" 	AS measure_description, "						+
+									"device_location "																	+	
+							"FROM LocationNormalizedMeasures.std:unique(device_pk).win:time(2 min) "					+
+							"OUTPUT SNAPSHOT EVERY 1 EVENTS "															+
+							"ORDER BY normalized_measure_avg_10min DESC"												;
+	
+		esperEngine.installQuery(statement, addListener);
+	}
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	
 
-	 
+	 	
 /*=========================================================================================================== 
  * 			Push Datastream into DBMS and Execute Data Integration/Evaluation Queries 
  *=========================================================================================================*/		
@@ -155,7 +169,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q0_BaseView(false);
 //		install_Q11_IntegrationQuery(true); install_Q4_EvaluationQuery(true);
 		install_Q7_8_Normalization_IntegrationQuery(false);
-		install_Q9_Percentage_EvaluationQuery(true);
+//		install_Q9_Percentage(true);
+		install_Q10_OrderBy(true);
 	}
 	
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
