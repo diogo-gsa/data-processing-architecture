@@ -126,7 +126,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		this.insertInto_DatapointReadingTable(tuple);
 
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_Q10_SortedMeasures();
+		QueryEvaluationReport report = this.executeEvaluationQuery_Q11_TimeWindows_10min();
 		System.out.println(report);	
 	}
 /* EOF Push Datastream and Queries execution ==============================================================*/

@@ -167,10 +167,10 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-//		install_Q11_IntegrationQuery(true); install_Q4_EvaluationQuery(true);
-		install_Q7_8_Normalization_IntegrationQuery(false);
+		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
+//		install_Q7_8_Normalization_IntegrationQuery(false);
 //		install_Q9_Percentage(true);
-		install_Q10_OrderBy(true);
+//		install_Q10_OrderBy(true);
 	}
 	
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
