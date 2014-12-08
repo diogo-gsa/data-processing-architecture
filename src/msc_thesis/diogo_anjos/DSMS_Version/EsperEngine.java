@@ -45,7 +45,12 @@ public class EsperEngine {
         dbConfig.setDriverManagerConnection("org.postgresql.Driver", "jdbc:postgresql://localhost:5432/lumina_db", "postgres", "root");
         
         Configuration engineConfig = new Configuration();
+        
+        // set-up database configuration
         engineConfig.addDatabaseReference("database", dbConfig);
+       
+        // import auxiliar functions (to deal with TS manipulation at Q12)
+        engineConfig.addImport("com.espertech.esper.client.util.DateTime");
   
         esperEngine = EPServiceProviderManager.getDefaultProvider(engineConfig); 
   

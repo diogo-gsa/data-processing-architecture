@@ -33,7 +33,7 @@ public class AppMainController {
 //		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16,	"2014-03-17  07:10:00", "2014-03-17  07:30:00");			
 //		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT, 	"2014-03-17  07:10:00", "2014-03-17  07:30:00");			
 		
-		simLIB.setSpeedTimeFactor(1);
+		simLIB.setSpeedTimeFactor(10);
 //		simA4.setSpeedTimeFactor(1);
 //		simA5.setSpeedTimeFactor(1);
 //		sim1_17.setSpeedTimeFactor(1);
@@ -58,7 +58,7 @@ public class AppMainController {
 		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl();
 		dbms_versionImpl.truncateAll_DatapointReadingTable();
 		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 05:00:00", "2014-03-17 06:59:30", EnergyMeter.LIBRARY); 		
-//		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 07:00:00", "2014-03-17 07:10:06", EnergyMeter.LECTUREHALL_A4); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 07:00:00", "2014-03-17 07:10:06", EnergyMeter.LECTUREHALL_A4); 	
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 07:00:00", "2014-03-17 07:10:06", EnergyMeter.LECTUREHALL_A5); 	
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 07:00:00", "2014-03-17 07:10:06", EnergyMeter.CLASSROOM_1_17); 	
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 07:00:00", "2014-03-17 07:10:06", EnergyMeter.CLASSROOM_1_19);
@@ -67,7 +67,7 @@ public class AppMainController {
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 07:00:00", "2014-03-17 07:10:06", EnergyMeter.LAB_1_58_MIT);
 				
 		//  Prepare Simulator  ====================================================
-		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17 07:00:00", "2014-03-17 07:30:30");				
+//		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17 07:00:00", "2014-03-17 07:30:30");				
 //		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17 07:11:00", "2014-03-17 07:30:30");
 //		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-03-17 07:11:00", "2014-03-17 07:30:30");
 //		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-03-17 07:11:00", "2014-03-17 07:30:30");
@@ -76,7 +76,7 @@ public class AppMainController {
 //		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-03-17 07:11:00", "2014-03-17 07:30:30");
 //		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-03-17 07:11:00", "2014-03-17 07:30:30");
 //		
-		simLIB.setSpeedTimeFactor(100); 	System.out.println(simLIB);
+//		simLIB.setSpeedTimeFactor(100); 	System.out.println(simLIB);
 //		simA4.setSpeedTimeFactor(100); 		System.out.println(simA4);
 //		simA5.setSpeedTimeFactor(100); 		System.out.println(simA5);
 //		sim1_17.setSpeedTimeFactor(100);	System.out.println(sim1_17);
@@ -87,7 +87,7 @@ public class AppMainController {
 		
 		
 		// Init Simulation  ====================================================
-		simLIB.registerNewClient(dbms_versionImpl); 	simLIB.start();
+//		simLIB.registerNewClient(dbms_versionImpl); 	simLIB.start();
 //		simA4.registerNewClient(dbms_versionImpl); 		simA4.start();
 //		simA5.registerNewClient(dbms_versionImpl); 		simA5.start();
 //		sim1_17.registerNewClient(dbms_versionImpl); 	sim1_17.start();

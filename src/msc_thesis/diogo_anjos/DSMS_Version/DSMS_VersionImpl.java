@@ -156,6 +156,16 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 		esperEngine.installQuery(statement, addListener);
 	}
+	
+	public void install_Q12_DeltaBetweenTuples(boolean addListener){		
+		String statement = 	"SELECT device_pk, " +
+				"					(DateTime.toMillisec(last(measure_timestamp, 0)) - DateTime.toMillisec(last(measure_timestamp, 1)))/1000 AS deltaInSeconds "	+
+				 			"FROM DenormalizedAggPhases.std:groupwin(device_pk).win:length(2) "			+
+				 			"GROUP BY device_pk " 													+
+				 			"HAVING count(*) > 1";		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	
 
@@ -167,7 +177,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
+		install_Q12_DeltaBetweenTuples(true);
+//		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
 //		install_Q7_8_Normalization_IntegrationQuery(false);
 //		install_Q9_Percentage(true);
 //		install_Q10_OrderBy(true);
