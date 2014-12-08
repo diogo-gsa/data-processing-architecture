@@ -159,11 +159,15 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q12_DeltaBetweenTuples(boolean addListener){		
 		String statement = 	"SELECT device_pk, " +
-				"					(DateTime.toMillisec(last(measure_timestamp, 0)) - DateTime.toMillisec(last(measure_timestamp, 1)))/1000 AS deltaInSeconds "	+
+									"last(measure_timestamp, 0) AS primeiro, " +
+									"last(measure_timestamp, 1) AS segundo, " +
+									"(DateTime.toMillisec(last(measure_timestamp, 0),\"yyyy-MM-dd HH:mm:ss\") " +
+								  " - DateTime.toMillisec(last(measure_timestamp, 1),\"yyyy-MM-dd HH:mm:ss\")) AS deltaInSeconds "	+
 				 			"FROM DenormalizedAggPhases.std:groupwin(device_pk).win:length(2) "			+
 				 			"GROUP BY device_pk " 													+
 				 			"HAVING count(*) > 1";		
 		esperEngine.installQuery(statement, addListener);
+		
 	}
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
