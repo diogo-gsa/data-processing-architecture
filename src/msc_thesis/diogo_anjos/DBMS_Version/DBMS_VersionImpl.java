@@ -114,6 +114,11 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q10_SortedMeasures();
 		return report;
 	}
+	
+	public QueryEvaluationReport executeIntegrationQuery_Q12_DeltaBetweenTuples(){
+		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q12_DeltaBetweenTuples();
+		return report;
+	}
 /* EOF Data Integration and Evaluation Queries ==============================================================*/
 	
 
@@ -126,7 +131,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		this.insertInto_DatapointReadingTable(tuple);
 
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeEvaluationQuery_Q11_TimeWindows_10min();
+		QueryEvaluationReport report = this.executeIntegrationQuery_Q12_DeltaBetweenTuples();
 		System.out.println(report);	
 	}
 /* EOF Push Datastream and Queries execution ==============================================================*/
