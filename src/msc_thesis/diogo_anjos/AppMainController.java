@@ -24,23 +24,23 @@ public class AppMainController {
 		DSMS_VersionImpl dsms_versionImpl = new DSMS_VersionImpl();
 		
 		//  Prepare Simulator  ====================================================
-		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-05-28  11:10:00", "2014-05-28  11:35:30");			
-		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-05-28  11:10:00", "2014-05-28  11:35:30");			
-		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-05-28  11:10:00", "2014-05-28  11:35:30");			
-		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-05-28  11:10:00", "2014-05-28  11:35:30");			
-		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-05-28  11:10:00", "2014-05-28  11:35:30");			
-		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-05-28  11:10:00", "2014-05-28  11:35:30");			
-		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16,	"2014-05-28  11:10:00", "2014-05-28  11:35:30");			
-		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT, 	"2014-05-28  11:10:00", "2014-05-28  11:35:30");			
+		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-07-04  00:00:00", "2014-08-03  00:00:00");			
+		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-07-04  00:00:00", "2014-08-03  00:00:00");			
+		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-07-04  00:00:00", "2014-08-03  00:00:00");			
+		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-07-04  00:00:00", "2014-08-03  00:00:00");			
+		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-07-04  00:00:00", "2014-08-03  00:00:00");			
+		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-07-04  00:00:00", "2014-08-03  00:00:00");			
+		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16,	"2014-07-04  00:00:00", "2014-08-03  00:00:00");			
+		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT, 	"2014-07-04  00:00:00", "2014-08-03  00:00:00");			
 		
-		simLIB.setSpeedTimeFactor(40);
-		simA4.setSpeedTimeFactor(40);
-		simA5.setSpeedTimeFactor(40);
-		sim1_17.setSpeedTimeFactor(40);
-		sim1_19.setSpeedTimeFactor(40);
-		simDEPT_14.setSpeedTimeFactor(40);
-		simDEPT_16.setSpeedTimeFactor(40);
-		simMIT_LAB.setSpeedTimeFactor(40);
+		simLIB.setSpeedTimeFactor(8000);
+		simA4.setSpeedTimeFactor(8000);
+		simA5.setSpeedTimeFactor(8000);
+		sim1_17.setSpeedTimeFactor(8000);
+		sim1_19.setSpeedTimeFactor(8000);
+		simDEPT_14.setSpeedTimeFactor(8000);
+		simDEPT_16.setSpeedTimeFactor(8000);
+		simMIT_LAB.setSpeedTimeFactor(8000);
 
 		// Init Simulation  ====================================================
 		simLIB.registerNewClient(dsms_versionImpl); 	simLIB.start();

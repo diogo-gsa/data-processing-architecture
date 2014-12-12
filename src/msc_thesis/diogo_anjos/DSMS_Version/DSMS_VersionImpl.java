@@ -3,8 +3,11 @@ package msc_thesis.diogo_anjos.DSMS_Version;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import msc_thesis.diogo_anjos.DBMS_Version.exceptions.ThereIsNoDataPoint_PKwithThisLocaionException;
+import msc_thesis.diogo_anjos.simulator.EnergyMeter;
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
 import msc_thesis.diogo_anjos.simulator.SimulatorClient;
 import msc_thesis.diogo_anjos.util.DataPoint_PK;
@@ -19,13 +22,41 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	private EsperEngine esperEngine = new EsperEngine();
 	private volatile boolean simulationHasFinished = false;
 
-	//TODO to turn off some input event push
-	private boolean printPushedInput = false;
+	//TODO turn on/off some dump flags (verbose mode)
+	private boolean DUMP_PUSHED_INPUT = false;
+	private boolean DUMP_INPUTBUFFER_LENGTH = true;
 	
 	//producerConsumerQueueOfTuples
 	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
-		
 	
+	Map<EnergyMeter, Boolean> simulationStartStopFlags = new TreeMap<EnergyMeter, Boolean>(); 
+	
+/*=========================================================================================================== 
+ * 			Push Datastream into DBMS and Execute Data Integration/Evaluation Queries 
+ *=========================================================================================================*/		
+	public DSMS_VersionImpl(){
+		Thread bufferConsumerThread = new Thread(this);
+		bufferConsumerThread.start();
+		install_Q0_BaseView(false);
+		install_Q12_DeltaBetweenTuples(true);
+//		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
+//		install_Q7_8_Normalization_IntegrationQuery(false);
+//		install_Q9_Percentage(true);
+//		install_Q10_OrderBy(true);
+	}
+		
+	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
+		List<Measure> datastreamTuples = inputAdapter(tuple);
+		for(Measure m : datastreamTuples){
+			if(DUMP_PUSHED_INPUT){
+				System.out.println("Pushing into Esper's engine -> "+m+"\n");
+			}	
+			esperEngine.pushInput(m);
+		}	
+	}
+/* EOF Push Datastream and Queries execution ==============================================================*/
+	
+
 /* ==========================================================================================================
  * 										Data Integration and Evaluation Queries
  * ========================================================================================================*/
@@ -172,33 +203,6 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	
-
-	 	
-/*=========================================================================================================== 
- * 			Push Datastream into DBMS and Execute Data Integration/Evaluation Queries 
- *=========================================================================================================*/		
-	public DSMS_VersionImpl(){
-		Thread bufferConsumerThread = new Thread(this);
-		bufferConsumerThread.start();
-		install_Q0_BaseView(false);
-		install_Q12_DeltaBetweenTuples(true);
-//		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
-//		install_Q7_8_Normalization_IntegrationQuery(false);
-//		install_Q9_Percentage(true);
-//		install_Q10_OrderBy(true);
-	}
-	
-	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
-		List<Measure> datastreamTuples = inputAdapter(tuple);
-		for(Measure m : datastreamTuples){
-			if(printPushedInput){
-				System.out.println("Pushing into Esper's engine -> "+m+"\n");
-			}	
-			esperEngine.pushInput(m);
-		}	
-	}
-/* EOF Push Datastream and Queries execution ==============================================================*/
-
 	
 /*=========================================================================================================== 
  * 			SimulatorClient's Interface Implementation and Producer and Consumer Buffer Code
@@ -230,15 +234,34 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 						e.printStackTrace();
 					}
 				}
-			tuple = bufferOfTuples.pollFirst();
+				tuple = bufferOfTuples.pollFirst();
+				if(DUMP_INPUTBUFFER_LENGTH){
+					System.out.print("Input_Buffer(remaining events): "+bufferOfTuples.size()+" | ");
+				}
 			}
 			processConsumedTuple(tuple);
 		}
 	}
 	
+	@Override
+	public synchronized void simulationHasStartedNotification(EnergyMeter em) {
+		simulationStartStopFlags.put(em, true); //true  = simulation started
+	}
 	
 	@Override
-	public synchronized void simulationHasFinishedNotification() {
+	public synchronized void simulationHasFinishedNotification(EnergyMeter em) {
+		
+		// Simulator "em" has finished its simulation work (false = simulation finished)
+		simulationStartStopFlags.put(em, false); //
+		
+		// Check if all simulators/sensors have already finished their work
+		for(boolean startStopFlag : simulationStartStopFlags.values()){
+			if(startStopFlag == true){
+				return; //nop, there is at least one simulator/simulation still working 
+			}
+		}
+		
+		// all started simulator have finished their work, lets stop producer/consumer buffer thread
 		simulationHasFinished = true;
 		notifyAll(); //wake up waiting threads so they can check the flag
 	}
@@ -266,4 +289,5 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		return measures;
 	}
 /* EOF Producer and Consumer Buffer Code ====================================================*/
+
 }

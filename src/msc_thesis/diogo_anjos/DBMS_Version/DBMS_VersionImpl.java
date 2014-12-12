@@ -178,9 +178,16 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	}
 
 	@Override
-	public synchronized void simulationHasFinishedNotification() {
+	public synchronized void simulationHasFinishedNotification(EnergyMeter em) {
+		// TODO TENS DE FAZER FIX AQUI
 		simulationHasFinished = true;
 		notifyAll(); //wake up waiting threads so they can check the flag
 	}
-/* EOF Producer and Consumer Buffer Code ====================================================*/	
+/* EOF Producer and Consumer Buffer Code ====================================================*/
+
+	@Override
+	public void simulationHasStartedNotification(EnergyMeter em) {
+		// TODO TENS DE FAZER FIX AQUI TAMBEM		
+	}
+
 }

@@ -12,6 +12,7 @@ public class QueryListener implements UpdateListener {
     private QueryMetadata qMD;    
     private EsperEngine esperEngine;
     private boolean printElapsedTime = true;
+    private boolean printQueryResult = false;
     private double queryExecutionTime = 0;
     
     public QueryListener(QueryMetadata metadata, EsperEngine engine) {
@@ -44,9 +45,11 @@ public class QueryListener implements UpdateListener {
     		res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events, ElapsedTime = not measured";
     	}
     	
-    	for (EventBean eb : events) {
-            res += "\n| " + eb.getUnderlying();
-        }
+    	if(printQueryResult){
+    		for (EventBean eb : events) {
+    			res += "\n| " + eb.getUnderlying();
+    		}
+    	}
         System.out.println(res);
     }       
 }
