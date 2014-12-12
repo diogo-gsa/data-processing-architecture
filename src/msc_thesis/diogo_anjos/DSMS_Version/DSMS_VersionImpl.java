@@ -19,12 +19,15 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	//	EsperEngine			--> DSMS_versionImpl
 	//	DBMS_CRUD_Query_API --> DBMS_VersionImpl		
 
+	// DUMP Configuration Flags ======================================
+	private boolean DUMP_PUSHED_INPUT 		= false;
+	private boolean DUMP_INPUTBUFFER_LENGTH = true;
+	//=================================================================
+
+	
 	private EsperEngine esperEngine = new EsperEngine();
 	private volatile boolean simulationHasFinished = false;
 
-	//TODO turn on/off some dump flags (verbose mode)
-	private boolean DUMP_PUSHED_INPUT = false;
-	private boolean DUMP_INPUTBUFFER_LENGTH = true;
 	
 	//producerConsumerQueueOfTuples
 	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
@@ -252,7 +255,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public synchronized void simulationHasFinishedNotification(EnergyMeter em) {
 		
 		// Simulator "em" has finished its simulation work (false = simulation finished)
-		simulationStartStopFlags.put(em, false); //
+		simulationStartStopFlags.put(em, false);
 		
 		// Check if all simulators/sensors have already finished their work
 		for(boolean startStopFlag : simulationStartStopFlags.values()){

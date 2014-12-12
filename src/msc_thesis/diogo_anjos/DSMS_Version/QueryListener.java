@@ -9,10 +9,13 @@ import com.espertech.esper.client.UpdateListener;
 
 public class QueryListener implements UpdateListener {
 
+	// DUMP Configuration Flags ======================================
+		private boolean DUMP_ELAPSED_TIME = true;
+		private boolean DUMP_QUERY_RESULT = false;
+	//=================================================================
+	
     private QueryMetadata qMD;    
     private EsperEngine esperEngine;
-    private boolean printElapsedTime = true;
-    private boolean printQueryResult = false;
     private double queryExecutionTime = 0;
     
     public QueryListener(QueryMetadata metadata, EsperEngine engine) {
@@ -38,14 +41,14 @@ public class QueryListener implements UpdateListener {
     private void printOutput(EventBean[] events, String typeOfEvent){
     	String res;
     	
-    	if(printElapsedTime){
+    	if(DUMP_ELAPSED_TIME){
     		res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events, ElapsedTime = "+queryExecutionTime+" ms";
     	}
     	else{
     		res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events, ElapsedTime = not measured";
     	}
     	
-    	if(printQueryResult){
+    	if(DUMP_QUERY_RESULT){
     		for (EventBean eb : events) {
     			res += "\n| " + eb.getUnderlying();
     		}

@@ -1,6 +1,8 @@
 package msc_thesis.diogo_anjos.DBMS_Version;
 
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
@@ -8,19 +10,42 @@ import msc_thesis.diogo_anjos.simulator.SimulatorClient;
 
 public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 
-
+	// DUMP Configuration Flags ======================================
+		private boolean DUMP_PUSHED_INPUT 		= false;
+		private boolean DUMP_INPUTBUFFER_LENGTH = true;
+	//=================================================================
+		
 	private DB_CRUD_Query_API dbAPI = new DB_CRUD_Query_API();
 	private volatile boolean simulationHasFinished = false;
-	
-	
+			
 	//producerConsumerQueueOfTuples
 	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
 	
+	Map<EnergyMeter, Boolean> simulationStartStopFlags = new TreeMap<EnergyMeter, Boolean>();
 	
+		
 	public DBMS_VersionImpl(){
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 	}
+	
+/*=========================================================================================================== 
+ * 			Push Datastream into DBMS and Execute Data Integration/Evaluation Queries 
+ *=========================================================================================================*/	
+	
+	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
+		
+		if(DUMP_PUSHED_INPUT){
+			System.out.println("Received: "+tuple); //DEBUG
+		}
+		this.insertInto_DatapointReadingTable(tuple);
+		// Execute QUERY
+		QueryEvaluationReport report = this.executeIntegrationQuery_Q12_DeltaBetweenTuples();
+		System.out.println(report.dump(true, true, true));	
+	}
+	
+/* EOF Push Datastream and Queries execution ==============================================================*/
+	
 	
 /* ==========================================================================================================
  * 											Database CRUD operation
@@ -121,21 +146,6 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	}
 /* EOF Data Integration and Evaluation Queries ==============================================================*/
 	
-
-	
-/*=========================================================================================================== 
- * 			Push Datastream into DBMS and Execute Data Integration/Evaluation Queries 
- *=========================================================================================================*/	
-	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
-		System.out.println("Received: "+tuple); //DEBUG
-		this.insertInto_DatapointReadingTable(tuple);
-
-		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_Q12_DeltaBetweenTuples();
-		System.out.println(report);	
-	}
-/* EOF Push Datastream and Queries execution ==============================================================*/
-	
 	
 	
 /*=========================================================================================================== 
@@ -166,7 +176,10 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 						e.printStackTrace();
 					}
 				}
-			tuple = bufferOfTuples.pollFirst();
+				tuple = bufferOfTuples.pollFirst();
+				if(DUMP_INPUTBUFFER_LENGTH){
+					System.out.print("Input_Buffer(remaining events): "+bufferOfTuples.size()+" | ");
+				}
 			}
 			processConsumedTuple(tuple);
 		}
@@ -177,17 +190,30 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		consumeTuple();
 	}
 
+	
+	@Override
+	public void simulationHasStartedNotification(EnergyMeter em) {
+		simulationStartStopFlags.put(em, true); //true  = simulation started
+		
+	}
+	
 	@Override
 	public synchronized void simulationHasFinishedNotification(EnergyMeter em) {
-		// TODO TENS DE FAZER FIX AQUI
+		
+		// Simulator "em" has finished its simulation work (false = simulation finished)
+		simulationStartStopFlags.put(em, false);
+				
+		// Check if all simulators/sensors have already finished their work
+		for(boolean startStopFlag : simulationStartStopFlags.values()){
+			if(startStopFlag == true){
+				return; //nop, there is at least one simulator/simulation still working 
+			}
+		}
+				
+		// all started simulator have finished their work, lets stop producer/consumer buffer thread
 		simulationHasFinished = true;
 		notifyAll(); //wake up waiting threads so they can check the flag
 	}
+	
 /* EOF Producer and Consumer Buffer Code ====================================================*/
-
-	@Override
-	public void simulationHasStartedNotification(EnergyMeter em) {
-		// TODO TENS DE FAZER FIX AQUI TAMBEM		
-	}
-
 }

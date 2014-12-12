@@ -62,12 +62,26 @@ public class QueryEvaluationReport {
 		return (emptyRS == true) ? null : res;
 	}
 	
+	public String dump(boolean dumpStatement, boolean dumpResult, boolean dumpElapsedTime){
+		String res = "===== Query Evaluation Report =====\n";
+		if(dumpStatement){
+			res += "Statement: " 	+	getExecutedQueryStatement() + "\n";
+		}
+		if(dumpElapsedTime){
+			res += "ElapsedTime: " + 	getQueryExecutionTime()     + " ms \n";
+		}
+		if(dumpResult){
+			res += getResultSetDump() + "\n";
+		}
+		return res += "=========== End of Report =========\n"; 
+	}
+	
 	@Override
-	public String toString(){
-		return	"===== Query Evaluation Report =====\n" +
-				"Statement: " +	getExecutedQueryStatement() + "\n" +
-				"ExecTime: " + getQueryExecutionTime()      + " ms \n" +
-				getResultSetDump()        				    + "\n" +
+	public String toString(){ 
+		return	"===== Query Evaluation [DEPRECATED] Report =====\n" +
+				"Statement: " 	+	getExecutedQueryStatement() + "\n" +
+				"ElapsedTime: " + 	getQueryExecutionTime()     + " ms \n" +
+									getResultSetDump()        	+ "\n" +
 				"=========== End of Report =========\n";
 	}
 	
