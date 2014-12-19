@@ -44,11 +44,11 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_Q12_DeltaBetweenTuples();
+		QueryEvaluationReport report = this.executeEvaluationQuery_Q5_DeltaBetweenTuplesOverThreashold();
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		
-		//System.out.println(report.dump(false, false, true));	//dumpStatement, dumpResult, dumpElapsedTime
-		System.out.println(report.dumpElapsedTime());	//dumpStatement, dumpResult, dumpElapsedTime
+		System.out.println(report.dump(true, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
+//		System.out.println(report.dumpElapsedTime());	//dumpStatement, dumpResult, dumpElapsedTime
 	}
 	
 /* EOF Push Datastream and Queries execution ==============================================================*/
@@ -151,6 +151,12 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q12_DeltaBetweenTuples();
 		return report;
 	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q5_DeltaBetweenTuplesOverThreashold(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q5_DeltaBetweenTuplesOverThreashold();
+		return report;
+	}
+	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/
 	
 	

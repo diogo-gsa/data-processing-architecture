@@ -216,6 +216,14 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport executeEvaluationQuery_Q5_DeltaBetweenTuplesOverThreashold(){
+		String queryStatement =	"SELECT 	* "											+
+								"FROM \"DBMS_EMS_Schema\".\"Q12_DeltaBetweenTuples\" "	+
+								"WHERE  delta < '00:00:50' "							+ 
+								   "OR  delta > '00:01:10' ";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
 	
 	
 //	==========================================================================================
