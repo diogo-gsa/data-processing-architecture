@@ -33,6 +33,10 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
  * 			Push Datastream into DBMS and Execute Data Integration/Evaluation Queries 
  *=========================================================================================================*/	
 	
+//	TODO: Attention: remover *synchronized* deste metodo para que a "velocidade" com que o simulator
+//			preenche o byffer seja completamente independente da velocidade do DBMS para processar esses tuplos.
+//			C/ synch: SpeedTimeFactors Altos => Buffer Não enche demasiado  => tempo de simulação é muito maior do que o esperado.
+//			S/ synch: SpeedTimeFactors Altos => Buffer Enche demasiado  => tempo de simulação é igual ao esperado.
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
 		
 		if(DUMP_PUSHED_INPUT){
@@ -41,7 +45,10 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
 		QueryEvaluationReport report = this.executeIntegrationQuery_Q12_DeltaBetweenTuples();
-		System.out.println(report.dump(true, true, true));	
+		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
+		
+		//System.out.println(report.dump(false, false, true));	//dumpStatement, dumpResult, dumpElapsedTime
+		System.out.println(report.dumpElapsedTime());	//dumpStatement, dumpResult, dumpElapsedTime
 	}
 	
 /* EOF Push Datastream and Queries execution ==============================================================*/

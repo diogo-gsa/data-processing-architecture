@@ -47,7 +47,12 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q9_Percentage(true);
 //		install_Q10_OrderBy(true);
 	}
-		
+	
+	
+//	TODO: Attention: remover *synchronized* deste metodo para que a "velocidade" com que o simulator
+//			preenche o byffer seja completamente independente da velocidade do Esper para processar esses tuplos.
+//			C/ synch: SpeedTimeFactors Altos => Buffer Não enche demasiado  => tempo de simulação é muito maior do que o esperado.
+//			S/ synch: SpeedTimeFactors Altos => Buffer Enche demasiado  => tempo de simulação é igual ao esperado.
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
 		List<Measure> datastreamTuples = inputAdapter(tuple);
 		for(Measure m : datastreamTuples){

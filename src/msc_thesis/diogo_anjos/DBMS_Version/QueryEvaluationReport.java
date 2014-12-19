@@ -76,6 +76,10 @@ public class QueryEvaluationReport {
 		return res += "=========== End of Report =========\n"; 
 	}
 	
+	public String dumpElapsedTime(){
+		return "ElapsedTime: " + getQueryExecutionTime() + " ms"; 
+	}
+	
 	@Override
 	public String toString(){ 
 		return	"===== Query Evaluation [DEPRECATED] Report =====\n" +
