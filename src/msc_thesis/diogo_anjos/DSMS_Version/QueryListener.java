@@ -11,7 +11,7 @@ public class QueryListener implements UpdateListener {
 
 	// DUMP Configuration Flags ======================================
 		private boolean DUMP_ELAPSED_TIME = true;
-		private boolean DUMP_QUERY_RESULT = false;
+		private boolean DUMP_QUERY_RESULT = true;
 	//=================================================================
 	
     private QueryMetadata qMD;    
@@ -20,7 +20,7 @@ public class QueryListener implements UpdateListener {
     
     public QueryListener(QueryMetadata metadata, EsperEngine engine) {
         qMD = metadata;
-        esperEngine = engine;
+        esperEngine = engine;    
     }
 
     @Override

@@ -220,7 +220,8 @@ public class DB_CRUD_Query_API {
 		String queryStatement =	"SELECT 	* "											+
 								"FROM \"DBMS_EMS_Schema\".\"Q12_DeltaBetweenTuples\" "	+
 								"WHERE  delta < '00:00:50' "							+ 
-								   "OR  delta > '00:01:10' ";
+								   "OR  delta > '00:01:10' "; 
+		//catch periods between measures out of [50,70] seconds range
 		return executeEvaluationQuery(queryStatement);	
 	}
 	

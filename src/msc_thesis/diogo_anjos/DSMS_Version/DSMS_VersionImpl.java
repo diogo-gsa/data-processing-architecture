@@ -41,7 +41,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_Q12_DeltaBetweenTuples(true);
+		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
 //		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
 //		install_Q7_8_Normalization_IntegrationQuery(false);
 //		install_Q9_Percentage(true);
@@ -197,15 +197,24 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q12_DeltaBetweenTuples(boolean addListener){		
-		String statement = 	"SELECT device_pk, " +
-									"device_location, " +
-									"last(measure_timestamp, 0) AS measure_timestamp_last, " +
-									"last(measure_timestamp, 1) AS measure_timestamp_2nd_Last, " +
-									"(DateTime.toMillisec(last(measure_timestamp, 0),\"yyyy-MM-dd HH:mm:ss\") " +
+		String statement = 	"INSERT INTO DeltaBetweenTuples "	 											+
+							"SELECT device_pk, " 																	+
+									"device_location, " 															+
+									"last(measure_timestamp, 0) AS measure_timestamp_last, " 						+
+									"last(measure_timestamp, 1) AS measure_timestamp_2nd_Last, " 					+
+									"(DateTime.toMillisec(last(measure_timestamp, 0),\"yyyy-MM-dd HH:mm:ss\") " 							+
 									" - DateTime.toMillisec(last(measure_timestamp, 1),\"yyyy-MM-dd HH:mm:ss\"))/1000 AS delta_seconds "	+
-				 			"FROM DenormalizedAggPhases.std:groupwin(device_pk).win:length(2) "			+
-				 			"GROUP BY device_pk " 													+
+				 			"FROM DenormalizedAggPhases.std:groupwin(device_pk).win:length(2) "						+
+				 			"GROUP BY device_pk " 																	+
 				 			"HAVING count(*) > 1";		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	public void install_Q5_DeltaBetweenTuplesOverThreashold(boolean addListener){		
+		String statement = 	"SELECT * "					+
+				 			"FROM DeltaBetweenTuples "  +
+							"WHERE delta_seconds < 50 " +
+							"	OR delta_seconds > 70";
 		esperEngine.installQuery(statement, addListener);
 	}
 	
