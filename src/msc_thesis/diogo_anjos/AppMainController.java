@@ -67,34 +67,34 @@ public class AppMainController {
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17 07:00:00", "2014-03-17 07:10:06", EnergyMeter.LAB_1_58_MIT);
 				
 		//  Prepare Simulator  ====================================================
-		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-05-21  00:00:00", "2014-05-21  00:15:00");				
-		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-05-21  00:00:00", "2014-05-21  00:15:00");
-//		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-07-04  00:00:00", "2014-08-03  00:00:00");
-//		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-07-04  00:00:00", "2014-08-03  00:00:00");
-//		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-07-04  00:00:00", "2014-08-03  00:00:00");
-//		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-07-04  00:00:00", "2014-08-03  00:00:00");
-//		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-07-04  00:00:00", "2014-08-03  00:00:00");
-//		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-07-04  00:00:00", "2014-08-03  00:00:00");
+		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  00:00:00", "2014-03-17  23:59:00");				
+		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17  00:00:00", "2014-03-17  23:59:00");
+		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-03-17  00:00:00", "2014-03-17  23:59:00");
+		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-03-17  00:00:00", "2014-03-17  23:59:00");
+		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-03-17  00:00:00", "2014-03-17  23:59:00");
+		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-03-17  00:00:00", "2014-03-17  23:59:00");
+		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-03-17  00:00:00", "2014-03-17  23:59:00");
+		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-03-17  00:00:00", "2014-03-17  23:59:00");
 		
-		simLIB.setSpeedTimeFactor(1000); 	System.out.println(simLIB);
-		simA4.setSpeedTimeFactor(1000); 		System.out.println(simA4);
-//		simA5.setSpeedTimeFactor(8000); 		System.out.println(simA5);
-//		sim1_17.setSpeedTimeFactor(8000);	System.out.println(sim1_17);
-//		sim1_19.setSpeedTimeFactor(8000); 	System.out.println(sim1_19);
-//		simDEPT_14.setSpeedTimeFactor(8000); System.out.println(simDEPT_14);
-//		simDEPT_16.setSpeedTimeFactor(8000); System.out.println(simDEPT_16);
-//		simMIT_LAB.setSpeedTimeFactor(8000); System.out.println(simMIT_LAB);
+		simLIB.setSpeedTimeFactor(2000); 	 System.out.println(simLIB);
+		simA4.setSpeedTimeFactor(2000);		 System.out.println(simA4);
+		simA5.setSpeedTimeFactor(2000); 	 System.out.println(simA5);
+		sim1_17.setSpeedTimeFactor(2000);	 System.out.println(sim1_17);
+		sim1_19.setSpeedTimeFactor(2000); 	 System.out.println(sim1_19);
+		simDEPT_14.setSpeedTimeFactor(2000); System.out.println(simDEPT_14);
+		simDEPT_16.setSpeedTimeFactor(2000); System.out.println(simDEPT_16);
+		simMIT_LAB.setSpeedTimeFactor(2000); System.out.println(simMIT_LAB);
 		
 		
 		// Init Simulation  ====================================================
 		simLIB.registerNewClient(dbms_versionImpl); 	simLIB.start();
 		simA4.registerNewClient(dbms_versionImpl); 		simA4.start();
-//		simA5.registerNewClient(dbms_versionImpl); 		simA5.start();
-//		sim1_17.registerNewClient(dbms_versionImpl); 	sim1_17.start();
-//		sim1_19.registerNewClient(dbms_versionImpl); 	sim1_19.start();
-//		simDEPT_14.registerNewClient(dbms_versionImpl); simDEPT_14.start();
-//		simDEPT_16.registerNewClient(dbms_versionImpl); simDEPT_16.start();
-//		simMIT_LAB.registerNewClient(dbms_versionImpl); simMIT_LAB.start();
+		simA5.registerNewClient(dbms_versionImpl); 		simA5.start();
+		sim1_17.registerNewClient(dbms_versionImpl); 	sim1_17.start();
+		sim1_19.registerNewClient(dbms_versionImpl); 	sim1_19.start();
+		simDEPT_14.registerNewClient(dbms_versionImpl); simDEPT_14.start();
+		simDEPT_16.registerNewClient(dbms_versionImpl); simDEPT_16.start();
+		simMIT_LAB.registerNewClient(dbms_versionImpl); simMIT_LAB.start();
 	}
 
 }

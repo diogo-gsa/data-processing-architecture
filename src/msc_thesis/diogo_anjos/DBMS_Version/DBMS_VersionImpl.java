@@ -44,10 +44,10 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeEvaluationQuery_Q5_DeltaBetweenTuplesOverThreashold();
-		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
+		QueryEvaluationReport report = this.executeEvaluationQuery_Q3_MinMaxRatio();
 		
-		System.out.println(report.dump(true, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
+		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
+		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
 //		System.out.println(report.dumpElapsedTime());	//dumpStatement, dumpResult, dumpElapsedTime
 	}
 	
@@ -154,6 +154,11 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	
 	public QueryEvaluationReport executeEvaluationQuery_Q5_DeltaBetweenTuplesOverThreashold(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q5_DeltaBetweenTuplesOverThreashold();
+		return report;
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_Q3_MinMaxRatio(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q3_MinMaxRatio();
 		return report;
 	}
 	
