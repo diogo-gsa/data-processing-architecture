@@ -8,7 +8,7 @@
 	)::timestamp without time zone 		      AS measure_timestamp,
 	sum(measure_avg_10min)/sum(location_area_m2)  AS building_normalized_measure,
 	'WATT.HOUR/m2' 				      AS measure_unit,
-	'BuildingEnergyConsumption_NormalizedByArea'  AS measure_description,
+	'EnergyConsumption_NormalizedByTotalArea'     AS measure_description,
 	count(device_pk)        		      AS covered_locations,
 	sum(location_area_m2) 			      AS covered_area_m2
 	
