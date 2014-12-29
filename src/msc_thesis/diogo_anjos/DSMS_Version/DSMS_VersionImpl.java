@@ -169,6 +169,21 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	public void install_Q7_10minAVGbyDevice_IntegrationQuery(boolean addListener){
+		String statement = 	"INSERT INTO 10minAVGbyDevice "	 +
+							"SELECT device_pk, " 																+
+									"measure_timestamp, " 														+
+									"avg(measure)							AS measure_avg_10min, " 			+
+									"measure_unit, "															+
+									"\"EnergyConsumptionAVG10min\"			AS measure_description, "			+
+									"device_location  "															+
+									"location_area_m2 "															+
+							"FROM  DenormalizedAggPhases.win:time(10 min) " 									+
+							"GROUP BY device_pk";
+	
+		esperEngine.installQuery(statement, addListener);
+	}
+	
 	public void install_Q9_Percentage(boolean addListener){		
 		String statement = 	"SELECT device_pk, " 																		+
 									"measure_timestamp, "																+
