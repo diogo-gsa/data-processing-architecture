@@ -41,7 +41,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
+		install_Q7_10minAVGbyDevice_IntegrationQuery(true);
+//		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
 //		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
 //		install_Q7_8_Normalization_IntegrationQuery(false);
 //		install_Q9_Percentage(true);
@@ -170,13 +171,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q7_10minAVGbyDevice_IntegrationQuery(boolean addListener){
-		String statement = 	"INSERT INTO 10minAVGbyDevice "	 +
+		String statement = 	"INSERT INTO Sliding10minAVGbyDevice10min "	 +
 							"SELECT device_pk, " 																+
 									"measure_timestamp, " 														+
 									"avg(measure)							AS measure_avg_10min, " 			+
 									"measure_unit, "															+
 									"\"EnergyConsumptionAVG10min\"			AS measure_description, "			+
-									"device_location  "															+
+									"device_location,  "														+
 									"location_area_m2 "															+
 							"FROM  DenormalizedAggPhases.win:time(10 min) " 									+
 							"GROUP BY device_pk";
