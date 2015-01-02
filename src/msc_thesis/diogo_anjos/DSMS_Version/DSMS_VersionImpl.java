@@ -41,7 +41,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_Q7_10minAVGbyDevice_IntegrationQuery(true);
+		install_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(true);
 //		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
 //		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
 //		install_Q7_8_Normalization_IntegrationQuery(false);
@@ -125,7 +126,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							"GROUP BY	bd.device_pk," 											+
 										"stream.measureTS "										+
 							
-							"HAVING		count(stream.measureTS) = 3"; //3 Phases 
+							"HAVING		count(stream.measureTS) = 3"; //3 Phases
 		 			
 		esperEngine.installQuery(statement,addListener);
 	}
@@ -170,8 +171,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_Q7_10minAVGbyDevice_IntegrationQuery(boolean addListener){
-		String statement = 	"INSERT INTO Sliding10minAVGbyDevice10min "	 +
+	public void install_Q7_AVG10minByDevice_IntegrationQuery(boolean addListener){
+		String statement = 	"INSERT INTO Sliding10minAVGbyDevice "	 +
 							"SELECT device_pk, " 																+
 									"measure_timestamp, " 														+
 									"avg(measure)							AS measure_avg_10min, " 			+
@@ -181,6 +182,20 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"location_area_m2 "															+
 							"FROM  DenormalizedAggPhases.win:time(10 min) " 									+
 							"GROUP BY device_pk";
+	
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	
+	public void install_Q8_BuildingConsumptionNormalized_IntegrationQuery(boolean addListener){
+		String statement = 	"SELECT max(measure_timestamp)							AS measure_timestamp, "				+
+									"sum(measure_avg_10min)/sum(location_area_m2) 	AS building_normalized_measure, "	+
+									"\"WATT.HOUR/m2\" 				      			AS measure_unit, "					+
+									"\"EnergyConsumption_NormalizedByTotalArea\"    AS measure_description, "			+
+									"count(device_pk) 								AS covered_devices, "				+
+									"sum(location_area_m2)							AS covered_area_m2 "				+
+							"FROM 	Sliding10minAVGbyDevice.std:unique(device_pk).win:time(1 min) "						+
+							"HAVING count(device_pk) = 8";
 	
 		esperEngine.installQuery(statement, addListener);
 	}
