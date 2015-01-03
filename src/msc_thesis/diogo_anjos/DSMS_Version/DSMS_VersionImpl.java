@@ -42,7 +42,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
 		install_Q7_AVG10minByDevice_IntegrationQuery(false);
-		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(true);
+		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(false);
+		install_Q3_MinMaxRatioQuery(true);
 //		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
 //		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
 //		install_Q7_8_Normalization_IntegrationQuery(false);
@@ -172,7 +173,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q7_AVG10minByDevice_IntegrationQuery(boolean addListener){
-		String statement = 	"INSERT INTO Sliding10minAVGbyDevice "	 +
+		String statement = 	"INSERT INTO Q7_Sliding10minAVGbyDevice "	 											+
 							"SELECT device_pk, " 																+
 									"measure_timestamp, " 														+
 									"avg(measure)							AS measure_avg_10min, " 			+
@@ -187,16 +188,29 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q8_BuildingConsumptionNormalized_IntegrationQuery(boolean addListener){
-		String statement = 	"SELECT min(measure_timestamp)							AS measure_timestamp, "				+
+		String statement = 	"INSERT INTO Q8_AllBuildingNormalization " 													+
+							"SELECT min(measure_timestamp)							AS measure_timestamp, "				+
 									"sum(measure_avg_10min)/sum(location_area_m2) 	AS building_normalized_measure, "	+
 									"\"WATT.HOUR/m2\" 				      			AS measure_unit, "					+
 									"\"EnergyConsumption_NormalizedByTotalArea\"    AS measure_description, "			+
 									"count(device_pk) 								AS covered_devices, "				+
 									"sum(location_area_m2)							AS covered_area_m2 "				+
-									
-							"FROM 	Sliding10minAVGbyDevice.std:unique(device_pk).win:time(1 min) "						+
+							"FROM 	Q7_Sliding10minAVGbyDevice.std:unique(device_pk).win:time(1 min) "					+
 							"HAVING count(device_pk) = 8 "	 															+
 							"OUTPUT LAST EVERY 8 EVENTS ";
+	
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	public void install_Q3_MinMaxRatioQuery(boolean addListener){
+		String statement = 	"SELECT max(measure_timestamp) 			   AS measure_timestamp, "	    + 
+								   "min(building_normalized_measure)" 								+
+								   "/max(building_normalized_measure)  AS min_max_measure_ratio, "  +
+								   "max(building_normalized_measure)   AS max_measure, "			+
+								   "max(building_normalized_measure)   AS min_measure, "			+
+								   "covered_devices, "												+
+								   "covered_area_m2 "												+
+							"FROM	Q8_AllBuildingNormalization.win:time(60 min) ";
 	
 		esperEngine.installQuery(statement, addListener);
 	}
