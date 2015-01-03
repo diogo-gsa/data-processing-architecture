@@ -186,16 +186,17 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	
 	public void install_Q8_BuildingConsumptionNormalized_IntegrationQuery(boolean addListener){
-		String statement = 	"SELECT max(measure_timestamp)							AS measure_timestamp, "				+
+		String statement = 	"SELECT min(measure_timestamp)							AS measure_timestamp, "				+
 									"sum(measure_avg_10min)/sum(location_area_m2) 	AS building_normalized_measure, "	+
 									"\"WATT.HOUR/m2\" 				      			AS measure_unit, "					+
 									"\"EnergyConsumption_NormalizedByTotalArea\"    AS measure_description, "			+
 									"count(device_pk) 								AS covered_devices, "				+
 									"sum(location_area_m2)							AS covered_area_m2 "				+
+									
 							"FROM 	Sliding10minAVGbyDevice.std:unique(device_pk).win:time(1 min) "						+
-							"HAVING count(device_pk) = 8";
+							"HAVING count(device_pk) = 8 "	 															+
+							"OUTPUT LAST EVERY 8 EVENTS ";
 	
 		esperEngine.installQuery(statement, addListener);
 	}
