@@ -240,6 +240,20 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport executeEvaluationQuery_Q1_BuildingNormalizedConsumptionOverThreshold(){
+		String queryStatement =	"SELECT measure_timestamp, "									+ 
+										"building_normalized_measure, " 						+
+										"measure_unit, "										+
+										"measure_description, " 								+
+										"covered_devices, "										+
+										"covered_area_m2 "										+
+								"FROM 	\"DBMS_EMS_Schema\".\"Q8_NormalizationAllBuilding\" "	+
+								"WHERE building_normalized_measure >= 9.5 "						+
+								"ORDER BY measure_timestamp DESC "								+
+								"LIMIT 1";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
 	
 	
 //	==========================================================================================
