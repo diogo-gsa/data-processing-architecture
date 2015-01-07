@@ -41,12 +41,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
+		install_Q7_8_Normalization_IntegrationQuery(false);
 		install_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(false);
-		install_Q3_MinMaxRatioQuery(true);
+		install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(true);
+//		install_Q3_MinMaxRatioQuery(true);
 //		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
 //		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
-//		install_Q7_8_Normalization_IntegrationQuery(false);
 //		install_Q9_Percentage(true);
 //		install_Q10_OrderBy(true);
 	}
@@ -134,7 +135,25 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	
 	public void install_Q11_IntegrationQuery(boolean addListener){
-		String statement = 	"INSERT INTO Q11_VariationStream " +
+		/* TODO provavelmente esta query pode ser reescrita 
+		 * de uma forma mais simples e mais eficiente:
+		 *
+		 *		SELECT (measure/avg(measure) - 1) 	AS variation,
+		 *				device_pk 					AS device_pk,
+		 *				device_location 			AS device_location,
+		 *				measure_timestamp 			AS measure_timestamp
+		 *		FROM	DenormalizedAggPhases.win:time(60 min)
+		 *		GROUP BY device_pk
+		 *
+		 * NO select projeccões "singulares" são sempre feitas sobre o tuplo mais recente,
+		 * que acabou de entrar no engien, e fez triggered à query.
+		 * Agregações são avaliados sobre janelas
+		 * Por isso: measure      -> avaliado sobre tuplo mais recente.
+		 * 			 avg(measure) -> avaliado sobre a ajanela win:time
+		 * Assim, evitas um "SELF-JOIN" e um "OUTPUT LAST", no entanto tudo isto
+		 * carece de validação impirica.
+		 */
+		String statement = 	"INSERT INTO Q11_VariationStream " 							+
 							"SELECT (now.measure/avg(win.measure) - 1) AS variation, "	+
 									"now.device_pk AS device_pk, "						+
 									"now.device_location AS device_location, "			+
@@ -263,6 +282,62 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							"	OR delta_seconds > 70";
 		esperEngine.installQuery(statement, addListener);
 	}
+		
+	public void install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(boolean addListener){		
+/*		String statement = 	"SELECT device1.device_pk, device2.device_pk "																									+
+							"FROM 	LocationNormalizedMeasures(device_pk = 1, normalized_measure_avg_10min >= 0).win:length(1) 	AS device1, "		+
+									"LocationNormalizedMeasures(device_pk = 2, normalized_measure_avg_10min >= 0).win:length(1)	AS device2 "		;
+//									"LocationNormalizedMeasures(device_pk = 3, normalized_measure_avg_10min >= 0).win:length(1)	AS device3, "		+
+//									"LocationNormalizedMeasures(device_pk = 4, normalized_measure_avg_10min >= 0).win:length(1)	AS device4, "		+
+//									"LocationNormalizedMeasures(device_pk = 5, normalized_measure_avg_10min >= 0).win:length(1) AS device5, "		+
+//									"LocationNormalizedMeasures(device_pk = 6, normalized_measure_avg_10min >= 0).win:length(1)	AS device6, "		+
+//									"LocationNormalizedMeasures(device_pk = 7, normalized_measure_avg_10min >= 0).win:length(1)	AS device7, "		+
+//									"LocationNormalizedMeasures(device_pk = 8, normalized_measure_avg_10min >= 0).win:length(1)	AS device8 "		;
+//									"Q8_AllBuildingNormalization(building_normalized_measure >= 0).win:length(1)				AS allBuilding ";*/
+		
+//				String statement = 	"SELECT device_location AS devLocation, measure_timestamp AS devTS, (SELECT measure_timestamp AS buildingTS FROM Q8_AllBuildingNormalization.std:lastevent()) " +
+//									"FROM  LocationNormalizedMeasures ";
+
+//		String statement = 	"SELECT *  " +
+//							"FROM  (SELECT * FROM LocationNormalizedMeasures) ";
+		
+		String statementAdapterQ78 ="INSERT INTO NormalizedMeasureQ1Input "								+
+									"SELECT	device_pk						AS device_pk, "				+
+											"measure_timestamp 				AS measure_timestamp, "		+
+											"normalized_measure_avg_10min	AS measure, "				+
+											"measure_unit					AS measure_unit, "			+
+											"measure_description			AS measure_description, "	+
+											"device_location 				AS device_location "		+
+									"FROM  LocationNormalizedMeasures ";
+		
+		String statementAdapterQ8 =	"INSERT INTO NormalizedMeasureQ1Input "								+
+									"SELECT	0L								AS device_pk, "				+
+											"measure_timestamp				AS measure_timestamp, " 	+
+											"building_normalized_measure	AS measure, "				+
+											"measure_unit					AS measure_unit, "			+
+											"measure_description			AS measure_description, "	+
+									 		"\"AllDevices\"					AS device_location "		+
+									 "FROM  Q8_AllBuildingNormalization ";
+
+		String statementAdapterQ1 =	"SELECT	* "															+
+									"FROM  NormalizedMeasureQ1Input "									+	
+									"WHERE  (device_pk = 1    AND measure >= 0) "						+
+									   "OR  (device_pk = 2    AND measure >= 0) "						+
+									   "OR	(device_pk = 3    AND measure >= 0) "						+
+									   "OR	(device_pk = 4    AND measure >= 0) "						+
+									   "OR	(device_pk = 5    AND measure >= 0) "						+
+									   "OR	(device_pk = 6    AND measure >= 0) "						+
+									   "OR	(device_pk = 7    AND measure >= 0) "						+
+									   "OR	(device_pk = 8 	  AND measure >= 0) "						+
+									   "OR	(device_pk = 0 	  AND measure >= 0) "						;
+		
+		
+		esperEngine.installQuery(statementAdapterQ78, false);
+		esperEngine.installQuery(statementAdapterQ8,  false);
+		esperEngine.installQuery(statementAdapterQ1,  addListener);
+		
+	}
+	
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	

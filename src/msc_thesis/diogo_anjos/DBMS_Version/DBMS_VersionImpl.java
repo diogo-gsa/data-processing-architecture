@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeEvaluationQuery_Q1_BuildingNormalizedConsumptionOverThreshold();
+		QueryEvaluationReport report = this.executeEvaluationQuery_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -162,7 +162,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		return report;
 	}
 	
-	public QueryEvaluationReport executeEvaluationQuery_Q1_BuildingNormalizedConsumptionOverThreshold(){
+	public QueryEvaluationReport executeEvaluationQuery_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q1_BuildingNormalizedConsumptionOverThreshold();
 		return report;
 	}
