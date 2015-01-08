@@ -343,15 +343,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		String statement = 	"SELECT device_pk, "	 																+
 									"measure_timestamp, "															+
 									"normalized_measure_avg_10min 						AS measure, "				+
-									"avg(normalized_measure_avg_10min) 					AS avg24h_measure, "		+
-									"avg(normalized_measure_avg_10min)*1.001 			AS threshold_measure "		+
-//									"device_location, "																+
-//									"measure_unit, "																+
-//									"\"Measures 25% higher than the past 24h average\" AS measure_description "		+
+									"avg(normalized_measure_avg_10min)*1.25 			AS threshold_measure, "		+
+									"device_location, "																+
+									"measure_unit, "																+
+									"\"Measures 25% higher than the past 24h average\" AS measure_description "		+
 							"FROM LocationNormalizedMeasures.win:time(24 hours) "									+
 							"GROUP BY device_pk "																	+
-							"HAVING normalized_measure_avg_10min >= avg(normalized_measure_avg_10min)*1.001 "		;
-		
+							"HAVING normalized_measure_avg_10min >= avg(normalized_measure_avg_10min)*1.25 "			;
 		
 		esperEngine.installQuery(statement, addListener);
 	}

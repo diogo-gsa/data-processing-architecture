@@ -24,8 +24,8 @@ public class AppMainController {
 		DSMS_VersionImpl dsms_versionImpl = new DSMS_VersionImpl();
 		
 		//  Prepare Simulator  ====================================================
-		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  00:00:00", "2014-03-17  00:15:59");			
-//		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17  11:00:00", "2014-03-17  11:05:59");			
+		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  00:00:00", "2014-03-17  00:10:59");			
+		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17  00:00:00", "2014-03-17  00:10:59");			
 //		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-03-17  11:00:00", "2014-03-17  11:05:59");			
 //		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-03-17  11:00:00", "2014-03-17  11:05:59");			
 //		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-03-17  11:00:00", "2014-03-17  11:05:59");			
@@ -34,7 +34,7 @@ public class AppMainController {
 //		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT, 	"2014-03-17  11:00:00", "2014-03-17  11:05:59");			
 		
 		simLIB.setSpeedTimeFactor(1);
-//		simA4.setSpeedTimeFactor(200);
+		simA4.setSpeedTimeFactor(1);
 //		simA5.setSpeedTimeFactor(200);
 //		sim1_17.setSpeedTimeFactor(200);
 //		sim1_19.setSpeedTimeFactor(200);
@@ -44,7 +44,7 @@ public class AppMainController {
 
 		// Init Simulation  ====================================================
 		simLIB.registerNewClient(dsms_versionImpl); 	simLIB.start();
-//		simA4.registerNewClient(dsms_versionImpl); 		simA4.start();
+		simA4.registerNewClient(dsms_versionImpl); 		simA4.start();
 //		simA5.registerNewClient(dsms_versionImpl); 		simA5.start();
 //		sim1_17.registerNewClient(dsms_versionImpl); 	sim1_17.start();
 //		sim1_19.registerNewClient(dsms_versionImpl); 	sim1_19.start();
