@@ -41,9 +41,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_Q7_8_Normalization_IntegrationQuery(false);
+//		install_Q7_8_Normalization_IntegrationQuery(false);
+		install_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_Q16_MeasuresPercentHigherThanAverageThresold(true);
-//		install_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(false);
 //		install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(true);
 //		install_Q3_MinMaxRatioQuery(true);
@@ -285,22 +285,6 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 		
 	public void install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(boolean addListener){		
-/*		String statement = 	"SELECT device1.device_pk, device2.device_pk "																									+
-							"FROM 	LocationNormalizedMeasures(device_pk = 1, normalized_measure_avg_10min >= 0).win:length(1) 	AS device1, "		+
-									"LocationNormalizedMeasures(device_pk = 2, normalized_measure_avg_10min >= 0).win:length(1)	AS device2 "		;
-//									"LocationNormalizedMeasures(device_pk = 3, normalized_measure_avg_10min >= 0).win:length(1)	AS device3, "		+
-//									"LocationNormalizedMeasures(device_pk = 4, normalized_measure_avg_10min >= 0).win:length(1)	AS device4, "		+
-//									"LocationNormalizedMeasures(device_pk = 5, normalized_measure_avg_10min >= 0).win:length(1) AS device5, "		+
-//									"LocationNormalizedMeasures(device_pk = 6, normalized_measure_avg_10min >= 0).win:length(1)	AS device6, "		+
-//									"LocationNormalizedMeasures(device_pk = 7, normalized_measure_avg_10min >= 0).win:length(1)	AS device7, "		+
-//									"LocationNormalizedMeasures(device_pk = 8, normalized_measure_avg_10min >= 0).win:length(1)	AS device8 "		;
-//									"Q8_AllBuildingNormalization(building_normalized_measure >= 0).win:length(1)				AS allBuilding ";*/
-		
-//				String statement = 	"SELECT device_location AS devLocation, measure_timestamp AS devTS, (SELECT measure_timestamp AS buildingTS FROM Q8_AllBuildingNormalization.std:lastevent()) " +
-//									"FROM  LocationNormalizedMeasures ";
-
-//		String statement = 	"SELECT *  " +
-//							"FROM  (SELECT * FROM LocationNormalizedMeasures) ";
 		
 		String statementAdapterQ78 ="INSERT INTO NormalizedMeasureQ1Input "								+
 									"SELECT	device_pk						AS device_pk, "				+
@@ -342,14 +326,14 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q16_MeasuresPercentHigherThanAverageThresold(boolean addListener){		
 		String statement = 	"SELECT device_pk, "	 																+
 									"measure_timestamp, "															+
-									"normalized_measure_avg_10min 						AS measure, "				+
-									"avg(normalized_measure_avg_10min)*1.25 			AS threshold_measure, "		+
+									"measure_avg_10min 									AS measure, "				+
+									"avg(measure_avg_10min)*1.25 						AS threshold_measure, "		+
 									"device_location, "																+
 									"measure_unit, "																+
 									"\"Measures 25% higher than the past 24h average\" AS measure_description "		+
-							"FROM LocationNormalizedMeasures.win:time(24 hours) "									+
+							"FROM Q7_Sliding10minAVGbyDevice.win:time(24 hours) "									+
 							"GROUP BY device_pk "																	+
-							"HAVING normalized_measure_avg_10min >= avg(normalized_measure_avg_10min)*1.25 "			;
+							"HAVING measure_avg_10min >= avg(measure_avg_10min)*1.25 ";
 		
 		esperEngine.installQuery(statement, addListener);
 	}

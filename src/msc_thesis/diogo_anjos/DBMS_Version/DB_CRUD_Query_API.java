@@ -280,7 +280,7 @@ public class DB_CRUD_Query_API {
 											"measure_sliding24h_avg*1.25	AS measure_threshold, "														+
 											"device_location, "																							+
 											"measure_unit, "																							+
-											"measure_description "																						+
+											"'Measures 25% higher than the past 24h average' AS measure_description "									+
 									"FROM	(SELECT all_measures.device_pk, "																			+
 													"all_measures.measure_timestamp, " 																	+
 													"all_measures.measure_avg_10min	  AS current_measure, "												+
