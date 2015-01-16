@@ -4,9 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class DSMS_UDF_Util {
+public class DSMS_UserDefinedFunctions {
 	
-	public static double getExpectedMeasure(int device_pk, String measure_timestamp){
+	public static double getExpectedMeasure(long device_pk, String measure_timestamp){
 		
 		Calendar cal = Calendar.getInstance();
 		try {
@@ -27,6 +27,6 @@ public class DSMS_UDF_Util {
 			 { 2.2, 2.1, 2.3, 2.3, 2.2, 2.1, 2.3, 2.3, 2.2, 2.3, 3.5, 3.5, 3.8, 3.3, 3.3, 3.4, 3.3, 3.2, 2.7, 2.5, 2.3, 2.4, 2.2, 2.3},	
 			 { 4.0, 4.0, 4.0, 4.0, 4.0, 4.0, 3.9, 3.9, 3.9, 4.0, 4.0, 4.0, 4.0, 4.1, 4.0, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.1, 4.0}};  
 		
-		return reference_map[device_pk-1][ts_hour];
+		return reference_map[(int) device_pk-1][ts_hour];
 	}	
 }

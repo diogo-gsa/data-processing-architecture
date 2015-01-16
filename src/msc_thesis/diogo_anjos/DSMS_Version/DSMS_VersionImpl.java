@@ -41,9 +41,10 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-//		install_Q7_8_Normalization_IntegrationQuery(false);
-		install_Q7_AVG10minByDevice_IntegrationQuery(false);
-		install_Q16_MeasuresPercentHigherThanAverageThresold(true);
+		install_Q7_8_Normalization_IntegrationQuery(false);
+		install_Q14_RealAndExpectedMeasureDelta(true);
+//		install_Q7_AVG10minByDevice_IntegrationQuery(false);
+//		install_Q16_MeasuresPercentHigherThanAverageThresold(true);
 //		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(false);
 //		install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(true);
 //		install_Q3_MinMaxRatioQuery(true);
@@ -337,6 +338,23 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		esperEngine.installQuery(statement, addListener);
 	}
+	
+	public void install_Q14_RealAndExpectedMeasureDelta(boolean addListener){		
+		
+		String statement = 	"SELECT device_pk, " 																							+
+									"measure_timestamp, "																					+
+									"normalized_measure_avg_10min 				    				    			 AS measure, "			+
+									"getExpectedMeasure(device_pk, measure_timestamp) 				    			 AS expected_measure, "	+
+									"normalized_measure_avg_10min - getExpectedMeasure(device_pk, measure_timestamp) AS delta, "			+
+									"measure_unit, "																						+
+									"measure_description, " 																				+
+									"device_location "																						+
+							"FROM LocationNormalizedMeasures";
+		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	
 	
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	

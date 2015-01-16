@@ -53,8 +53,8 @@ public class EsperEngine {
         engineConfig.addImport("com.espertech.esper.client.util.DateTime");
         
         // import Single Row User Defined Function (UDF) - getExpectedMeasure(..) for Q14
-        engineConfig.addPlugInSingleRowFunction("getExpectedMeasure", "DSMS_UDF_Util", "getExpectedMeasure");
-      
+        engineConfig.addPlugInSingleRowFunction("getExpectedMeasure", "msc_thesis.diogo_anjos.util.DSMS_UserDefinedFunctions", "getExpectedMeasure");
+        
         esperEngine = EPServiceProviderManager.getDefaultProvider(engineConfig); 
   
         engineRuntime = esperEngine.getEPRuntime();
