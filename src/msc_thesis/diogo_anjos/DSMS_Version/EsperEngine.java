@@ -51,7 +51,10 @@ public class EsperEngine {
        
         // import auxiliar functions (to deal with TS manipulation at Q12)
         engineConfig.addImport("com.espertech.esper.client.util.DateTime");
-  
+        
+        // import Single Row User Defined Function (UDF) - getExpectedMeasure(..) for Q14
+        engineConfig.addPlugInSingleRowFunction("getExpectedMeasure", "DSMS_UDF_Util", "getExpectedMeasure");
+      
         esperEngine = EPServiceProviderManager.getDefaultProvider(engineConfig); 
   
         engineRuntime = esperEngine.getEPRuntime();

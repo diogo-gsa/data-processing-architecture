@@ -6,10 +6,14 @@ import java.util.Calendar;
 
 public class DSMS_UDF_Util {
 	
-	public static double getExpectedMeasure(int device_pk, String measure_timestamp) throws ParseException{
+	public static double getExpectedMeasure(int device_pk, String measure_timestamp){
 		
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(measure_timestamp));
+		try {
+			cal.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(measure_timestamp));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		int ts_hour = cal.get(Calendar.HOUR_OF_DAY);
 				
 		double reference_map[][] = 
