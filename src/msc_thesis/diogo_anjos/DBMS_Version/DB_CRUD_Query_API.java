@@ -298,7 +298,7 @@ public class DB_CRUD_Query_API {
 																") AS most_recent_measure "																+
 													"ON  most_recent_measure.device_pk = all_measures.device_pk "										+
 													"AND all_measures.measure_timestamp >= most_recent_measure.current_ts  - interval '24 hours' "		+
-											"WINDOW w AS (PARTITION BY all_measures.device_pk "															+
+											"WINDOW w AS (PARTITION BY	 all_measures.device_pk "															+
 														 "ORDER BY all_measures.measure_timestamp DESC "												+
 														 "RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) "											+
 											") AS rel "																									+
