@@ -305,7 +305,7 @@ public class DB_CRUD_Query_API {
 									"WHERE current_measure > measure_sliding24h_avg*1.25 AND rank = 1 ";
 		return executeEvaluationQuery(queryStatement);	
 	}
-
+	//TODO esta query tem de estar instalada no DBMS (ve a Q13)
 	public QueryEvaluationReport executeIntegrationQuery_Q14_RealAndExpectedMeasureDelta(){
 		String queryStatement =	"SELECT device_pk, " 																										+
 										"measure_timestamp, " 																								+
@@ -316,6 +316,11 @@ public class DB_CRUD_Query_API {
 										"measure_description, " 																							+
 										"device_location "																									+
 								"FROM \"DBMS_EMS_Schema\".\"Q7+8_WindowOp\"";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	public QueryEvaluationReport executeIntegrationQuery_Q13_CurrentAndExpectedHourClusterMeasure(){
+		String queryStatement =	"SELECT * " +
+								"FROM \"DBMS_EMS_Schema\".\"Q13_CurrentAndExpectedHourClusterMeasure\"";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	

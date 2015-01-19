@@ -25,10 +25,10 @@ FROM	(SELECT	all_measures.device_pk,
 		FROM 	"DBMS_EMS_Schema"."Q7_10minAVG"
 		GROUP BY device_pk) 			AS most_recent_measure
 		ON  most_recent_measure.device_pk   = all_measures.device_pk	
-		AND all_measures.measure_timestamp >= most_recent_measure.ts  - interval '3 day'
+		AND all_measures.measure_timestamp >= most_recent_measure.ts  - interval '1 month'
 
 	WINDOW 	w AS (PARTITION BY all_measures.device_pk, 
-				  date_part('hour', all_measures.measure_timestamp)
+				   date_part('hour', all_measures.measure_timestamp)
 		     ORDER BY all_measures.measure_timestamp DESC
 		     RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)
 	) AS clustered_measures
@@ -38,4 +38,3 @@ FROM	(SELECT	all_measures.device_pk,
 	AND all_measures.device_pk = clustered_measures.device_pk
 	AND all_measures.measure_timestamp = clustered_measures.measure_timestamp	
 	AND date_part('hour', all_measures.measure_timestamp) = clustered_measures.cluster_pivot_hour
-
