@@ -306,16 +306,9 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	//TODO esta query tem de estar instalada no DBMS (ve a Q13)
-	public QueryEvaluationReport executeIntegrationQuery_Q14_RealAndExpectedMeasureDelta(){
-		String queryStatement =	"SELECT device_pk, " 																										+
-										"measure_timestamp, " 																								+
-										"normalized_measure_avg_10min 				    				    						AS measure, "			+
-										"get_expected_measure(device_pk::integer, measure_timestamp) 				    			AS expected_measure, "	+
-										"normalized_measure_avg_10min - get_expected_measure(device_pk::integer, measure_timestamp) AS delta, "				+
-										"measure_unit,  "																									+
-										"measure_description, " 																							+
-										"device_location "																									+
-								"FROM \"DBMS_EMS_Schema\".\"Q7+8_WindowOp\"";
+	public QueryEvaluationReport executeIntegrationQuery_Q14_CurrentAndExpectedUDFMeasure(){
+		String queryStatement =	"SELECT * " +
+								"FROM \"DBMS_EMS_Schema\".\"Q14_CurrentAndExpectedUDFMeasure\"";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	public QueryEvaluationReport executeIntegrationQuery_Q13_CurrentAndExpectedHourClusterMeasure(){

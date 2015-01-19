@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_Q13_CurrentAndExpectedHourClusterMeasure();
+		QueryEvaluationReport report = this.executeIntegrationQuery_Q14_CurrentAndExpectedUDFMeasure();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -172,8 +172,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		return report;
 	}
 	
-	public QueryEvaluationReport executeIntegrationQuery_Q14_RealAndExpectedMeasureDelta(){
-		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q14_RealAndExpectedMeasureDelta();
+	public QueryEvaluationReport executeIntegrationQuery_Q14_CurrentAndExpectedUDFMeasure(){
+		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_Q14_CurrentAndExpectedUDFMeasure();
 		return report;
 	}
 	
