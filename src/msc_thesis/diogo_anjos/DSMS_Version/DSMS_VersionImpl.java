@@ -357,28 +357,19 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q13_CurrentAndExpectedHourClusterMeasure(boolean addListener){
-//	Q7 output:
-//				device_pk			=2, 
-//				measure_timestamp	=2014-03-17 00:00:03, 
-//				measure_avg_10min	=5.61, 
-//				measure_unit		=WATT.HOUR,
-//				measure_description	=EnergyConsumptionAVG10min, 	
-//				device_location		=LECTUREHALL_A4, 
-//				location_area_m2	=110, 
 		
-		
-//		"(DateTime.toMillisec(last(measure_timestamp, 0),\"yyyy-MM-dd HH:mm:ss\") " 							+
-		
-		String statement = 	"SELECT device_pk, " 									+
-									"measure_timestamp, "							+
-									"measure_avg_10min, "							+
-									"measure_unit, "								+
-									"measure_description, "							+
-									"device_location, "								+
-									"location_area_m2, "							+
-									"DateTime.toDate(measure_timestamp, \"yyyy-MM-dd HH:mm:ss\").getHours() AS pivotHour " +
-							"FROM Q7_Sliding10minAVGbyDevice.win:time(1 month)"		+
-							"GROUP BY device_pk";
+		String statement = 	"SELECT device_pk, " 																							+
+									"measure_timestamp, "																					+
+									"measure_avg_10min	 													AS measure, "					+
+									"avg(measure_avg_10min) 												AS clusterExpectedMeasure, "	+
+									"measure_avg_10min - avg(measure_avg_10min) 							AS delta, " 					+
+									"DateTime.toDate(measure_timestamp, \"yyyy-MM-dd HH:mm:ss\").getHours() AS clusterPivotHour, " 			+
+									"count(measure_avg_10min)/60											AS clusterDatasetDays, "		+
+									"measure_unit, "																						+
+									"measure_description, "																					+
+									"device_location "																						+			
+							"FROM Q7_Sliding10minAVGbyDevice.win:time(1 month)"																+
+							"GROUP BY device_pk, DateTime.toDate(measure_timestamp, \"yyyy-MM-dd HH:mm:ss\").getHours()";
 		
 		esperEngine.installQuery(statement, addListener);
 	}
