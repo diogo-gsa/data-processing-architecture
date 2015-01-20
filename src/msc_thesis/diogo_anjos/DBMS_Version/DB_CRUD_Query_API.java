@@ -305,7 +305,6 @@ public class DB_CRUD_Query_API {
 									"WHERE current_measure > measure_sliding24h_avg*1.25 AND rank = 1 ";
 		return executeEvaluationQuery(queryStatement);	
 	}
-	//TODO esta query tem de estar instalada no DBMS (ve a Q13)
 	public QueryEvaluationReport executeIntegrationQuery_Q14_CurrentAndExpectedUDFMeasure(){
 		String queryStatement =	"SELECT * " +
 								"FROM \"DBMS_EMS_Schema\".\"Q14_CurrentAndExpectedUDFMeasure\"";
