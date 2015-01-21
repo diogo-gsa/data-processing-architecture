@@ -44,16 +44,17 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_Q13_CurrentAndExpectedHourClusterMeasure(false);
 //		install_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
-		install_Q7_8_Normalization_IntegrationQuery(false);
-		install_Q14_RealAndExpectedMeasureDelta(false);
-		install_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
+//		install_Q7_8_Normalization_IntegrationQuery(false);
+//		install_Q14_RealAndExpectedMeasureDelta(false);
+//		install_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
 //		install_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_Q16_MeasuresPercentHigherThanAverageThresold(true);
 //		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(false);
 //		install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(true);
 //		install_Q3_MinMaxRatioQuery(true);
 //		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
-//		install_Q11_IntegrationQuery(true); //install_Q4_EvaluationQuery(true);
+		install_Q11_IntegrationQuery(false); 
+		install_Q4_EvaluationQuery(true);
 //		install_Q9_Percentage(true);
 //		install_Q10_OrderBy(true);
 	}
@@ -141,8 +142,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	
 	public void install_Q11_IntegrationQuery(boolean addListener){
-		/* TODO provavelmente esta query pode ser reescrita 
-		 * de uma forma mais simples e mais eficiente:
+		/* Query foi reescrita de uma forma mais simples e mais eficiente:
 		 *
 		 *		SELECT (measure/avg(measure) - 1) 	AS variation,
 		 *				device_pk 					AS device_pk,
@@ -158,7 +158,10 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		 * 			 avg(measure) -> avaliado sobre a ajanela win:time
 		 * Assim, evitas um "SELF-JOIN" e um "OUTPUT LAST", no entanto tudo isto
 		 * carece de validação impirica.
-		 */
+		 *
+		 * Antiga (e Ineficiente) implemenntação da query que não tira
+		 * partido da caracteristica especial dos DSMS de a query ser orientada ao
+		 * tuplo, e não ao dataset inteiro.
 		String statement = 	"INSERT INTO Q11_VariationStream " 							+
 							"SELECT (now.measure/avg(win.measure) - 1) AS variation, "	+
 									"now.device_pk AS device_pk, "						+
@@ -167,7 +170,16 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							"FROM	DenormalizedAggPhases.win:time(60 min)	AS win, " 	+
 							"		DenormalizedAggPhases.std:lastevent()	AS now "	+
 							"WHERE 	win.device_pk = now.device_pk "						+
-							"OUTPUT LAST EVERY 1 EVENTS ";			
+							"OUTPUT LAST EVERY 1 EVENTS ";
+		*/
+		
+		String statement = 	"INSERT INTO Q11_VariationStream " 										 +
+							"SELECT 	(measure/avg(measure) - 1)	 			  AS variation, "		 +
+										"device_pk 								  AS device_pk, "		 +
+										"device_location 						  AS device_location, "	 +
+										"measure_timestamp 						  AS measure_timestamp " +
+							"FROM		DenormalizedAggPhases.win:time(10 min) " 						 +
+							"GROUP BY 	device_pk ";
 	
 		esperEngine.installQuery(statement, addListener);
 	}
