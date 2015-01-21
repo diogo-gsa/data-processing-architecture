@@ -41,10 +41,12 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_Q7_AVG10minByDevice_IntegrationQuery(false);
-		install_Q13_CurrentAndExpectedHourClusterMeasure(true);
-//		install_Q7_8_Normalization_IntegrationQuery(false);
-//		install_Q14_RealAndExpectedMeasureDelta(false);
+//		install_Q7_AVG10minByDevice_IntegrationQuery(false);
+//		install_Q13_CurrentAndExpectedHourClusterMeasure(false);
+//		install_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
+		install_Q7_8_Normalization_IntegrationQuery(false);
+		install_Q14_RealAndExpectedMeasureDelta(false);
+		install_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
 //		install_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_Q16_MeasuresPercentHigherThanAverageThresold(true);
 //		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(false);
@@ -266,7 +268,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q12_DeltaBetweenTuples(boolean addListener){		
-		String statement = 	"INSERT INTO DeltaBetweenTuples "	 											+
+		String statement = 	"INSERT INTO DeltaBetweenTuples "	 													+
 							"SELECT device_pk, " 																	+
 									"device_location, " 															+
 									"last(measure_timestamp, 0) AS measure_timestamp_last, " 						+
@@ -343,7 +345,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q14_RealAndExpectedMeasureDelta(boolean addListener){		
 		
-		String statement = 	"SELECT device_pk, " 																							+
+		String statement =  "INSERT INTO Q14_CurrentAndExpectedMeasure "																	+ 	
+							"SELECT device_pk, " 																							+
 									"measure_timestamp, "																					+
 									"normalized_measure_avg_10min 				    				    			 AS measure, "			+
 									"getExpectedMeasure(device_pk, measure_timestamp) 				    			 AS expected_measure, "	+
@@ -358,7 +361,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q13_CurrentAndExpectedHourClusterMeasure(boolean addListener){
 		
-		String statement = 	"SELECT device_pk, " 																							+
+		String statement = 	"INSERT INTO Q13_CurrentAndExpectedMeasure "																	+
+							"SELECT device_pk, " 																							+
 									"measure_timestamp, "																					+
 									"measure_avg_10min	 													AS measure, "					+
 									"avg(measure_avg_10min) 												AS clusterExpectedMeasure, "	+
@@ -374,6 +378,36 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	public void install_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(boolean addListener){
+		String statement = 	"SELECT device_pk, "																								+
+									"measure_timestamp, "																						+
+									"(measure/(clusterExpectedMeasure+0.0001) - 1)*100 								 AS measure, "				+
+									"measure 																		 AS current_cosnumption, "	+
+									"clusterExpectedMeasure 														 AS expected_consumption, "	+
+									"\"%percent\" 																	 AS measure_unit, "			+
+									"\"Percent variation between current and expected consumption greater than 10%\" AS measure_description, "	+
+									"device_location "																							+
+							"FROM	Q13_CurrentAndExpectedMeasure "																				+
+							"WHERE 	(measure/(clusterExpectedMeasure+0.0001) - 1)*100 > 0 ";
+		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	public void install_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(boolean addListener){
+		
+		String statement = 	"SELECT device_pk, "																								+
+									"measure_timestamp, "																						+
+									"(measure/(expected_measure+0.0001) - 1)*100 								 	 AS measure, "				+
+									"measure 																		 AS current_cosnumption, "	+
+									"expected_measure 														 		 AS expected_consumption, "	+
+									"\"%percent\" 																	 AS measure_unit, "			+
+									"\"Percent variation between current and expected consumption greater than 10%\" AS measure_description, "	+
+									"device_location "																							+
+							"FROM	Q14_CurrentAndExpectedMeasure "																				+
+							"WHERE 	(measure/(expected_measure+0.0001) - 1)*0 = 0 ";
+		
+		esperEngine.installQuery(statement, addListener);
+	}
 	
 	
 	
