@@ -161,7 +161,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		 *
 		 * Antiga (e Ineficiente) implemenntação da query que não tira
 		 * partido da caracteristica especial dos DSMS de a query ser orientada ao
-		 * tuplo, e não ao dataset inteiro.
+		 * tuplo, e não ao dataset inteiro:
 		String statement = 	"INSERT INTO Q11_VariationStream " 							+
 							"SELECT (now.measure/avg(win.measure) - 1) AS variation, "	+
 									"now.device_pk AS device_pk, "						+
