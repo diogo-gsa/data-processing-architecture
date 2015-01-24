@@ -1,4 +1,8 @@
-﻿SELECT 	device_pk, 
+﻿=====================================================
+= Q7 DBMS : WindowOps. => 1Row/Minute Limitation    =
+=====================================================
+
+SELECT 	device_pk, 
 	measure_timestamp,
 	measure,
 	avg(measure)		OVER w AS  measure_avg_10min,

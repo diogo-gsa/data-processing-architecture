@@ -1,4 +1,8 @@
-﻿SELECT 	device_pk,
+﻿===========================
+= Q7+8 DBMS w/ WindowOps. =
+===========================
+
+SELECT 	device_pk,
     	ts AS measure_timestamp,
     	measure_avg_10min,
     	'WATT.HOUR' AS measure_unit,

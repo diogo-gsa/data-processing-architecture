@@ -209,6 +209,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	//NOTA: Esta é a NEW_Q7 (não houve alterações em relação à query original)
 	public void install_Q7_AVG10minByDevice_IntegrationQuery(boolean addListener){
 		String statement = 	"INSERT INTO Q7_Sliding10minAVGbyDevice "	 											+
 							"SELECT device_pk, " 																+

@@ -1,4 +1,9 @@
-﻿SELECT 	r1.device_pk,
+﻿=============================================
+= Q7 DBMS : NO WindowOps. => NO Limitations =
+=============================================
+
+
+SELECT 	r1.device_pk,
 		r1.measure_timestamp,
 		AVG(r2.measure) AS measure_avg_10min,
 		'WATT.HOUR/m^2' AS measure_unit,
