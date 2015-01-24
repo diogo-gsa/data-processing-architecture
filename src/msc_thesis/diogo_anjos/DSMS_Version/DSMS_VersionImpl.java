@@ -42,19 +42,22 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
 //		install_Q7_AVG10minByDevice_IntegrationQuery(false);
+//		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
+		install_Q7_8_Normalization_IntegrationQuery(true);
+
+		
+//		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(true);
 //		install_Q13_CurrentAndExpectedHourClusterMeasure(false);
 //		install_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
-//		install_Q7_8_Normalization_IntegrationQuery(false);
 //		install_Q14_RealAndExpectedMeasureDelta(false);
 //		install_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
 //		install_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_Q16_MeasuresPercentHigherThanAverageThresold(true);
-//		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(false);
 //		install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(true);
 //		install_Q3_MinMaxRatioQuery(true);
 //		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
-		install_Q11_IntegrationQuery(false); 
-		install_Q4_EvaluationQuery(true);
+//		install_Q11_IntegrationQuery(false); 
+//		install_Q4_EvaluationQuery(true);
 //		install_Q9_Percentage(true);
 //		install_Q10_OrderBy(true);
 	}
@@ -209,7 +212,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	//NOTA: Esta é a NEW_Q7 (não houve alterações em relação à query original)
+	//NOTA: Esta é a NEW_Q7, que é igual à versão original (não houve alterações)
 	public void install_Q7_AVG10minByDevice_IntegrationQuery(boolean addListener){
 		String statement = 	"INSERT INTO Q7_Sliding10minAVGbyDevice "	 											+
 							"SELECT device_pk, " 																+
@@ -422,6 +425,38 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	public void install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(boolean addListener){		
+		
+		String subStatement1 =	"INSERT INTO Q8_NormalizeConsumptionsByLocationSquareMeters "											+
+								"SELECT device_pk, "																					+
+										"measure_timestamp, "																			+
+										"measure_avg_10min/location_area_m2									AS measure, "				+
+										"\"WATT/m^2\"	 													AS measure_unit, "			+
+										"\"Energy consumption Normalized by energy meter location area\"  	AS measure_description, "	+
+										"device_location "																				+
+								"FROM	Q7_Sliding10minAVGbyDevice ";
+		
+		String subStatement2 =	"INSERT INTO Q8_NormalizeConsumptionsByLocationSquareMeters "											+
+								"SELECT  0L	 																AS device_pk, "				+
+										"min(measure_timestamp)												AS measure_timestamp, " 	+
+										"sum(measure_avg_10min)/sum(location_area_m2) 						AS measure, " 				+
+										"\"WATT/m^2\"	 													AS measure_unit, " 			+
+										"\"Energy consumption Normalized by energy meter location area\"	AS measure_description, "	+
+										"\"ALL_BUILDING\" 													AS device_location " 		+					
+								"FROM 	Q7_Sliding10minAVGbyDevice.std:unique(device_pk).win:time(1 min) " 								+
+								"HAVING count(device_pk) = 8 " 																		+
+								"OUTPUT LAST EVERY 8 EVENTS"; 
+
+		String statement =	"SELECT	* "						 					   +
+							"FROM  Q8_NormalizeConsumptionsByLocationSquareMeters ";	
+									
+		
+		
+		esperEngine.installQuery(subStatement1, false);
+		esperEngine.installQuery(subStatement2, false);
+		esperEngine.installQuery(statement,  addListener);
+		
+	}
 	
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
