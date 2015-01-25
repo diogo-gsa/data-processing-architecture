@@ -41,12 +41,15 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-//		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
-//		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 //		install_New_Q9_FractionateConsumptions(true);
-		install_Q7_8_Normalization_IntegrationQuery(false);
-		install_Q9_Percentage(true);
+		install_New_Q10_OrderByConsumptions(true);
+//		install_Q7_8_Normalization_IntegrationQuery(false);
+//		install_Q10_OrderBy(true);
 
+		
+//		install_Q9_Percentage(true);
 		
 //		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
 //		install_Q13_CurrentAndExpectedHourClusterMeasure(false);
@@ -59,7 +62,6 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q12_DeltaBetweenTuples(false); install_Q5_DeltaBetweenTuplesOverThreashold(true);
 //		install_Q11_IntegrationQuery(false); 
 //		install_Q4_EvaluationQuery(true);
-//		install_Q10_OrderBy(true);
 	}
 	
 	
@@ -460,6 +462,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_New_Q9_FractionateConsumptions(boolean addListener){		
+		
 		String statement = 	"SELECT device_pk, " 																			+																	
 									"measure_timestamp, " 																	+
 									"(measure/SUM(measure))*100 				AS measure, "								+
@@ -473,6 +476,20 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	public void install_New_Q10_OrderByConsumptions(boolean addListener){		
+		
+		String statement = 	"SELECT device_pk," 																			+
+									"measure_timestamp, "																	+
+									"measure, "																				+
+									"measure_unit, "																		+
+									"measure_description, "																	+
+									"device_location "																		+	
+							"FROM Q8_NormalizeConsumptionsByLocationSquareMeters.std:unique(device_pk).win:time(2 min) "	+
+							"OUTPUT SNAPSHOT EVERY 1 EVENTS "																+
+							"ORDER BY measure DESC";
+		
+		esperEngine.installQuery(statement, addListener);
+	}
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	
