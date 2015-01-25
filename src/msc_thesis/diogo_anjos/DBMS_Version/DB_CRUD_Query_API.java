@@ -351,7 +351,13 @@ public class DB_CRUD_Query_API {
 	}
 	
 	
-	
+	public QueryEvaluationReport executeIntegrationQuery_New_Q9_FractionateConsumptions(){
+		String queryStatement =	"SELECT * " 														+					
+								"FROM 	\"DBMS_EMS_Schema\".\"New_Q9_FractionateConsumptions\" ";			
+		return executeEvaluationQuery(queryStatement);
+
+		
+	}
 	
 //	==========================================================================================
 //						End Of Case Study Queries Implementation Zone 
