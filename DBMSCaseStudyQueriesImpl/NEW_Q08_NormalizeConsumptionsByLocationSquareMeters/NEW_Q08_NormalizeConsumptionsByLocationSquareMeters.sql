@@ -32,7 +32,7 @@ WINDOW w AS (ORDER BY 	date_part('year',  measure_timestamp),
 			date_part('month', measure_timestamp),
 			date_part('day',   measure_timestamp),
 			date_part('hour',  measure_timestamp),
-			date_part('minute',measure_timestamp))
+			date_part('minute',measure_timestamp) DESC)
 
 --ORDER BY measure_timestamp DESC --DEBUG
 	

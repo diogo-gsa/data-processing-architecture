@@ -41,12 +41,11 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-//		install_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
-		install_Q7_8_Normalization_IntegrationQuery(true);
-
+//		install_Q7_8_Normalization_IntegrationQuery(true);
 		
-//		install_Q8_BuildingConsumptionNormalized_IntegrationQuery(true);
+		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
 //		install_Q13_CurrentAndExpectedHourClusterMeasure(false);
 //		install_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
 //		install_Q14_RealAndExpectedMeasureDelta(false);
