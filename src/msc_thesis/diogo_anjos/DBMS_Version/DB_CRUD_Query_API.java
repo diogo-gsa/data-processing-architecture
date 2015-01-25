@@ -354,9 +354,13 @@ public class DB_CRUD_Query_API {
 	public QueryEvaluationReport executeIntegrationQuery_New_Q9_FractionateConsumptions(){
 		String queryStatement =	"SELECT * " 														+					
 								"FROM 	\"DBMS_EMS_Schema\".\"New_Q9_FractionateConsumptions\" ";			
-		return executeEvaluationQuery(queryStatement);
-
-		
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	public QueryEvaluationReport executeIntegrationQuery_New_Q10_OrderByConsumptions(){
+		String queryStatement =	"SELECT * " 														+					
+								"FROM 	\"DBMS_EMS_Schema\".\"New_Q10_OrderByConsumptions\" ";			
+		return executeEvaluationQuery(queryStatement);	
 	}
 	
 //	==========================================================================================

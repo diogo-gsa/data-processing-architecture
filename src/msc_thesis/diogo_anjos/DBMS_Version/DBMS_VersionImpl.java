@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_Q9_Percentage();
+		QueryEvaluationReport report = this.executeIntegrationQuery_New_Q10_OrderByConsumptions();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -193,9 +193,12 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	}
 	
 	public QueryEvaluationReport executeIntegrationQuery_New_Q9_FractionateConsumptions(){
-		
 		QueryEvaluationReport report = dbAPI. executeIntegrationQuery_New_Q9_FractionateConsumptions();
-		
+		return report;
+	}
+	
+	public QueryEvaluationReport executeIntegrationQuery_New_Q10_OrderByConsumptions(){
+		QueryEvaluationReport report = dbAPI. executeIntegrationQuery_New_Q10_OrderByConsumptions();
 		return report;
 	}
 
