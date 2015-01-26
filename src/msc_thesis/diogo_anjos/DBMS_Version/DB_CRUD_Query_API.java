@@ -363,6 +363,12 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport executeIntegrationQuery_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(){
+		String queryStatement =	"SELECT * " +
+								"FROM \"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\"";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
 //	==========================================================================================
 //						End Of Case Study Queries Implementation Zone 
 //	==========================================================================================

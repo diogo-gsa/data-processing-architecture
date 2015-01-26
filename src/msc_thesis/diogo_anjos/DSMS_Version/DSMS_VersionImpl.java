@@ -46,7 +46,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_New_Q9_FractionateConsumptions(true);
 		install_New_Q10_OrderByConsumptions(true);
 //		install_Q7_8_Normalization_IntegrationQuery(false);
-//		install_Q10_OrderBy(true);
+//		install_Q10_OrderBy(true);	
 
 		
 //		install_Q9_Percentage(true);
