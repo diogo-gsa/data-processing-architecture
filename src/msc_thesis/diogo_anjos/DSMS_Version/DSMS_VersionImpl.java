@@ -44,17 +44,17 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 //		install_New_Q9_FractionateConsumptions(true);
-		install_New_Q10_OrderByConsumptions(true);
-//		install_Q7_8_Normalization_IntegrationQuery(false);
-//		install_Q10_OrderBy(true);	
-
+//		install_New_Q10_OrderByConsumptions(true);
+		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(true);
 		
+//		install_Q7_8_Normalization_IntegrationQuery(true);
+//		install_Q10_OrderBy(true);	
 //		install_Q9_Percentage(true);
 		
 //		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
 //		install_Q13_CurrentAndExpectedHourClusterMeasure(false);
 //		install_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
-//		install_Q14_RealAndExpectedMeasureDelta(false);
+//		install_Q14_RealAndExpectedMeasureDelta(true);
 //		install_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
 //		install_Q16_MeasuresPercentHigherThanAverageThresold(true);
 //		install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(true);
@@ -487,6 +487,20 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							"FROM Q8_NormalizeConsumptionsByLocationSquareMeters.std:unique(device_pk).win:time(2 min) "	+
 							"OUTPUT SNAPSHOT EVERY 1 EVENTS "																+
 							"ORDER BY measure DESC";
+		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	public void install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(boolean addListener){		
+		String statement =  "SELECT device_pk, "  																			+	
+			       					"measure_timestamp, "                                                               	+                    
+			       					"measure                                                    AS measure, "           	+
+			       					"getExpectedMeasure(device_pk, measure_timestamp)           AS expected_measure, "  	+
+			       					"measure - getExpectedMeasure(device_pk, measure_timestamp) AS delta, "					+
+			       					"measure_unit, "                                                                    	+                     
+			       					"measure_description, "                                                             	+                    
+			       					"device_location "                                                                  	+            
+			       			"FROM Q8_NormalizeConsumptionsByLocationSquareMeters ";
 		
 		esperEngine.installQuery(statement, addListener);
 	}

@@ -7,4 +7,4 @@
     	measure_description,
     	device_location
 FROM "DBMS_EMS_Schema"."New_Q8_NormalizeConsumptionsByLocationSquareMeters"
-WHERE rank = 1;
+WHERE rank = 1
