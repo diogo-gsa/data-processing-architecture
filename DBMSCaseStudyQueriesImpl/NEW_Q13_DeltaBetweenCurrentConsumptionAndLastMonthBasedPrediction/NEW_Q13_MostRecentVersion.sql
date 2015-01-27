@@ -23,9 +23,9 @@ FROM	(SELECT	all_measures.device_pk,
 		"DBMS_EMS_Schema"."New_Q8_NormalizeConsumptionsByLocationSquareMeters"		AS most_recent_measure
 		ON  most_recent_measure.rank 	    = 1
 		AND most_recent_measure.device_pk   = all_measures.device_pk	
-		AND all_measures.measure_timestamp >= most_recent_measure.measure_timestamp  - interval '1 month'
+		AND all_measures.measure_timestamp >= most_recent_measure.measure_timestamp  - interval '3 minutes'
 
-	WINDOW 	w AS (PARTITION BY all_measures.device_pk, 
+	WINDOW 	w AS (PARTITION BY all_measures.device_pk, 	
 				   date_part('hour', all_measures.measure_timestamp)
 		      ORDER BY all_measures.measure_timestamp DESC
 	              RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)
