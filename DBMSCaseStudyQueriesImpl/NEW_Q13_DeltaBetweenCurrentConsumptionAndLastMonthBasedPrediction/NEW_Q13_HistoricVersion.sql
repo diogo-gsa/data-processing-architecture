@@ -2,8 +2,9 @@
 	measure_timestamp,
 	measure,
 	expecetd_measure,
+	measure - expecetd_measure AS delta,
 	measure_description,
-	measure_unit,
+	measure_unit,		-- TENS DE METER AQUI O DELTA
 	device_location,
 	rank()	OVER w2
 	

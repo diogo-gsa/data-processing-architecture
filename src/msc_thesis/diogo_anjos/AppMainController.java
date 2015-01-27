@@ -58,30 +58,30 @@ public class AppMainController {
 		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl();
 		dbms_versionImpl.truncateAll_DatapointReadingTable();
 
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:00:00", "2014-03-17  02:00:00", EnergyMeter.LIBRARY); 		
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:00:00", "2014-03-17  02:00:00", EnergyMeter.LECTUREHALL_A4); 	
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:00:00", "2014-03-17  02:00:00", EnergyMeter.LECTUREHALL_A5); 	
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:00:00", "2014-03-17  02:00:00", EnergyMeter.CLASSROOM_1_17); 	
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:00:00", "2014-03-17  02:00:00", EnergyMeter.CLASSROOM_1_19);
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:00:00", "2014-03-17  02:00:00", EnergyMeter.DEPARTMENT_14);
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:00:00", "2014-03-17  02:00:00", EnergyMeter.DEPARTMENT_16);
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:00:00", "2014-03-17  02:00:00", EnergyMeter.LAB_1_58_MIT);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.LIBRARY); 		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.LECTUREHALL_A4); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.LECTUREHALL_A5); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.CLASSROOM_1_17); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.CLASSROOM_1_19);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.DEPARTMENT_14);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.DEPARTMENT_16);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.LAB_1_58_MIT);
 				
 		//  Prepare Simulator  ====================================================
-//		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  00:00:00", "2014-03-17  00:00:00");				
-//		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17  00:00:00", "2014-03-17  00:00:00");
-//		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-03-17  00:00:00", "2014-03-17  00:00:00");
-//		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-03-17  00:00:00", "2014-03-17  00:00:00");
-//		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-03-17  00:00:00", "2014-03-17  00:00:00");
-//		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-03-17  00:00:00", "2014-03-17  00:00:00");
-//		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-03-17  00:00:00", "2014-03-17  00:00:00");
-//		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-03-17  00:00:00", "2014-03-17  00:00:00");
-		
-//		simLIB.setSpeedTimeFactor(1000); 	System.out.println(simLIB);
-//		simA4.setSpeedTimeFactor(1000);		System.out.println(simA4);
-//		simA5.setSpeedTimeFactor(1000); 	 	System.out.println(simA5);
-//		sim1_17.setSpeedTimeFactor(1000);	System.out.println(sim1_17);
-//		sim1_19.setSpeedTimeFactor(1000); 	System.out.println(sim1_19);
+//		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  00:00:00", "2014-03-17  05:00:00");				
+//		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17  00:00:00", "2014-03-17  05:00:00");
+//		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-03-17  00:00:00", "2014-03-17  05:00:00");
+//		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-03-17  00:00:00", "2014-03-17  05:00:00");
+//		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-03-17  00:00:00", "2014-03-17  05:00:00");
+//		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-03-17  00:00:00", "2014-03-17  05:00:00");
+//		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-03-17  00:00:00", "2014-03-17  05:00:00");
+//		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-03-17  00:00:00", "2014-03-17  05:00:00");
+//		
+//		simLIB.setSpeedTimeFactor(1000); 	 System.out.println(simLIB);
+//		simA4.setSpeedTimeFactor(1000);		 System.out.println(simA4);
+//		simA5.setSpeedTimeFactor(1000); 	 System.out.println(simA5);
+//		sim1_17.setSpeedTimeFactor(1000);	 System.out.println(sim1_17);
+//		sim1_19.setSpeedTimeFactor(1000); 	 System.out.println(sim1_19);
 //		simDEPT_14.setSpeedTimeFactor(1000); System.out.println(simDEPT_14);
 //		simDEPT_16.setSpeedTimeFactor(1000); System.out.println(simDEPT_16);
 //		simMIT_LAB.setSpeedTimeFactor(1000); System.out.println(simMIT_LAB);
