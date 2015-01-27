@@ -4,7 +4,7 @@
 	expecetd_measure,
 	measure - expecetd_measure AS delta,
 	measure_description,
-	measure_unit,		-- TENS DE METER AQUI O DELTA
+	measure_unit,		
 	device_location,
 	rank()	OVER w2
 	
@@ -14,7 +14,7 @@ FROM	(SELECT	pivot_measures.device_pk,
 		avg(cluster_measures.measure)	     OVER w1	AS expecetd_measure,
 		pivot_measures.measure_description,
 		pivot_measures.measure_unit,
-		pivot_measures.device_location,
+		pivot_measures.device_location,	
 		rank()				     OVER w1
 		
 	FROM 	"DBMS_EMS_Schema"."New_Q8_NormalizeConsumptionsByLocationSquareMeters"   	AS cluster_measures
@@ -22,7 +22,7 @@ FROM	(SELECT	pivot_measures.device_pk,
 		"DBMS_EMS_Schema"."New_Q8_NormalizeConsumptionsByLocationSquareMeters"		AS pivot_measures
 		ON  cluster_measures.device_pk		= pivot_measures.device_pk
 		AND cluster_measures.measure_timestamp <= pivot_measures.measure_timestamp
-		AND cluster_measures.measure_timestamp  > pivot_measures.measure_timestamp  - interval '3 minutes' -- Must Change to 3 months
+		AND cluster_measures.measure_timestamp  > pivot_measures.measure_timestamp  - interval '1 month'
 				
 		WINDOW 	w1 AS 	(PARTITION BY 	cluster_measures.device_pk, 
 						date_part('hour', cluster_measures.measure_timestamp),
