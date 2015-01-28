@@ -5,6 +5,6 @@
     	measure - "DBMS_EMS_Schema".get_expected_measure_udf(device_pk::integer, measure_timestamp) 	AS delta,
     	measure_unit,
     	measure_description,
-    	device_location
+    	device_location,
+    	rank
 FROM "DBMS_EMS_Schema"."New_Q8_NormalizeConsumptionsByLocationSquareMeters"
-WHERE rank = 1
