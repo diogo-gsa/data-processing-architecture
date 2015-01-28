@@ -43,7 +43,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q0_BaseView(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
-		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(true);
+		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
+		install_New_Q6_withQ13AsInput_DeltaAbove(true);
 		
 //		install_New_Q9_FractionateConsumptions(true);
 //		install_New_Q10_OrderByConsumptions(true);
@@ -510,7 +511,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(boolean addListener){
 		
-		String statement = 	"INSERT INTO Q13_CurrentAndExpectedMeasure "                                                    +      
+		String statement = 	"INSERT INTO New_Q13_CurrentAndExpectedMeasure "                                                +      
 							"SELECT  device_pk, "                                                                    		+
 		        					"measure_timestamp, "                                                                   +         
 		        					"measure, "																				+
@@ -521,6 +522,22 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"device_location "                                                                      +                          
 							"FROM Q8_NormalizeConsumptionsByLocationSquareMeters.win:time(1 month) "						+
 							"GROUP BY device_pk, DateTime.toDate(measure_timestamp, \"yyyy-MM-dd HH:mm:ss\").getHours()"; 
+		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	public void install_New_Q6_withQ13AsInput_DeltaAbove(boolean addListener){
+		String statement = 	"SELECT  device_pk, "																			+                                                                                                 
+		        					"measure_timestamp, "																	+
+		        					"(measure/(expected_measure+0.0001) - 1)*100	AS measure, "               			+
+							        "measure                                        AS current_cosnumption, "   			+
+							        "expected_measure, "																	+
+							        "measure_unit, "																		+
+							        "measure_description, "																	+
+							        "device_location "                                                                      +    
+							"FROM   New_Q13_CurrentAndExpectedMeasure "														+
+//							IMPORTANT: (measure/(expected_measure+0.0001) - 1)*0 >= 0 Universal Condition 
+							"WHERE  (measure/(expected_measure+0.0001) - 1)*100 >= 0";
 		
 		esperEngine.installQuery(statement, addListener);
 	}
