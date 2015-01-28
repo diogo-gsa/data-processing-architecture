@@ -43,16 +43,18 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q0_BaseView(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(true);
+		
 //		install_New_Q9_FractionateConsumptions(true);
 //		install_New_Q10_OrderByConsumptions(true);
-		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(true);
+//		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(true);
 		
 //		install_Q7_8_Normalization_IntegrationQuery(true);
 //		install_Q10_OrderBy(true);	
 //		install_Q9_Percentage(true);
 		
 //		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
-//		install_Q13_CurrentAndExpectedHourClusterMeasure(false);
+//		install_Q13_CurrentAndExpectedHourClusterMeasure(true);
 //		install_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
 //		install_Q14_RealAndExpectedMeasureDelta(true);
 //		install_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(true);
@@ -492,6 +494,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(boolean addListener){		
+							//TODO fata aqui o insert INTO
 		String statement =  "SELECT device_pk, "  																			+	
 			       					"measure_timestamp, "                                                               	+                    
 			       					"measure                                                    AS measure, "           	+
@@ -501,6 +504,23 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 			       					"measure_description, "                                                             	+                    
 			       					"device_location "                                                                  	+            
 			       			"FROM Q8_NormalizeConsumptionsByLocationSquareMeters ";
+		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	public void install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(boolean addListener){
+		
+		String statement = 	"INSERT INTO Q13_CurrentAndExpectedMeasure "                                                    +      
+							"SELECT  device_pk, "                                                                    		+
+		        					"measure_timestamp, "                                                                   +         
+		        					"measure, "																				+
+		        					"avg(measure)                AS expected_measure, "										+
+		        					"measure - avg(measure)      AS delta, "           										+
+		        					"measure_description, "                                                               	+
+		        					"measure_unit, "                                                                        +       
+		        					"device_location "                                                                      +                          
+							"FROM Q8_NormalizeConsumptionsByLocationSquareMeters.win:time(1 month) "						+
+							"GROUP BY device_pk, DateTime.toDate(measure_timestamp, \"yyyy-MM-dd HH:mm:ss\").getHours()"; 
 		
 		esperEngine.installQuery(statement, addListener);
 	}

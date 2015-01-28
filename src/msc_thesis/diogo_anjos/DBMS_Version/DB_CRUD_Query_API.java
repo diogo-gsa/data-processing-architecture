@@ -369,16 +369,10 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_New_Q13_Historic(){
-		String queryStatement =	"SELECT * " +
-								"FROM \"DBMS_EMS_Schema\".\"New_Q13_Historic\" " +
-								"WHERE rank = 1";
-		return executeEvaluationQuery(queryStatement);	
-	}
 	
-	public QueryEvaluationReport execute_New_Q13_MostRecent(){
+	public QueryEvaluationReport executeIntegrationQuery_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(){
 		String queryStatement =	"SELECT * " +
-								"FROM \"DBMS_EMS_Schema\".\"New_Q13_MostRecent\"";
+								"FROM \"DBMS_EMS_Schema\".\"New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPredicti\" ";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
