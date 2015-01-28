@@ -32,7 +32,7 @@ FROM	(SELECT	pivot_measures.device_pk,
 				RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)
 	) AS rel 	
 
-WHERE rel.rank = 1 
+WHERE 	rel.rank = 1 
 	AND date_part('hour', measure_timestamp_pivot) = date_part('hour', measure_timestamp_cluster) -- ALTEREI ISTO 
 
 WINDOW 	w2 AS 	(PARTITION BY 	device_pk

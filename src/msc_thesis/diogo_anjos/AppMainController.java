@@ -58,15 +58,30 @@ public class AppMainController {
 		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl();
 		dbms_versionImpl.truncateAll_DatapointReadingTable();
 
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.LIBRARY); 		
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.LECTUREHALL_A4); 	
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.LECTUREHALL_A5); 	
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.CLASSROOM_1_17); 	
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.CLASSROOM_1_19);
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.DEPARTMENT_14);
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.DEPARTMENT_16);
-		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:02:00", EnergyMeter.LAB_1_58_MIT);
-				
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.LIBRARY); 		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-18  00:55:00", "2014-03-18  01:05:00", EnergyMeter.LIBRARY);
+		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.LECTUREHALL_A4); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-18  00:55:00", "2014-03-18  01:05:00", EnergyMeter.LECTUREHALL_A4);
+		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.LECTUREHALL_A5); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-18  00:55:00", "2014-03-18  01:05:00", EnergyMeter.LECTUREHALL_A5);
+		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.CLASSROOM_1_17); 	
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-18  00:55:00", "2014-03-18  01:05:00", EnergyMeter.CLASSROOM_1_17);
+		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.CLASSROOM_1_19);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-18  00:55:00", "2014-03-18  01:05:00", EnergyMeter.CLASSROOM_1_19);
+		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.DEPARTMENT_14);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-18  00:55:00", "2014-03-18  01:05:00", EnergyMeter.DEPARTMENT_14);
+		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.DEPARTMENT_16);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-18  00:55:00", "2014-03-18  01:05:00", EnergyMeter.DEPARTMENT_16);
+		
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.LAB_1_58_MIT);
+		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-18  00:55:00", "2014-03-18  01:05:00", EnergyMeter.LAB_1_58_MIT);
+		
 		//  Prepare Simulator  ====================================================
 //		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  00:00:00", "2014-03-17  05:00:00");				
 //		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17  00:00:00", "2014-03-17  05:00:00");
