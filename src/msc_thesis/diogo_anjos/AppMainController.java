@@ -14,8 +14,8 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 public class AppMainController {
 
 	public static void main(String args[]) throws Exception{
-		execute_DSMS_experiment();
-//		execute_DBMS_experiment();	
+//		execute_DSMS_experiment();
+		execute_DBMS_experiment();	
 	}	
 	
 	
@@ -78,12 +78,12 @@ public class AppMainController {
 //		
 		simLIB.setSpeedTimeFactor(100); 	 System.out.println(simLIB);
 		simA4.setSpeedTimeFactor(100);		 System.out.println(simA4);
-		simA5.setSpeedTimeFactor(100); 	 System.out.println(simA5);
+		simA5.setSpeedTimeFactor(100); 	 	 System.out.println(simA5);
 		sim1_17.setSpeedTimeFactor(100);	 System.out.println(sim1_17);
 		sim1_19.setSpeedTimeFactor(100); 	 System.out.println(sim1_19);
-		simDEPT_14.setSpeedTimeFactor(100); System.out.println(simDEPT_14);
-		simDEPT_16.setSpeedTimeFactor(100); System.out.println(simDEPT_16);
-		simMIT_LAB.setSpeedTimeFactor(100); System.out.println(simMIT_LAB);
+		simDEPT_14.setSpeedTimeFactor(100);  System.out.println(simDEPT_14);
+		simDEPT_16.setSpeedTimeFactor(100);  System.out.println(simDEPT_16);
+		simMIT_LAB.setSpeedTimeFactor(100);  System.out.println(simMIT_LAB);
 		
 		
 		// Init Simulation  ====================================================
