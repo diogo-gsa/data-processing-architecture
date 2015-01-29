@@ -43,7 +43,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q0_BaseView(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
-		install_New_Q1_ConsumptionsAboveThreshold(true);
+//		install_New_Q1_ConsumptionsAboveThreshold(true);
+		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
 //		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
 //		install_New_Q6_withQ13AsInput_DeltaAbove(true);
 		
@@ -250,6 +251,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q3_MinMaxRatioQuery(boolean addListener){
 		String statement = 	"SELECT max(measure_timestamp) 			   AS measure_timestamp, "	    + 
 								   "min(building_normalized_measure)" 								+
@@ -582,6 +584,21 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		   					   "OR  (device_pk = 0 AND measure >= 0)";	
 		esperEngine.installQuery(statement, addListener);
 	}
+	
+	public void install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(boolean addListener){
+		String statement = 	"SELECT  device_pk, "														+
+        							"measure_timestamp, "												+
+        							"min(measure)/max(measure)            AS measure, "					+
+        							"min(measure)                         AS min_measure, "				+
+        							"max(measure)                         AS max_measure, "				+
+        							"measure_unit, "													+
+        							"'Min/Max Ratio over last 60 minutes' AS measure_description, "		+
+        							"device_location "													+
+        					"FROM   Q8_NormalizeConsumptionsByLocationSquareMeters.win:time(60 min) "	+
+        					"WHERE device_pk = 0";
+		esperEngine.installQuery(statement, addListener);
+	}
+	
 	
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
