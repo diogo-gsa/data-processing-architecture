@@ -376,6 +376,22 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ13AsInput(){
+		String queryStatement = "SELECT	device_pk, "																								+
+		        						"measure_timestamp, "																						+
+		        						"(measure/(expecetd_measure+0.0001) - 1)*100                                    AS measure, "				+
+		        						"measure                                                                        AS current_cosnumption, "	+
+		        						"expecetd_measure                                                               AS expected_consumption, " 	+
+		        						"'%percent'                                                                     AS measure_unit, "			+
+		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+ 
+		        						"device_location "																							+
+		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPredicti\" " 					+
+//								IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
+		        				"WHERE  rank = 1 AND (measure/(expecetd_measure+0.0001) - 1)*0 >= 0";
+		
+		 return executeEvaluationQuery(queryStatement);	
+	}
+	
 	
 	
 //	==========================================================================================

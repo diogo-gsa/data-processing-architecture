@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.execute_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction();
+		QueryEvaluationReport report = this.execute_New_Q6_DeltaAboveThreshold_WithQ13AsInput();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -209,6 +209,11 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	
 	public QueryEvaluationReport execute_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(){
 		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction();
+		return report;
+	}
+	
+	public QueryEvaluationReport execute_New_Q6_DeltaAboveThreshold_WithQ13AsInput(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ13AsInput();
 		return report;
 	}
 
