@@ -387,11 +387,26 @@ public class DB_CRUD_Query_API {
 		        						"device_location "																							+
 		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPredicti\" " 					+
 //								IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
-		        				"WHERE  rank = 1 AND (measure/(expecetd_measure+0.0001) - 1)*0 >= 0";
+		        				"WHERE  rank = 1 AND (measure/(expecetd_measure+0.0001) - 1)*100 >= 10";
 		
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ14AsInput(){
+		String queryStatement = "SELECT  device_pk, "                                                                                   			+
+		        						"measure_timestamp, "																						+
+		        						"(measure/(expected_measure+0.0001) - 1)*100                                    AS measure, "				+
+		        						"measure                                                                        AS current_consumption, "	+
+		        						"expected_measure+0.0001                                                        AS expected_consumption, "	+
+		        						"'%percent'                                                                     AS measure_unit, "			+
+		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+
+		        						"device_location "                                                                                      	+
+		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" "                		+
+//		        				IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
+		        				"WHERE rank = 1 AND  (measure/(expected_measure+0.0001) - 1)*100 >= 10 ";
+		
+		 return executeEvaluationQuery(queryStatement);	
+	}
 	
 	
 //	==========================================================================================
