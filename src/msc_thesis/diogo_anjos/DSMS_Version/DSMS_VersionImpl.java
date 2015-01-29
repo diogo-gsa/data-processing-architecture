@@ -43,13 +43,14 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q0_BaseView(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_New_Q1_ConsumptionsAboveThreshold(true);
 //		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
 //		install_New_Q6_withQ13AsInput_DeltaAbove(true);
 		
 //		install_New_Q9_FractionateConsumptions(true);
 //		install_New_Q10_OrderByConsumptions(true);
-		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
-		install_New_Q6_withQ14AsInput_DeltaAbove(true);
+//		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
+//		install_New_Q6_withQ14AsInput_DeltaAbove(true);
 		
 //		install_Q7_8_Normalization_IntegrationQuery(true);
 //		install_Q10_OrderBy(true);	
@@ -311,6 +312,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 		
+	@Deprecated
 	public void install_Q1_AllAndEachDevicesNormalizedConsumptionOverThreshold(boolean addListener){		
 		
 		String statementAdapterQ78 ="INSERT INTO NormalizedMeasureQ1Input "								+
@@ -539,7 +541,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							        "measure_description, "																						+
 							        "device_location "                                                                      					+    
 							"FROM   New_Q13_CurrentAndExpectedMeasure "																			+
-//							IMPORTANT: (measure/(expected_measure+0.0001) - 1)*0 >= 0 Universal Condition 
+							//IMPORTANT: (measure/(expected_measure+0.0001) - 1)*0 >= 0 Universal Condition 
 							"WHERE  (measure/(expected_measure+0.0001) - 1)*100 >= 0";
 		
 		esperEngine.installQuery(statement, addListener);
@@ -555,9 +557,29 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"\"Percent variation between current and expected consumption greater than 10%\" AS measure_description, " 	+
 		        					"device_location " 																							+                                                                             
 		        			"FROM   New_Q14_CurrentAndExpectedMeasure " 																		+
-//							IMPORTANT: (measure/(expected_measure+0.0001) - 1)*0 >= 0 Universal Condition
-		        			"WHERE  (measure/(expected_measure+0.0001) - 1)*0 >= 0 ";
-		
+							//IMPORTANT: (measure/(expected_measure+0.0001) - 1)*0 >= 0 Universal Condition
+		        			"WHERE  (measure/(expected_measure+0.0001) - 1)*0 >= 0 ";	
+		esperEngine.installQuery(statement, addListener);
+	}
+			
+	public void install_New_Q1_ConsumptionsAboveThreshold(boolean addListener){
+		String statement = 	"SELECT  device_pk, "									+
+									"measure_timestamp, "							+
+									"measure, "										+
+									"measure_unit, "								+
+									"measure_description, "							+
+									"device_location "                              +                 
+							"FROM  Q8_NormalizeConsumptionsByLocationSquareMeters "	+
+							"WHERE  (device_pk = 0 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 1 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 2 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 3 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 4 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 5 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 6 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 7 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 8 AND measure >= 0) "				+
+		   					   "OR  (device_pk = 0 AND measure >= 0)";	
 		esperEngine.installQuery(statement, addListener);
 	}
 	

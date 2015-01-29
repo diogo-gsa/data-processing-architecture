@@ -270,9 +270,13 @@ public class DB_CRUD_Query_API {
 			                         "OR (device_pk = 7 AND normalized_measure_avg_10min >= 00) "	+
 			                         "OR (device_pk = 8 AND normalized_measure_avg_10min >= 00) "	+
 				 				")";
+		
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	
+	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q16_MeasuresPercentHigherThanAverageThresold(){
 		String queryStatement =		"SELECT  device_pk, "																								+
 											"measure_timestamp, "																						+
