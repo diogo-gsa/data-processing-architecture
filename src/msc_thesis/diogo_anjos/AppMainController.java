@@ -76,14 +76,14 @@ public class AppMainController {
 		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-03-17  00:00:00", "2014-03-17  00:05:00");
 		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-03-17  00:00:00", "2014-03-17  00:05:00");
 //		
-		simLIB.setSpeedTimeFactor(1000); 	 System.out.println(simLIB);
-		simA4.setSpeedTimeFactor(1000);		 System.out.println(simA4);
-		simA5.setSpeedTimeFactor(1000); 	 System.out.println(simA5);
-		sim1_17.setSpeedTimeFactor(1000);	 System.out.println(sim1_17);
-		sim1_19.setSpeedTimeFactor(1000); 	 System.out.println(sim1_19);
-		simDEPT_14.setSpeedTimeFactor(1000); System.out.println(simDEPT_14);
-		simDEPT_16.setSpeedTimeFactor(1000); System.out.println(simDEPT_16);
-		simMIT_LAB.setSpeedTimeFactor(1000); System.out.println(simMIT_LAB);
+		simLIB.setSpeedTimeFactor(100); 	 System.out.println(simLIB);
+		simA4.setSpeedTimeFactor(100);		 System.out.println(simA4);
+		simA5.setSpeedTimeFactor(100); 	 System.out.println(simA5);
+		sim1_17.setSpeedTimeFactor(100);	 System.out.println(sim1_17);
+		sim1_19.setSpeedTimeFactor(100); 	 System.out.println(sim1_19);
+		simDEPT_14.setSpeedTimeFactor(100); System.out.println(simDEPT_14);
+		simDEPT_16.setSpeedTimeFactor(100); System.out.println(simDEPT_16);
+		simMIT_LAB.setSpeedTimeFactor(100); System.out.println(simMIT_LAB);
 		
 		
 		// Init Simulation  ====================================================

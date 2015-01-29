@@ -43,12 +43,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q0_BaseView(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
-		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
-		install_New_Q6_withQ13AsInput_DeltaAbove(true);
+//		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
+//		install_New_Q6_withQ13AsInput_DeltaAbove(true);
 		
 //		install_New_Q9_FractionateConsumptions(true);
 //		install_New_Q10_OrderByConsumptions(true);
-//		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(true);
+		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
+		install_New_Q6_withQ14AsInput_DeltaAbove(true);
 		
 //		install_Q7_8_Normalization_IntegrationQuery(true);
 //		install_Q10_OrderBy(true);	
@@ -495,8 +496,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(boolean addListener){		
-							//TODO fata aqui o insert INTO
-		String statement =  "SELECT device_pk, "  																			+	
+							
+		String statement =  "INSERT INTO New_Q14_CurrentAndExpectedMeasure "                                                +
+							"SELECT device_pk, "  																			+	
 			       					"measure_timestamp, "                                                               	+                    
 			       					"measure                                                    AS measure, "           	+
 			       					"getExpectedMeasure(device_pk, measure_timestamp)           AS expected_measure, "  	+
@@ -527,20 +529,38 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_New_Q6_withQ13AsInput_DeltaAbove(boolean addListener){
-		String statement = 	"SELECT  device_pk, "																			+                                                                                                 
-		        					"measure_timestamp, "																	+
-		        					"(measure/(expected_measure+0.0001) - 1)*100	AS measure, "               			+
-							        "measure                                        AS current_cosnumption, "   			+
-							        "expected_measure, "																	+
-							        "measure_unit, "																		+
-							        "measure_description, "																	+
-							        "device_location "                                                                      +    
-							"FROM   New_Q13_CurrentAndExpectedMeasure "														+
+		String statement = 	"SELECT  device_pk, "																								+                                                                                                 
+		        					"measure_timestamp, "																						+
+		        					"(measure/(expected_measure+0.0001) - 1)*100									 AS measure, "              +							   
+							        "measure                                        								 AS current_consumption, " 	+
+							        "expected_measure                               								 AS expected_consumption, "	+
+							        "\"%percent\"                                                                    AS measure_unit, " 		+
+							        "\"Percent variation between current and expected consumption greater than 10%\" AS measure_description, " 	+
+							        "measure_description, "																						+
+							        "device_location "                                                                      					+    
+							"FROM   New_Q13_CurrentAndExpectedMeasure "																			+
 //							IMPORTANT: (measure/(expected_measure+0.0001) - 1)*0 >= 0 Universal Condition 
 							"WHERE  (measure/(expected_measure+0.0001) - 1)*100 >= 0";
 		
 		esperEngine.installQuery(statement, addListener);
 	}
+	
+	public void install_New_Q6_withQ14AsInput_DeltaAbove(boolean addListener){
+		String statement = 	"SELECT  device_pk, " 																								+
+		        					"measure_timestamp, "																						+
+		        					"(measure/(expected_measure+0.0001) - 1)*100                                     AS measure, " 				+
+		        					"measure                                                                         AS current_consumption, " 	+
+		        					"expected_measure                                                                AS expected_consumption, " +
+		        					"\"%percent\"                                                                    AS measure_unit, " 		+
+		        					"\"Percent variation between current and expected consumption greater than 10%\" AS measure_description, " 	+
+		        					"device_location " 																							+                                                                             
+		        			"FROM   New_Q14_CurrentAndExpectedMeasure " 																		+
+//							IMPORTANT: (measure/(expected_measure+0.0001) - 1)*0 >= 0 Universal Condition
+		        			"WHERE  (measure/(expected_measure+0.0001) - 1)*0 >= 0 ";
+		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	
