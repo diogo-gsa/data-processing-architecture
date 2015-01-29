@@ -485,7 +485,8 @@ public class DB_CRUD_Query_API {
 						                "WINDOW w AS (PARTITION BY   all_measures.device_pk " 															+ 
 						                			 "ORDER BY all_measures.measure_timestamp DESC " 													+                                                 
 						                			 "RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) " 												+                                           
-						        		") AS rel " 																									+                                        
+						        		") AS rel " 																									+
+						        // IMPORTANT: current_measure >= measure_sliding24h_avg*0.0 0 Universal Condition/Worst Case
 						        "WHERE current_measure >= measure_sliding24h_avg*0.0 AND rank = 1 ";
 		 return executeEvaluationQuery(queryStatement);	
 	}

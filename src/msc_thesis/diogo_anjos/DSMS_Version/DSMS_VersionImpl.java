@@ -42,9 +42,10 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
+//		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 //		install_New_Q1_ConsumptionsAboveThreshold(true);
-		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
+//		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
 //		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
 //		install_New_Q6_withQ13AsInput_DeltaAbove(true);
 		
@@ -353,7 +354,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statementAdapterQ1,  addListener);
 		
 	}
-	
+	@Deprecated
 	public void install_Q16_MeasuresPercentHigherThanAverageThresold(boolean addListener){		
 		String statement = 	"SELECT device_pk, "	 																+
 									"measure_timestamp, "															+
@@ -596,6 +597,23 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
         							"device_location "													+
         					"FROM   Q8_NormalizeConsumptionsByLocationSquareMeters.win:time(60 min) "	+
         					"WHERE device_pk = 0";
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	public void install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(boolean addListener){		
+		//Nota é igual à original Q16, não houve nenhuma alteração, no entanto fiz copy+past para as queries ficarem separadas/arrumadas
+		String statement = 	"SELECT device_pk, "	 																+
+									"measure_timestamp, "															+
+									"measure_avg_10min 									AS measure, "				+
+									"avg(measure_avg_10min)*1.25 						AS threshold_measure, "		+
+									"device_location, "																+
+									"measure_unit, "																+
+									"\"Measures 25% higher than the past 24h average\" AS measure_description "		+
+							"FROM Q7_Sliding10minAVGbyDevice.win:time(24 hours) "									+
+							"GROUP BY device_pk "																	+
+							// IMPORTANT: current_measure >= measure_sliding24h_avg*0.0 0 Universal Condition/Worst Case
+							"HAVING measure_avg_10min >= avg(measure_avg_10min)*0.0 ";
+		
 		esperEngine.installQuery(statement, addListener);
 	}
 	
