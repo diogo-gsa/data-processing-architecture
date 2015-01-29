@@ -1,5 +1,4 @@
-﻿ConsumptionsAboveThreshold
-SELECT  device_pk,                                                 
+﻿SELECT  device_pk,                                                 
         measure_timestamp,                                        
         measure,                  
         measure_unit,                                       

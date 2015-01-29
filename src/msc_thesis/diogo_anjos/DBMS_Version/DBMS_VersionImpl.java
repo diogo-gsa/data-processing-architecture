@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.execute_New_Q1_ConsumptionsAboveThreshold();
+		QueryEvaluationReport report = this.execute_New_Q3_MinMaxConsumptionsRatioOverLast1Hour();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -224,6 +224,11 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	
 	public QueryEvaluationReport execute_New_Q1_ConsumptionsAboveThreshold(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q1_ConsumptionsAboveThreshold();
+		return report;
+	}
+	
+	public QueryEvaluationReport execute_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q3_MinMaxConsumptionsRatioOverLast1Hour();
 		return report;
 	}
 
