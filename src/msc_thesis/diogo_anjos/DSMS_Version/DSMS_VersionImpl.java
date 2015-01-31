@@ -41,7 +41,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_New_Q12_PeriodBetweenDatastreamTuples(true);
+		install_New_Q12_PeriodBetweenDatastreamTuples(false);
+		install_New_Q5_PeriodOutOfBounds(true);
 //		install_New_Q11_ConsumptionsVariationOverLast5min(false);
 //		install_New_Q4_VariationsAboveThreshold(true);
 //		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
@@ -312,6 +313,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q5_DeltaBetweenTuplesOverThreashold(boolean addListener){		
 		String statement = 	"SELECT * "					+
 				 			"FROM DeltaBetweenTuples "  +
@@ -698,6 +700,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 				 			"FROM DenormalizedAggPhases.std:groupwin(device_pk).win:length(2) "						+
 				 			"GROUP BY device_pk " 																	+
 				 			"HAVING count(*) > 1";		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	public void install_New_Q5_PeriodOutOfBounds(boolean addListener){
+		String statement = 	"SELECT * "							+
+				 			"FROM New_Q12_DeltaBetweenTuples "  +
+				 			"WHERE NOT(55 <= delta_seconds  AND  delta_seconds <= 65) ";
 		esperEngine.installQuery(statement, addListener);
 	}
 	
