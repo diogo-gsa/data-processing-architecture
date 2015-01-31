@@ -41,8 +41,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_New_Q11_ConsumptionsVariationOverLast5min(false);
-		install_New_Q4_VariationsAboveThreshold(true);
+		install_New_Q12_PeriodBetweenDatastreamTuples(true);
+//		install_New_Q11_ConsumptionsVariationOverLast5min(false);
+//		install_New_Q4_VariationsAboveThreshold(true);
 //		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
 //		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
@@ -296,6 +297,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q12_DeltaBetweenTuples(boolean addListener){		
 		String statement = 	"INSERT INTO DeltaBetweenTuples "	 													+
 							"SELECT device_pk, " 																	+
@@ -684,6 +686,21 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 		esperEngine.installQuery(statement, addListener);
 	}
+	
+	public void install_New_Q12_PeriodBetweenDatastreamTuples(boolean addListener){		
+		String statement = 	"INSERT INTO New_Q12_DeltaBetweenTuples "	 											+
+							"SELECT device_pk, " 																	+
+									"device_location, " 															+
+									"last(measure_timestamp, 0) AS measure_timestamp_last, " 						+
+									"last(measure_timestamp, 1) AS measure_timestamp_2nd_Last, " 					+
+									"(DateTime.toMillisec(last(measure_timestamp, 0),\"yyyy-MM-dd HH:mm:ss\") " 							+
+									" - DateTime.toMillisec(last(measure_timestamp, 1),\"yyyy-MM-dd HH:mm:ss\"))/1000 AS delta_seconds "	+
+				 			"FROM DenormalizedAggPhases.std:groupwin(device_pk).win:length(2) "						+
+				 			"GROUP BY device_pk " 																	+
+				 			"HAVING count(*) > 1";		
+		esperEngine.installQuery(statement, addListener);
+	}
+	
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	
