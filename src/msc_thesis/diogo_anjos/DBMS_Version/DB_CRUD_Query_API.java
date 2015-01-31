@@ -505,11 +505,11 @@ public class DB_CRUD_Query_API {
 	
 	public QueryEvaluationReport executeEvaluationQuery_New_Q4_VariationsAboveThreshold(){
 		String queryStatement =	"SELECT device_pk, "														+ 
-										"device_location, " 												+
 										"measure_timestamp, " 												+
 										"variation, " 														+
 										"current_measure, " 												+ 
 										"win_measure, " 													+
+										"device_location, " 												+
 										"rank " 															+
 								"FROM \"DBMS_EMS_Schema\".\"New_Q11_ConsumptionsVariationOverLast5min\" " 	+
 								"WHERE rank = 1 " +
@@ -521,7 +521,7 @@ public class DB_CRUD_Query_API {
 									  "OR (device_pk = 6 AND variation >= 00) "	+								
 									  "OR (device_pk = 7 AND variation >= 00) "	+								
 									  "OR (device_pk = 8 AND variation >= 00)) ";
-								//Important: Use device_pk = 8 AND variation >= -1000 for universal condition
+								//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
 		
 		return executeEvaluationQuery(queryStatement);	
 	}

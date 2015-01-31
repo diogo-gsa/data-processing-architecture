@@ -41,7 +41,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_NewQ11_IntegrationQuery(true);
+		install_New_Q11_ConsumptionsVariationOverLast5min(false);
+		install_New_Q4_VariationsAboveThreshold(true);
 //		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
 //		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
@@ -197,6 +198,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q4_EvaluationQuery(boolean addListener){
 		String statement = 	"SELECT variation          		AS variationAlarm, "		+
 									"device_pk         		AS device_pk, "				+
@@ -618,7 +620,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_NewQ11_IntegrationQuery(boolean addListener){
+	public void install_New_Q11_ConsumptionsVariationOverLast5min(boolean addListener){
 		/* Query foi reescrita de uma forma mais simples e mais eficiente:
 		 *
 		 *		SELECT (measure/avg(measure) - 1) 	AS variation,
@@ -663,6 +665,25 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	public void install_New_Q4_VariationsAboveThreshold(boolean addListener){
+		String statement = 	"SELECT  device_pk, " 										+
+									"measure_timestamp, " 								+
+									"variation              AS variation, "				+
+									"current_measure, "									+
+									"device_location   		AS device_location "		+
+							"FROM	New_Q11_VariationStream	"							+	
+							"WHERE ((device_pk = 1 AND variation >= 0) " 				+  									
+							   "OR  (device_pk = 2 AND variation >= 0) "				+								
+							   "OR  (device_pk = 3 AND variation >= 0) "				+								
+							   "OR  (device_pk = 4 AND variation >= 0) "				+								
+							   "OR  (device_pk = 5 AND variation >= 0) "				+								
+							   "OR  (device_pk = 6 AND variation >= 0) "				+								
+							   "OR  (device_pk = 7 AND variation >= 0) "				+								
+							   "OR  (device_pk = 8 AND variation >= 0)) ";
+			//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
+	
+		esperEngine.installQuery(statement, addListener);
+	}
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	
 	
