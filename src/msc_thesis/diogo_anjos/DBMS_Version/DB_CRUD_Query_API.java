@@ -229,6 +229,7 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q5_DeltaBetweenTuplesOverThreashold(){
 		String queryStatement =	"SELECT 	* "											+
 								"FROM \"DBMS_EMS_Schema\".\"Q12_DeltaBetweenTuples\" "	+
@@ -562,6 +563,15 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q5_PeriodOutOfBounds(){
+		String queryStatement =	"SELECT 	* "											+
+								"FROM \"DBMS_EMS_Schema\".\"New_Q12_PeriodBetweenDatastreamTuples\" "	+
+								"WHERE rank = 1 " +
+									"AND NOT('00:00:55' <= delta  AND  delta <= '00:01:05') ";
+		//catch periods between measures out of [50,70] seconds range
+		return executeEvaluationQuery(queryStatement);	
+	}
 	
 //	==========================================================================================
 //						End Of Case Study Queries Implementation Zone 

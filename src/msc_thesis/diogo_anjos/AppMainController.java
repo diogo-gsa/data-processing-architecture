@@ -14,8 +14,8 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 public class AppMainController {
 
 	public static void main(String args[]) throws Exception{
-		execute_DSMS_experiment();
-//		execute_DBMS_experiment();	
+//		execute_DSMS_experiment();
+		execute_DBMS_experiment();	
 	}	
 	
 	
