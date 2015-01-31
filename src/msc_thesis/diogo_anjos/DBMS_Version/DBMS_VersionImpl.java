@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast5min();
+		QueryEvaluationReport report = this.execute_New_Q4_VariationsAboveThreshold();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -247,6 +247,11 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	
 	public QueryEvaluationReport execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
+		return report;
+	}
+	
+	public QueryEvaluationReport execute_New_Q4_VariationsAboveThreshold(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q4_VariationsAboveThreshold();
 		return report;
 	}
 
