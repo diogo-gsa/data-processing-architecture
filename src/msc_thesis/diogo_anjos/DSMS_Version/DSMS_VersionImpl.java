@@ -41,8 +41,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
-		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
+		install_NewQ11_IntegrationQuery(true);
+//		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+//		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
 //		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 //		install_New_Q1_ConsumptionsAboveThreshold(true);
 //		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
@@ -152,7 +153,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement,addListener);
 	}
 	
-	
+	@Deprecated
 	public void install_Q11_IntegrationQuery(boolean addListener){
 		/* Query foi reescrita de uma forma mais simples e mais eficiente:
 		 *
@@ -617,6 +618,50 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	public void install_NewQ11_IntegrationQuery(boolean addListener){
+		/* Query foi reescrita de uma forma mais simples e mais eficiente:
+		 *
+		 *		SELECT (measure/avg(measure) - 1) 	AS variation,
+		 *				device_pk 					AS device_pk,
+		 *				device_location 			AS device_location,
+		 *				measure_timestamp 			AS measure_timestamp
+		 *		FROM	DenormalizedAggPhases.win:time(60 min)
+		 *		GROUP BY device_pk
+		 *
+		 * NO select projeccões "singulares" são sempre feitas sobre o tuplo mais recente,
+		 * que acabou de entrar no engien, e fez triggered à query.
+		 * Agregações são avaliados sobre janelas
+		 * Por isso: measure      -> avaliado sobre tuplo mais recente.
+		 * 			 avg(measure) -> avaliado sobre a ajanela win:time
+		 * Assim, evitas um "SELF-JOIN" e um "OUTPUT LAST", no entanto tudo isto
+		 * carece de validação impirica.
+		 *
+		 * Antiga (e Ineficiente) implemenntação da query que não tira
+		 * partido da caracteristica especial dos DSMS de a query ser orientada ao
+		 * tuplo, e não ao dataset inteiro:
+		String statement = 	"INSERT INTO Q11_VariationStream " 							+
+							"SELECT (now.measure/avg(win.measure) - 1) AS variation, "	+
+									"now.device_pk AS device_pk, "						+
+									"now.device_location AS device_location, "			+
+									"now.measure_timestamp AS measure_timestamp "		+
+							"FROM	DenormalizedAggPhases.win:time(60 min)	AS win, " 	+
+							"		DenormalizedAggPhases.std:lastevent()	AS now "	+
+							"WHERE 	win.device_pk = now.device_pk "						+
+							"OUTPUT LAST EVERY 1 EVENTS ";
+		*/
+		
+		String statement = 	"INSERT INTO New_Q11_VariationStream " 										 +
+							"SELECT 	device_pk 								  AS device_pk, "		 +
+										"measure_timestamp 						  AS measure_timestamp, " +
+										"(measure/(avg(measure)+0.00001) - 1)	  AS variation, "		 +
+										"measure 								  AS current_measure, "  +
+										"avg(measure)							  AS win_measure, "		 +
+										"device_location 						  AS device_location "	 +
+							"FROM		DenormalizedAggPhases.win:time(5 min) " 						 +
+							"GROUP BY 	device_pk ";
+	
+		esperEngine.installQuery(statement, addListener);
+	}
 	
 	
 /* EOF Data Integration and Evaluation Queries ==============================================================*/	

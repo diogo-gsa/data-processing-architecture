@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast10min();
+		QueryEvaluationReport report = this.executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast5min();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -99,8 +99,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
  * ========================================================================================================*/	
 	
 	
-	public QueryEvaluationReport executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast10min(){
-		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast10min();
+	public QueryEvaluationReport executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast5min(){
+		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast5min();
 		return report;
 	}
 	

@@ -14,8 +14,8 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 public class AppMainController {
 
 	public static void main(String args[]) throws Exception{
-//		execute_DSMS_experiment();
-		execute_DBMS_experiment();	
+		execute_DSMS_experiment();
+//		execute_DBMS_experiment();	
 	}	
 	
 	
@@ -33,14 +33,14 @@ public class AppMainController {
 		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16,	"2014-03-17  00:00:00", "2014-03-17  00:05:00");			
 		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT, 	"2014-03-17  00:00:00", "2014-03-17  00:05:00");			
 		
-		simLIB.setSpeedTimeFactor(1000);
-		simA4.setSpeedTimeFactor(1000);
-		simA5.setSpeedTimeFactor(1000);
-		sim1_17.setSpeedTimeFactor(1000);
-		sim1_19.setSpeedTimeFactor(1000);
-		simDEPT_14.setSpeedTimeFactor(1000);
-		simDEPT_16.setSpeedTimeFactor(1000);
-		simMIT_LAB.setSpeedTimeFactor(1000);
+		simLIB.setSpeedTimeFactor(100);
+		simA4.setSpeedTimeFactor(100);
+		simA5.setSpeedTimeFactor(100);
+		sim1_17.setSpeedTimeFactor(100);
+		sim1_19.setSpeedTimeFactor(100);
+		simDEPT_14.setSpeedTimeFactor(100);
+		simDEPT_16.setSpeedTimeFactor(100);
+		simMIT_LAB.setSpeedTimeFactor(100);
 
 		// Init Simulation  ====================================================
 		simLIB.registerNewClient(dsms_versionImpl); 	simLIB.start();

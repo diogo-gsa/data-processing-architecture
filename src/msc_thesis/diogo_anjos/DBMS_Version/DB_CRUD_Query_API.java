@@ -139,9 +139,9 @@ public class DB_CRUD_Query_API {
 //	==========================================================================================
 	
 	
-	public QueryEvaluationReport executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast10min(){
+	public QueryEvaluationReport executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast5min(){
 		String queryStatement =	  "SELECT * "
-								+ "FROM \"DBMS_EMS_Schema\".\"New_Q11_ConsumptionsVariationOverLast10min\"";
+								+ "FROM \"DBMS_EMS_Schema\".\"New_Q11_ConsumptionsVariationOverLast5min\"";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
@@ -188,7 +188,7 @@ public class DB_CRUD_Query_API {
 	}
 	
 	
-	public QueryEvaluationReport executeEvaluationQuery_Q4_NoWindows_10min(){
+	public QueryEvaluationReport executeEvaluationQuery_Q4_NoWindows_5min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\""
 //										"DBMS_EMS_Schema"."Q11_Size_Win_10min" 		//Available Windows (views) to "feed" this Query

@@ -1,11 +1,9 @@
-﻿-- Q11_WindowWorkaround_10min ###############
-
-SELECT dga.device_pk,
-	dga.device_location,
+﻿SELECT 	dga.device_pk,
 	dga.measure_timestamp,	
 	(dga.measure/(avg(dga.measure) 	OVER w +0.00001) - 1) 	AS variation,	
 	dga.measure 						AS current_measure,
 	avg(dga.measure) 		OVER w 			AS win_measure,
+	dga.device_location,
 	rank() 		 		OVER w 			AS rank
 	
 FROM 	"DBMS_EMS_Schema"."DenormalizedAggPhases" 	AS dga,
@@ -20,5 +18,3 @@ WHERE dga.device_pk = dga_last_ts.device_pk
 WINDOW w AS 	(PARTITION BY dga.device_pk 	
 		ORDER BY dga.measure_timestamp 
 		DESC RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING)
-
---WHERE rel.rank = 1;	
