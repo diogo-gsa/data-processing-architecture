@@ -137,38 +137,50 @@ public class DB_CRUD_Query_API {
 // 	==========================================================================================
 //								Case Study Queries Implementation 
 //	==========================================================================================
+	
+	
+	public QueryEvaluationReport executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast10min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"New_Q11_ConsumptionsVariationOverLast10min\"";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_10min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\"";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_60min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_60min\"";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_SizeWindows_10min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_Size_Win_10min\"";
 		return executeEvaluationQuery(queryStatement);
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_SizeWindows_60min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_Size_Win_60min\"";
 		return executeEvaluationQuery(queryStatement);
 	}
 	
-	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_TimeWindows_10min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_Time_Win_10min\"";
 		return executeEvaluationQuery(queryStatement);
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_TimeWindows_60min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"Q11_Time_Win_60min\"";

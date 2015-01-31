@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
+		QueryEvaluationReport report = this.executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast10min();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -97,31 +97,44 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 /* ==========================================================================================================
  * 										Data Integration and Evaluation Queries
  * ========================================================================================================*/	
+	
+	
+	public QueryEvaluationReport executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast10min(){
+		QueryEvaluationReport report = dbAPI.executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast10min();
+		return report;
+	}
+	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_10min(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_NoWindows_10min();
 		return report;
 	}
 
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_NoWindows_60min(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_NoWindows_60min();
 		return report;
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_SizeWindows_10min(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_SizeWindows_10min();
 		return report;
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_SizeWindows_60min(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_SizeWindows_60min();
 		return report;
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_TimeWindows_10min(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_TimeWindows_10min();
 		return report;
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q11_TimeWindows_60min(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q11_TimeWindows_60min();
 		return report;
