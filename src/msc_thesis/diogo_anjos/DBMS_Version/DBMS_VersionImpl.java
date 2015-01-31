@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.execute_New_Q4_VariationsAboveThreshold();
+		QueryEvaluationReport report = this.execute_New_Q12_PeriodBetweenDatastreamTuples();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
@@ -252,6 +252,11 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	
 	public QueryEvaluationReport execute_New_Q4_VariationsAboveThreshold(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q4_VariationsAboveThreshold();
+		return report;
+	}
+	
+	public QueryEvaluationReport execute_New_Q12_PeriodBetweenDatastreamTuples(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q12_PeriodBetweenDatastreamTuples();
 		return report;
 	}
 
