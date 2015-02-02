@@ -44,7 +44,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 		// Execute QUERY
-		QueryEvaluationReport report = this.execute_New_Q4_VariationsAboveThreshold();
+		QueryEvaluationReport report = this.execute_New_Q5_PeriodOutOfBounds();
 		
 		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
 		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
