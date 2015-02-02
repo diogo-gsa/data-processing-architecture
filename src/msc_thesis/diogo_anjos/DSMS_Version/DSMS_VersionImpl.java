@@ -41,13 +41,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		install_Q0_BaseView(false);
-		install_New_Q12_PeriodBetweenDatastreamTuples(false);
-		install_New_Q5_PeriodOutOfBounds(true);
+//		install_New_Q12_PeriodBetweenDatastreamTuples(false);
+//		install_New_Q5_PeriodOutOfBounds(true);
 //		install_New_Q11_ConsumptionsVariationOverLast5min(false);
 //		install_New_Q4_VariationsAboveThreshold(true);
-//		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
-//		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 //		install_New_Q1_ConsumptionsAboveThreshold(true);
 //		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
 //		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
@@ -55,7 +55,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 //		install_New_Q9_FractionateConsumptions(true);
 //		install_New_Q10_OrderByConsumptions(true);
-//		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
+		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
+		install_New_Q17(true);
 //		install_New_Q6_withQ14AsInput_DeltaAbove(true);
 		
 //		install_Q7_8_Normalization_IntegrationQuery(true);
@@ -707,6 +708,19 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		String statement = 	"SELECT * "							+
 				 			"FROM New_Q12_DeltaBetweenTuples "  +
 				 			"WHERE NOT(55 <= delta_seconds  AND  delta_seconds <= 65) ";
+		esperEngine.installQuery(statement, addListener);
+	}
+	
+	//TODO
+	public void install_New_Q17(boolean addListener){
+		String statement = 	"SELECT  device_pk, " +
+		        					"measure_timestamp, " +
+		        					"count(measure) " +
+		        			"FROM   New_Q14_CurrentAndExpectedMeasure.win:time(60 min) " +
+		        			"WHERE  measure > expected_measure " +
+		        			"GROUP BY device_pk " +
+		        			"HAVING 5 <= count(measure) AND count(measure) <= 10 ";
+		
 		esperEngine.installQuery(statement, addListener);
 	}
 	
