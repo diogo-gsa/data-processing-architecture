@@ -14,7 +14,7 @@ SELECT 	rela.device_pk,
 		 location_area_m2,
 		 rank() OVER (PARTITION BY device_pk 
 			      ORDER BY 	measure_timestamp DESC) AS rank
-           FROM "DBMS_EMS_Schema"."DenormalizedAggPhases") rela
+           FROM "DBMS_EMS_Schema"."New_Q0_JoinDatastreamWithStaticData") rela
    JOIN ( SELECT device_pk,
 		 measure_timestamp,
 		 measure,
@@ -24,7 +24,7 @@ SELECT 	rela.device_pk,
 		 location_area_m2,
 		 rank() OVER (PARTITION BY device_pk 
 			      ORDER BY measure_timestamp DESC) AS rank
-           FROM "DBMS_EMS_Schema"."DenormalizedAggPhases") relb 
+           FROM "DBMS_EMS_Schema"."New_Q0_JoinDatastreamWithStaticData") relb 
     ON rela.device_pk = relb.device_pk 
     AND (rela.rank + 1) = relb.rank
  

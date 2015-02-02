@@ -8,9 +8,9 @@ SELECT 	r1.device_pk,
 	r1.location_area_m2,
 	rank()	OVER w
 
-FROM 	"DBMS_EMS_Schema"."DenormalizedAggPhases" r1
+FROM 	"DBMS_EMS_Schema"."New_Q0_JoinDatastreamWithStaticData" r1
 	JOIN 
-	"DBMS_EMS_Schema"."DenormalizedAggPhases" r2 
+	"DBMS_EMS_Schema"."New_Q0_JoinDatastreamWithStaticData" r2 
 	ON r1.device_pk = r2.device_pk 
 	AND r2.measure_timestamp >= (r1.measure_timestamp - '00:10:00'::interval) 
 	AND r2.measure_timestamp <= r1.measure_timestamp

@@ -515,14 +515,14 @@ public class DB_CRUD_Query_API {
 										"rank " 															+
 								"FROM \"DBMS_EMS_Schema\".\"New_Q11_ConsumptionsVariationOverLast5min\" " 	+
 								"WHERE rank = 1 " +
-									"AND ((device_pk = 1 AND variation >= 00) " +  									
-									  "OR (device_pk = 2 AND variation >= 00) "	+								
-									  "OR (device_pk = 3 AND variation >= 00) "	+								
-									  "OR (device_pk = 4 AND variation >= 00) "	+								
-									  "OR (device_pk = 5 AND variation >= 00) "	+								
-									  "OR (device_pk = 6 AND variation >= 00) "	+								
-									  "OR (device_pk = 7 AND variation >= 00) "	+								
-									  "OR (device_pk = 8 AND variation >= 00)) ";
+									"AND ((device_pk = 1 AND variation >= -100) " +  									
+									  "OR (device_pk = 2 AND variation >= -100) "	+								
+									  "OR (device_pk = 3 AND variation >= -100) "	+								
+									  "OR (device_pk = 4 AND variation >= -100) "	+								
+									  "OR (device_pk = 5 AND variation >= -100) "	+								
+									  "OR (device_pk = 6 AND variation >= -100) "	+								
+									  "OR (device_pk = 7 AND variation >= -100) "	+								
+									  "OR (device_pk = 8 AND variation >= -100)) ";
 								//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
 		
 		return executeEvaluationQuery(queryStatement);	
