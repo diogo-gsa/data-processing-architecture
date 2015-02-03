@@ -138,7 +138,169 @@ public class DB_CRUD_Query_API {
 //								Case Study Queries Implementation 
 //	==========================================================================================
 	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q4_VariationsAboveThreshold(){
+		String queryStatement =	"SELECT device_pk, "														+ 
+										"measure_timestamp, " 												+
+										"variation, " 														+
+										"current_measure, " 												+ 
+										"win_measure, " 													+
+										"device_location, " 												+
+										"rank " 															+
+								"FROM \"DBMS_EMS_Schema\".\"New_Q11_ConsumptionsVariationOverLast5min\" " 	+
+								"WHERE rank = 1 " +
+									"AND ((device_pk = 1 AND variation >= -100) " +  									
+									  "OR (device_pk = 2 AND variation >= -100) "	+								
+									  "OR (device_pk = 3 AND variation >= -100) "	+								
+									  "OR (device_pk = 4 AND variation >= -100) "	+								
+									  "OR (device_pk = 5 AND variation >= -100) "	+								
+									  "OR (device_pk = 6 AND variation >= -100) "	+								
+									  "OR (device_pk = 7 AND variation >= -100) "	+								
+									  "OR (device_pk = 8 AND variation >= -100)) ";
+								//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
+		
+		return executeEvaluationQuery(queryStatement);	
+	}
 	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q5_PeriodOutOfBounds(){
+		String queryStatement =	"SELECT 	* "											+
+								"FROM \"DBMS_EMS_Schema\".\"New_Q12_PeriodBetweenDatastreamTuples\" "	+
+								"WHERE rank = 1 " +
+									"AND NOT('00:00:55' <= delta  AND  delta <= '00:01:05') ";
+		//catch periods between measures out of [50,70] seconds range
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q1_ConsumptionsAboveThreshold(){
+		String queryStatement =	"SELECT  device_pk, " 																	+                                         
+		        						"measure_timestamp, " 															+                                        
+								        "measure, " 																	+
+								        "measure_unit, " 																+                                       
+								        "measure_description, " 														+                                
+								        "device_location " 																+
+								"FROM   \"DBMS_EMS_Schema\".\"New_Q8_NormalizeConsumptionsByLocationSquareMeters\" " 	+
+								"WHERE   rank = 1 " 																	+
+									"AND (  (device_pk = 0 AND measure >= 00) " 										+
+											"OR (device_pk = 1 AND measure >= 00) " 									+
+											"OR (device_pk = 2 AND measure >= 00) " 									+
+											"OR (device_pk = 3 AND measure >= 00) " 									+
+											"OR (device_pk = 4 AND measure >= 00) " 									+
+											"OR (device_pk = 5 AND measure >= 00) " 									+
+											"OR (device_pk = 6 AND measure >= 00) " 									+
+											"OR (device_pk = 7 AND measure >= 00) " 									+
+											"OR (device_pk = 8 AND measure >= 00)) ";
+		
+		 return executeEvaluationQuery(queryStatement);	
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(){
+		String queryStatement =	"SELECT  r1.device_pk, "																				+
+										"r1.measure_timestamp, "																		+
+										"min(r2.measure)/max(r2.measure) AS measure, "													+
+										"min(r2.measure) AS min_measure, "																+
+										"max(r2.measure) AS max_measure, "																+
+										"r1.measure_unit, "																				+
+										"'Min/Max Ratio over last 60 minutes'::text AS measure_description, "							+
+										"r1.device_location "																			+
+								"FROM   \"DBMS_EMS_Schema\".\"New_Q8_NormalizeConsumptionsByLocationSquareMeters\"   AS r1 "			+
+										"INNER JOIN "																					+
+								       "\"DBMS_EMS_Schema\".\"New_Q8_NormalizeConsumptionsByLocationSquareMeters\"	 AS r2 "			+  		
+								       "ON   r1.device_pk   = 0 "      /*All Building consumption only*/								+
+								       	"AND r1.rank        = 1 "	   /*All Building most recent measure*/								+
+								       	"AND r2.device_pk   = r1.device_pk "															+
+								       	"AND r2.measure_timestamp > r1.measure_timestamp - interval '60 minutes' " /*60min Time Window*/+
+								"GROUP BY r1.device_pk, "																				+
+									 	 "r1.measure_timestamp, " 																		+
+									 	 "r1.measure_unit, "																			+
+									 	 "r1.measure_description, "																		+
+									 	 "r1.device_location";	
+		
+		 return executeEvaluationQuery(queryStatement);	
+	}
+	
+	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ13AsInput(){
+		String queryStatement = "SELECT	device_pk, "																								+
+		        						"measure_timestamp, "																						+
+		        						"(measure/(expecetd_measure+0.0001) - 1)*100                                    AS measure, "				+
+		        						"measure                                                                        AS current_cosnumption, "	+
+		        						"expecetd_measure                                                               AS expected_consumption, " 	+
+		        						"'%percent'                                                                     AS measure_unit, "			+
+		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+ 
+		        						"device_location "																							+
+		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPredicti\" " 					+
+								// IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
+		        				"WHERE  rank = 1 AND (measure/(expecetd_measure+0.0001) - 1)*100 >= 10";
+		
+		 return executeEvaluationQuery(queryStatement);	
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ14AsInput(){
+		String queryStatement = "SELECT  device_pk, "                                                                                   			+
+		        						"measure_timestamp, "																						+
+		        						"(measure/(expected_measure+0.0001) - 1)*100                                    AS measure, "				+
+		        						"measure                                                                        AS current_consumption, "	+
+		        						"expected_measure+0.0001                                                        AS expected_consumption, "	+
+		        						"'%percent'                                                                     AS measure_unit, "			+
+		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+
+		        						"device_location "                                                                                      	+
+		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" "                		+
+		        				// IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
+		        				"WHERE rank = 1 AND  (measure/(expected_measure+0.0001) - 1)*100 >= 10 ";	
+		 return executeEvaluationQuery(queryStatement);	
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q17(){
+		String queryStatement =	"SELECT r2.device_pk, " 																			+
+										"max(r2.measure_timestamp) AS measure_timestamp, " 											+
+										"count(r2.measure) 	  AS count_measure_above_expected "										+
+								"FROM 	\"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" r1 " 	+
+										"INNER JOIN " 																				+
+										"\"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" r2 " 	+
+										"ON r1.device_pk = r2.device_pk " 															+
+										"AND r1.rank = 1 " 																			+
+										"AND r2.measure_timestamp > (r1.measure_timestamp - '01:00:00'::interval) " 				+ 
+								"WHERE  r2.measure > r2.expected_measure " 															+ 
+								"GROUP BY r2.device_pk, r2.expected_measure " 														+
+								"HAVING 5 <= COUNT(r2.measure) AND COUNT(r2.measure) <= 10 ";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	public QueryEvaluationReport executeEvaluationQuery_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(){
+		String queryStatement =	"SELECT  device_pk, " 																									+                                                                                       
+						        		"measure_timestamp, " 																							+                                                                                        
+						        		"current_measure                AS measure, " 																	+                                                                
+						        		"measure_sliding24h_avg*1.25    AS measure_threshold, " 														+                                                      
+						        		"device_location, " 																							+              
+						        		"measure_unit, " 																								+                                                                                   
+						        		"'Measures 25% higher than the past 24h average' AS measure_description " 										+                                    
+						        "FROM   (SELECT  all_measures.device_pk, " 																				+
+						                		"all_measures.measure_timestamp, " 																		+                                                                   
+						                		"all_measures.measure_avg_10min   AS current_measure, " 												+                                              
+						                		"all_measures.measure_unit, "  																			+                
+						                		"all_measures.measure_description, " 																	+                                                                 
+						                		"all_measures.device_location, "   																		+                                                         
+						                		"all_measures.location_area_m2, "   																	+                                                                
+						                		"avg(all_measures.measure_avg_10min) over w       AS measure_sliding24h_avg, " 							+                                   
+						                		"rank()                  			 over w "  															+
+						                "FROM   \"DBMS_EMS_Schema\".\"New_Q7_SmoothConsumptionsWith10MinSlindingAvg\"   AS all_measures " 				+                                              
+						                		"INNER JOIN " 																							+
+						                		"\"DBMS_EMS_Schema\".\"New_Q7_SmoothConsumptionsWith10MinSlindingAvg\" AS most_recent_measure " 		+
+						                		"ON   most_recent_measure.rank = 1 " 																	+
+						                		"AND  most_recent_measure.device_pk = all_measures.device_pk " 											+                                        
+						                		"AND  all_measures.measure_timestamp >= most_recent_measure.measure_timestamp  - interval '24 hours' " 	+             
+						                "WINDOW w AS (PARTITION BY   all_measures.device_pk " 															+ 
+						                			 "ORDER BY all_measures.measure_timestamp DESC " 													+                                                 
+						                			 "RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) " 												+                                           
+						        		") AS rel " 																									+
+						        // IMPORTANT: current_measure >= measure_sliding24h_avg*0.0 0 Universal Condition/Worst Case
+						        "WHERE current_measure >= measure_sliding24h_avg*0.0 AND rank = 1 ";
+		 return executeEvaluationQuery(queryStatement);	
+	}
+	
+	
+// =================================== DEPRECATED FUNCTIONS ==================================
+	
+	@Deprecated
 	public QueryEvaluationReport executeIntegrationQuery_New_Q11_ConsumptionsVariationOverLast5min(){
 		String queryStatement =	  "SELECT * "
 								+ "FROM \"DBMS_EMS_Schema\".\"New_Q11_ConsumptionsVariationOverLast5min\"";
@@ -188,44 +350,84 @@ public class DB_CRUD_Query_API {
 	}
 	
 	@Deprecated
-	public QueryEvaluationReport executeEvaluationQuery_Q4_NoWindows_5min(){
-		String queryStatement =	  "SELECT * "
-								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\""
-//										"DBMS_EMS_Schema"."Q11_Size_Win_10min" 		//Available Windows (views) to "feed" this Query
-//										"DBMS_EMS_Schema"."Q11_Time_Win_10min"
-								+ "WHERE 	variation_10min_win > 0.05";
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
 	public QueryEvaluationReport executeIntegrationQuery_Q8_7_10minAVG_NoWindowOperator(){
 		String queryStatement =	"SELECT * " 										+					
 								"FROM 	\"DBMS_EMS_Schema\".\"Q7+8_NoWindowOp\" ";
 		return executeEvaluationQuery(queryStatement);
 	}
 	
-
+	@Deprecated
 	public QueryEvaluationReport executeIntegrationQuery_Q8_7_10minAVG_WindowOperator(){
 		String queryStatement =	"SELECT * " 										+					
 								"FROM 	\"DBMS_EMS_Schema\".\"Q7+8_WindowOp\" ";
 		return executeEvaluationQuery(queryStatement);
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeIntegrationQuery_Q9_Percentage(){
 		String queryStatement =	"SELECT * " 										+					
 								"FROM 	\"DBMS_EMS_Schema\".\"Q9_Percentage\" ";	
 		return executeEvaluationQuery(queryStatement);
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeIntegrationQuery_Q10_SortedMeasures(){
 		String queryStatement =	"SELECT * " 										+					
 								"FROM 	\"DBMS_EMS_Schema\".\"Q10_SortedMeasures\" ";	
 		return executeEvaluationQuery(queryStatement);	
 	}
-
+	
 	@Deprecated
-	public QueryEvaluationReport executeIntegrationQuery_Q12_DeltaBetweenTuples(){
-		String queryStatement =	"SELECT * " 										+	
-								"FROM \"DBMS_EMS_Schema\".\"Q12_DeltaBetweenTuples\"";
+	public QueryEvaluationReport executeIntegrationQuery_Q14_CurrentAndExpectedUDFMeasure(){
+		String queryStatement =	"SELECT * " +
+								"FROM \"DBMS_EMS_Schema\".\"Q14_CurrentAndExpectedUDFMeasure\"";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	@Deprecated 
+	public QueryEvaluationReport executeIntegrationQuery_Q13_CurrentAndExpectedHourClusterMeasure(){
+		String queryStatement =	"SELECT * " +
+								"FROM \"DBMS_EMS_Schema\".\"Q13_CurrentAndExpectedHourClusterMeasure\"";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	
+	
+	@Deprecated // This *NEW* is marked as Deprecated because it an Integration Query, and these queries are directy installed at pgSQL Server
+	public QueryEvaluationReport executeIntegrationQuery_New_Q9_FractionateConsumptions(){
+		String queryStatement =	"SELECT * " 														+					
+								"FROM 	\"DBMS_EMS_Schema\".\"New_Q9_FractionateConsumptions\" ";			
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	@Deprecated // This *NEW* is marked as Deprecated because it an Integration Query, and these queries are directy installed at pgSQL Server
+	public QueryEvaluationReport executeIntegrationQuery_New_Q10_OrderByConsumptions(){
+		String queryStatement =	"SELECT * " 														+					
+								"FROM 	\"DBMS_EMS_Schema\".\"New_Q10_OrderByConsumptions\" ";			
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	@Deprecated // This *NEW* is marked as Deprecated because it an Integration Query, and these queries are directy installed at pgSQL Server
+	public QueryEvaluationReport executeIntegrationQuery_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(){
+		String queryStatement =	"SELECT * " +
+								"FROM \"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\"";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	@Deprecated // This *NEW* is marked as Deprecated because it an Integration Query, and these queries are directy installed at pgSQL Server
+	public QueryEvaluationReport executeIntegrationQuery_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(){
+		String queryStatement =	"SELECT * " +
+								"FROM \"DBMS_EMS_Schema\".\"New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPredicti\" ";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	@Deprecated
+	public QueryEvaluationReport executeEvaluationQuery_Q4_NoWindows_5min(){
+		String queryStatement =	  "SELECT * "
+								+ "FROM \"DBMS_EMS_Schema\".\"Q11_NO_Win_10min\""
+										//"DBMS_EMS_Schema"."Q11_Size_Win_10min" 		//Available Windows (views) to "feed" this Query
+										//"DBMS_EMS_Schema"."Q11_Time_Win_10min"
+								+ "WHERE 	variation_10min_win > 0.05";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
@@ -238,6 +440,14 @@ public class DB_CRUD_Query_API {
 		//catch periods between measures out of [50,70] seconds range
 		return executeEvaluationQuery(queryStatement);	
 	}
+	
+	@Deprecated
+	public QueryEvaluationReport executeIntegrationQuery_Q12_DeltaBetweenTuples(){
+		String queryStatement =	"SELECT * " 										+	
+								"FROM \"DBMS_EMS_Schema\".\"Q12_DeltaBetweenTuples\"";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
 	
 	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q3_MinMaxRatio(){
@@ -290,8 +500,6 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	
-	
 	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q16_MeasuresPercentHigherThanAverageThresold(){
 		String queryStatement =		"SELECT  device_pk, "																								+
@@ -323,16 +531,6 @@ public class DB_CRUD_Query_API {
 														 "RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) "											+
 											") AS rel "																									+
 									"WHERE current_measure > measure_sliding24h_avg*1.25 AND rank = 1 ";
-		return executeEvaluationQuery(queryStatement);	
-	}
-	public QueryEvaluationReport executeIntegrationQuery_Q14_CurrentAndExpectedUDFMeasure(){
-		String queryStatement =	"SELECT * " +
-								"FROM \"DBMS_EMS_Schema\".\"Q14_CurrentAndExpectedUDFMeasure\"";
-		return executeEvaluationQuery(queryStatement);	
-	}
-	public QueryEvaluationReport executeIntegrationQuery_Q13_CurrentAndExpectedHourClusterMeasure(){
-		String queryStatement =	"SELECT * " +
-								"FROM \"DBMS_EMS_Schema\".\"Q13_CurrentAndExpectedHourClusterMeasure\"";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
@@ -372,167 +570,8 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	
-	public QueryEvaluationReport executeIntegrationQuery_New_Q9_FractionateConsumptions(){
-		String queryStatement =	"SELECT * " 														+					
-								"FROM 	\"DBMS_EMS_Schema\".\"New_Q9_FractionateConsumptions\" ";			
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeIntegrationQuery_New_Q10_OrderByConsumptions(){
-		String queryStatement =	"SELECT * " 														+					
-								"FROM 	\"DBMS_EMS_Schema\".\"New_Q10_OrderByConsumptions\" ";			
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeIntegrationQuery_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(){
-		String queryStatement =	"SELECT * " +
-								"FROM \"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\"";
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	
-	public QueryEvaluationReport executeIntegrationQuery_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(){
-		String queryStatement =	"SELECT * " +
-								"FROM \"DBMS_EMS_Schema\".\"New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPredicti\" ";
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ13AsInput(){
-		String queryStatement = "SELECT	device_pk, "																								+
-		        						"measure_timestamp, "																						+
-		        						"(measure/(expecetd_measure+0.0001) - 1)*100                                    AS measure, "				+
-		        						"measure                                                                        AS current_cosnumption, "	+
-		        						"expecetd_measure                                                               AS expected_consumption, " 	+
-		        						"'%percent'                                                                     AS measure_unit, "			+
-		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+ 
-		        						"device_location "																							+
-		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPredicti\" " 					+
-								// IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
-		        				"WHERE  rank = 1 AND (measure/(expecetd_measure+0.0001) - 1)*100 >= 10";
-		
-		 return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ14AsInput(){
-		String queryStatement = "SELECT  device_pk, "                                                                                   			+
-		        						"measure_timestamp, "																						+
-		        						"(measure/(expected_measure+0.0001) - 1)*100                                    AS measure, "				+
-		        						"measure                                                                        AS current_consumption, "	+
-		        						"expected_measure+0.0001                                                        AS expected_consumption, "	+
-		        						"'%percent'                                                                     AS measure_unit, "			+
-		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+
-		        						"device_location "                                                                                      	+
-		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" "                		+
-		        				// IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
-		        				"WHERE rank = 1 AND  (measure/(expected_measure+0.0001) - 1)*100 >= 10 ";	
-		 return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q1_ConsumptionsAboveThreshold(){
-		String queryStatement =	"SELECT  device_pk, " 																	+                                         
-		        						"measure_timestamp, " 															+                                        
-								        "measure, " 																	+
-								        "measure_unit, " 																+                                       
-								        "measure_description, " 														+                                
-								        "device_location " 																+
-								"FROM   \"DBMS_EMS_Schema\".\"New_Q8_NormalizeConsumptionsByLocationSquareMeters\" " 	+
-								"WHERE   rank = 1 " 																	+
-									"AND (  (device_pk = 0 AND measure >= 00) " 										+
-											"OR (device_pk = 1 AND measure >= 00) " 									+
-											"OR (device_pk = 2 AND measure >= 00) " 									+
-											"OR (device_pk = 3 AND measure >= 00) " 									+
-											"OR (device_pk = 4 AND measure >= 00) " 									+
-											"OR (device_pk = 5 AND measure >= 00) " 									+
-											"OR (device_pk = 6 AND measure >= 00) " 									+
-											"OR (device_pk = 7 AND measure >= 00) " 									+
-											"OR (device_pk = 8 AND measure >= 00)) ";
-		
-		 return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(){
-		String queryStatement =	"SELECT  r1.device_pk, "																				+
-										"r1.measure_timestamp, "																		+
-										"min(r2.measure)/max(r2.measure) AS measure, "													+
-										"min(r2.measure) AS min_measure, "																+
-										"max(r2.measure) AS max_measure, "																+
-										"r1.measure_unit, "																				+
-										"'Min/Max Ratio over last 60 minutes'::text AS measure_description, "							+
-										"r1.device_location "																			+
-								"FROM   \"DBMS_EMS_Schema\".\"New_Q8_NormalizeConsumptionsByLocationSquareMeters\"   AS r1 "			+
-										"INNER JOIN "																					+
-								       "\"DBMS_EMS_Schema\".\"New_Q8_NormalizeConsumptionsByLocationSquareMeters\"	 AS r2 "			+  		
-								       "ON   r1.device_pk   = 0 "      /*All Building consumption only*/								+
-								       	"AND r1.rank        = 1 "	   /*All Building most recent measure*/								+
-								       	"AND r2.device_pk   = r1.device_pk "															+
-								       	"AND r2.measure_timestamp > r1.measure_timestamp - interval '60 minutes' " /*60min Time Window*/+
-								"GROUP BY r1.device_pk, "																				+
-									 	 "r1.measure_timestamp, " 																		+
-									 	 "r1.measure_unit, "																			+
-									 	 "r1.measure_description, "																		+
-									 	 "r1.device_location";	
-		
-		 return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(){
-		String queryStatement =	"SELECT  device_pk, " 																									+                                                                                       
-						        		"measure_timestamp, " 																							+                                                                                        
-						        		"current_measure                AS measure, " 																	+                                                                
-						        		"measure_sliding24h_avg*1.25    AS measure_threshold, " 														+                                                      
-						        		"device_location, " 																							+              
-						        		"measure_unit, " 																								+                                                                                   
-						        		"'Measures 25% higher than the past 24h average' AS measure_description " 										+                                    
-						        "FROM   (SELECT  all_measures.device_pk, " 																				+
-						                		"all_measures.measure_timestamp, " 																		+                                                                   
-						                		"all_measures.measure_avg_10min   AS current_measure, " 												+                                              
-						                		"all_measures.measure_unit, "  																			+                
-						                		"all_measures.measure_description, " 																	+                                                                 
-						                		"all_measures.device_location, "   																		+                                                         
-						                		"all_measures.location_area_m2, "   																	+                                                                
-						                		"avg(all_measures.measure_avg_10min) over w       AS measure_sliding24h_avg, " 							+                                   
-						                		"rank()                  			 over w "  															+
-						                "FROM   \"DBMS_EMS_Schema\".\"New_Q7_SmoothConsumptionsWith10MinSlindingAvg\"   AS all_measures " 				+                                              
-						                		"INNER JOIN " 																							+
-						                		"\"DBMS_EMS_Schema\".\"New_Q7_SmoothConsumptionsWith10MinSlindingAvg\" AS most_recent_measure " 		+
-						                		"ON   most_recent_measure.rank = 1 " 																	+
-						                		"AND  most_recent_measure.device_pk = all_measures.device_pk " 											+                                        
-						                		"AND  all_measures.measure_timestamp >= most_recent_measure.measure_timestamp  - interval '24 hours' " 	+             
-						                "WINDOW w AS (PARTITION BY   all_measures.device_pk " 															+ 
-						                			 "ORDER BY all_measures.measure_timestamp DESC " 													+                                                 
-						                			 "RANGE BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) " 												+                                           
-						        		") AS rel " 																									+
-						        // IMPORTANT: current_measure >= measure_sliding24h_avg*0.0 0 Universal Condition/Worst Case
-						        "WHERE current_measure >= measure_sliding24h_avg*0.0 AND rank = 1 ";
-		 return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q4_VariationsAboveThreshold(){
-		String queryStatement =	"SELECT device_pk, "														+ 
-										"measure_timestamp, " 												+
-										"variation, " 														+
-										"current_measure, " 												+ 
-										"win_measure, " 													+
-										"device_location, " 												+
-										"rank " 															+
-								"FROM \"DBMS_EMS_Schema\".\"New_Q11_ConsumptionsVariationOverLast5min\" " 	+
-								"WHERE rank = 1 " +
-									"AND ((device_pk = 1 AND variation >= -100) " +  									
-									  "OR (device_pk = 2 AND variation >= -100) "	+								
-									  "OR (device_pk = 3 AND variation >= -100) "	+								
-									  "OR (device_pk = 4 AND variation >= -100) "	+								
-									  "OR (device_pk = 5 AND variation >= -100) "	+								
-									  "OR (device_pk = 6 AND variation >= -100) "	+								
-									  "OR (device_pk = 7 AND variation >= -100) "	+								
-									  "OR (device_pk = 8 AND variation >= -100)) ";
-								//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
-		
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q12_PeriodBetweenDatastreamTuples(){
+	@Deprecated
+	public QueryEvaluationReport executeEvaluationQuery_Q12_PeriodBetweenDatastreamTuples(){
 		
 		String queryStatement =	"SELECT rela.device_pk, "															+
 										"rela.device_location, " 													+
@@ -563,32 +602,6 @@ public class DB_CRUD_Query_API {
 						      "ON rela.device_pk = relb.device_pk "													+
 						      	"AND (rela.rank + 1) = relb.rank";
 		
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q5_PeriodOutOfBounds(){
-		String queryStatement =	"SELECT 	* "											+
-								"FROM \"DBMS_EMS_Schema\".\"New_Q12_PeriodBetweenDatastreamTuples\" "	+
-								"WHERE rank = 1 " +
-									"AND NOT('00:00:55' <= delta  AND  delta <= '00:01:05') ";
-		//catch periods between measures out of [50,70] seconds range
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q17(){
-		String queryStatement =	"SELECT r2.device_pk, " 																			+
-										"max(r2.measure_timestamp) AS measure_timestamp, " 											+
-										"count(r2.measure) 	  AS count_measure_above_expected "										+
-								"FROM 	\"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" r1 " 	+
-										"INNER JOIN " 																				+
-										"\"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" r2 " 	+
-										"ON r1.device_pk = r2.device_pk " 															+
-										"AND r1.rank = 1 " 																			+
-										"AND r2.measure_timestamp > (r1.measure_timestamp - '01:00:00'::interval) " 				+ 
-								"WHERE  r2.measure > r2.expected_measure " 															+ 
-								"GROUP BY r2.device_pk, r2.expected_measure " 														+
-								"HAVING 5 <= COUNT(r2.measure) AND COUNT(r2.measure) <= 10 ";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
