@@ -40,14 +40,14 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public DSMS_VersionImpl(){
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
-		install_Q0_BaseView(false);
+		install_New_Q0_BaseView(true);
 //		install_New_Q12_PeriodBetweenDatastreamTuples(false);
 //		install_New_Q5_PeriodOutOfBounds(true);
 //		install_New_Q11_ConsumptionsVariationOverLast5min(false);
 //		install_New_Q4_VariationsAboveThreshold(true);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+//		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 //		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+//		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 //		install_New_Q1_ConsumptionsAboveThreshold(true);
 //		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
 //		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
@@ -55,8 +55,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 //		install_New_Q9_FractionateConsumptions(true);
 //		install_New_Q10_OrderByConsumptions(true);
-		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
-		install_New_Q17(true);
+//		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
+//		install_New_Q17(true);
 //		install_New_Q6_withQ14AsInput_DeltaAbove(true);
 		
 //		install_Q7_8_Normalization_IntegrationQuery(true);
@@ -113,6 +113,47 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	
+	public void install_New_Q0_BaseView(boolean addListener){
+		
+		String sqlQuery="SELECT  dev.device_pk 			 AS device_pk, "						 +
+								"dpu.unit                AS measure_unit, "						 +
+								"dpd.description         AS measure_description, "				 +
+								"dl.location             AS device_location,"					 +
+								"dl.area_m2              AS location_area_m2 "					 +
+						
+						"FROM    \"DSMS_EMS_Schema\".\"DataPoint\"         		   dp " 		 +
+								"JOIN \"DSMS_EMS_Schema\".\"Device\"               dev " 		 +
+								"ON dp.device_fk = dev.device_pk "								 +
+								"JOIN \"DSMS_EMS_Schema\".\"DeviceLocation\"       dl  " 		 +
+								"ON dev.device_location_fk = dl.device_location_pk "			 +
+								"JOIN \"DSMS_EMS_Schema\".\"DataPointDescription\" dpd " 		 +
+								"ON dp.datapoint_description_fk = dpd.datapoint_description_pk " +
+								"JOIN \"DSMS_EMS_Schema\".\"DataPointUnit\"        dpu " 		 +
+								"ON dp.datapoint_unit_fk = dpu.datapoint_unit_pk " 				 +
+						//testing PK because with dpd.description=".." weirdly does NOT work		
+						"WHERE   ${datapointPk} = dp.datapoint_pk " 							 +
+						  "AND (   dpd.datapoint_description_pk = 10 "							 +
+						       "OR dpd.datapoint_description_pk = 11 " 							 +
+						       "OR dpd.datapoint_description_pk = 12) " 						 ;
+						
+		String statement = 	"INSERT INTO DenormalizedAggPhases "								+
+							"SELECT 	bd.device_pk 				AS device_pk, "				+
+										"stream.measureTS          	AS measure_timestamp, "		+
+										"sum(stream.measure) 		AS measure, "				+
+										"\"WATT.HOUR\"	 			AS measure_unit, "			+
+										"\"EnergyConsumptionPh123\" AS measure_description, "	+
+										"bd.device_location  		AS device_location, "		+		
+										"bd.location_area_m2        AS location_area_m2 "		+
+							"FROM		Datastream.Measure 				AS stream , " 			+
+										"sql:database ['"+sqlQuery+"'] 	AS bd "					+
+							"GROUP BY	bd.device_pk," 											+
+										"stream.measureTS "										+
+							"HAVING		count(stream.measureTS) = 3"; //3 Phases
+		
+		esperEngine.installQuery(statement,addListener);
+	}
+	
+	@Deprecated
 	public void install_Q0_BaseView(boolean addListener){
 		String sqlQuery="SELECT  dev.device_pk 			 AS device_pk, "						+
 								"dpu.unit                AS measure_unit, "						+
@@ -213,6 +254,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q7_8_Normalization_IntegrationQuery(boolean addListener){
 		String statement = 	"INSERT INTO LocationNormalizedMeasures "	 +
 							"SELECT device_pk, " 																+
@@ -243,6 +285,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q8_BuildingConsumptionNormalized_IntegrationQuery(boolean addListener){
 		String statement = 	"INSERT INTO Q8_AllBuildingNormalization " 													+
 							"SELECT min(measure_timestamp)							AS measure_timestamp, "				+
@@ -272,6 +315,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q9_Percentage(boolean addListener){		
 		String statement = 	"SELECT device_pk, " 																		+
 									"measure_timestamp, "																+
@@ -285,6 +329,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q10_OrderBy(boolean addListener){		
 		String statement = 	"SELECT device_pk," 														+
 									"measure_timestamp, "												+
@@ -378,6 +423,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q14_RealAndExpectedMeasureDelta(boolean addListener){		
 		
 		String statement =  "INSERT INTO Q14_CurrentAndExpectedMeasure "																	+ 	
@@ -394,6 +440,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q13_CurrentAndExpectedHourClusterMeasure(boolean addListener){
 		
 		String statement = 	"INSERT INTO Q13_CurrentAndExpectedMeasure "																	+
@@ -413,6 +460,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(boolean addListener){
 		String statement = 	"SELECT device_pk, "																								+
 									"measure_timestamp, "																						+
@@ -428,6 +476,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
+	@Deprecated
 	public void install_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(boolean addListener){
 		
 		String statement = 	"SELECT device_pk, "																								+
@@ -507,6 +556,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		esperEngine.installQuery(statement, addListener);
 	}
+	
 	
 	public void install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(boolean addListener){		
 							
@@ -711,7 +761,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	//TODO
+
 	public void install_New_Q17(boolean addListener){
 		String statement = 	"SELECT  device_pk, " +
 		        					"measure_timestamp, " +

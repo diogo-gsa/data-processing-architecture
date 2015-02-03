@@ -255,6 +255,7 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q1_BuildingNormalizedConsumptionOverThreshold(){
 		// Note: measure >= 0 means worst case scenario simulation. 
 		// That is, query always produces an output.
@@ -335,6 +336,7 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(){
 		
 		String queryStatement =	"SELECT	device_pk, " 																								+
@@ -352,6 +354,7 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q6_withQ14AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(){
 		
 		String queryStatement =	"SELECT	device_pk, " 																								+
