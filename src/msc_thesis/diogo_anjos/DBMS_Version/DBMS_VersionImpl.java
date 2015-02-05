@@ -45,13 +45,13 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		this.insertInto_DatapointReadingTable(tuple);
 // ============= Query to be Executed ========================================================================= 
 //		QueryEvaluationReport report = this.execute_New_Q4_VariationsAboveThreshold();
-		QueryEvaluationReport report = this.execute_New_Q5_PeriodOutOfBounds();
+//		QueryEvaluationReport report = this.execute_New_Q5_PeriodOutOfBounds();
 //		QueryEvaluationReport report = this.execute_New_Q1_ConsumptionsAboveThreshold();
 //		QueryEvaluationReport report = this.execute_New_Q3_MinMaxConsumptionsRatioOverLast1Hour();
 //		QueryEvaluationReport report = this.execute_New_Q6_DeltaAboveThreshold_WithQ13AsInput();
 //		QueryEvaluationReport report = this.execute_New_Q6_DeltaAboveThreshold_WithQ14AsInput();
 //		QueryEvaluationReport report = this.execute_New_Q17();
-//		QueryEvaluationReport report = this.execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
+		QueryEvaluationReport report = this.execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
 //============================================================================================================= 
 		
 		
@@ -145,7 +145,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	
 	
 	public QueryEvaluationReport execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(){
-		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
+		QueryEvaluationReport report = dbAPI.execute_Q16_ConsumptionAboveSlidingAvgThreshold();
 		return report;
 	}
 	
