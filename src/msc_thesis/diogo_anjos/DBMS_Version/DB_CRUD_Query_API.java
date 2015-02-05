@@ -164,12 +164,19 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q5_PeriodOutOfBounds(){
-		String queryStatement =	"SELECT 	* "											+
-								"FROM \"DBMS_EMS_Schema\".\"New_Q12_PeriodBetweenDatastreamTuples\" "	+
-								"WHERE rank = 1 " +
-									"AND NOT('00:00:55' <= delta  AND  delta <= '00:01:05') ";
+	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(){	
+		String queryStatement = "SELECT  device_pk, "																											+
+		        						"measure_timestamp, " 																									+
+		        						"measure, "																												+
+		        						"'Time Seconds' AS measure_unit, " 																						+
+		        						"'Period between two last power consumption measurements is out of range: [55, 65] seconds.' AS meausre_description, " 	+
+		        						"device_location, " 																									+
+		        						"location_area_m2 " 																									+
+		        				"FROM    \"DBMS_EMS_Schema\".\"_Q12_DataStreamPeriodicity\" " 																	+
+		        				"WHERE   index = 1 "  																											+
+		        				    "AND NOT('00:00:55' <= measure  AND  measure <= '00:01:05') ";
 		//catch periods between measures out of [50,70] seconds range
+		
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
