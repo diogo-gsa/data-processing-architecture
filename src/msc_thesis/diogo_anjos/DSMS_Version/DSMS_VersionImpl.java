@@ -42,7 +42,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 		//=== Query to be Executed ============
 //		install_Q0();
-		install_Q11();
+//		install_Q11();
 //		install_Q12();
 //		install_Q7();
 //		install_Q8();
@@ -52,7 +52,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q13();
 //		install_Q4();
 //		install_Q5();
-//		install_Q1();
+		install_Q1();
 //		install_Q3();
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
@@ -266,7 +266,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		String statement = 	"INSERT INTO New_Q11_VariationStream " 										 +
 							"SELECT 	device_pk 								  AS device_pk, "		 +
 										"measure_timestamp 						  AS measure_timestamp, " +
-										"(measure/(avg(measure)+0.00001) - 1)	  AS variation, "		 +
+										"(measure/(avg(measure)+0.00001) - 1)*100 AS variation, "		 +
 										"measure 								  AS current_measure, "  +
 										"avg(measure)							  AS win_measure, "		 +
 										"device_location 						  AS device_location "	 +
