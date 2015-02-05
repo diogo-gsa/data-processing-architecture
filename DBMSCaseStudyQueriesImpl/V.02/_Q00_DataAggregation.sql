@@ -1,4 +1,3 @@
--- _Q0_
 SELECT  dev.device_pk,
         dpr.measure_timestamp,
         sum(dpr.measure)          AS measure,
