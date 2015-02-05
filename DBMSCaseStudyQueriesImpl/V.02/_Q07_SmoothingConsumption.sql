@@ -1,5 +1,4 @@
-﻿--_Q07_SmoothingConsumption
-SELECT 	r1.device_pk,
+﻿SELECT 	r1.device_pk,
 	r1.measure_timestamp,
 	avg(r2.measure) 						  AS measure,
 	'WATT'	 							  AS measure_unit,
