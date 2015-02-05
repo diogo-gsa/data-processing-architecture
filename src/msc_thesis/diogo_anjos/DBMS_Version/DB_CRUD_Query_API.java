@@ -180,6 +180,21 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport execute_Q09_ProportionsFromConsumptions(){	
+		String queryStatement = "SELECT	device_pk, " 																											+
+										"measure_timestamp, " 																									+
+										"measure/sum(measure) OVER wintotal * 100::double precision 				   				AS measure, " 				+
+										"'Percentage%' 						   				   										AS measure_unit, " 			+
+										"'%Proportion of each location power consumption by comparation with all other locations.'  AS measure_description, " 	+
+										"device_location " 																										+
+								"FROM 	\"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" "																	+
+								"WHERE 	device_pk <> 0 AND index = 1 " 																							+
+								"WINDOW 	wintotal AS (PARTITION BY NULL::text) ";
+		//catch periods between measures out of [50,70] seconds range
+		
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
 	public QueryEvaluationReport executeEvaluationQuery_New_Q1_ConsumptionsAboveThreshold(){
 		String queryStatement =	"SELECT  device_pk, " 																	+                                         
 		        						"measure_timestamp, " 															+                                        
