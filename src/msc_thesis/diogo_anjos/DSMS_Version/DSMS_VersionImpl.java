@@ -42,7 +42,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 		//=== Query to be Executed ============
 //		install_Q0();
-		install_Q11();
+//		install_Q11();
 //		install_Q12();
 //		install_Q7();
 //		install_Q8();
@@ -50,7 +50,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q10();
 //		install_Q14();
 //		install_Q13();
-//		install_Q4();
+		install_Q4();
 //		install_Q5();
 //		install_Q1();
 //		install_Q3();
@@ -134,7 +134,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q4(){
 		install_Q00_DataAggregation(false);
 		install_Q11_InstantVariation(false);
-		install_New_Q4_VariationsAboveThreshold(true);
+		install_Q04_InstantVariationAboveThreshold(true);
 	}
 	
 	public void install_Q5(){
@@ -412,21 +412,25 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 // 	----------------------------- Evaluation Queries -------------------------------------	
 	
-	public void install_New_Q4_VariationsAboveThreshold(boolean addListener){
-		String statement = 	"SELECT  device_pk, " 										+
-									"measure_timestamp, " 								+
-									"variation              AS variation, "				+
-									"current_measure, "									+
-									"device_location   		AS device_location "		+
-							"FROM	New_Q11_VariationStream	"							+	
-							"WHERE ((device_pk = 1 AND variation >= 0) " 				+  									
-							   "OR  (device_pk = 2 AND variation >= 0) "				+								
-							   "OR  (device_pk = 3 AND variation >= 0) "				+								
-							   "OR  (device_pk = 4 AND variation >= 0) "				+								
-							   "OR  (device_pk = 5 AND variation >= 0) "				+								
-							   "OR  (device_pk = 6 AND variation >= 0) "				+								
-							   "OR  (device_pk = 7 AND variation >= 0) "				+								
-							   "OR  (device_pk = 8 AND variation >= 0)) ";
+	public void install_Q04_InstantVariationAboveThreshold(boolean addListener){
+		String statement = 	"SELECT  device_pk, " 																					+
+									"measure_timestamp, " 																			+
+									"measure, "																						+
+									"current_power_consumption, "																	+
+									"\"Percentage%\" 												AS measure_unit, "				+
+									"\"Variation between current and last 5 minutes average power " 								+
+									"consumption that exceeded a given threshold.\" 				AS measure_description, "		+
+									"device_location,  "																			+
+									"location_area_m2  "																			+
+							"FROM	_Q11_InstantVariation	"																		+	
+							"WHERE ((device_pk = 1 AND measure >= 0) " 																+  									
+							   "OR  (device_pk = 2 AND measure >= 0) "																+								
+							   "OR  (device_pk = 3 AND measure >= 0) "																+								
+							   "OR  (device_pk = 4 AND measure >= 0) "																+								
+							   "OR  (device_pk = 5 AND measure >= 0) "																+								
+							   "OR  (device_pk = 6 AND measure >= 0) "																+								
+							   "OR  (device_pk = 7 AND measure >= 0) "																+								
+							   "OR  (device_pk = 8 AND measure >= 0)) ";
 			//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
 		esperEngine.installQuery(statement, addListener);
 	}
