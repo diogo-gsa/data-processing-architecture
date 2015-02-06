@@ -43,14 +43,14 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		//=== Query to be Executed ============
 //		install_Q0();
 //		install_Q11();
-//		install_Q12();
+		install_Q12();
 //		install_Q7();
 //		install_Q8();
 //		install_Q9();
 //		install_Q10();
 //		install_Q14();
 //		install_Q13();
-		install_Q4();
+//		install_Q4();
 //		install_Q5();
 //		install_Q1();
 //		install_Q3();
@@ -89,7 +89,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q12(){
 		install_Q00_DataAggregation(false);
-		install_New_Q12_PeriodBetweenDatastreamTuples(true);
+		install_Q12_DataStreamPeriodicity(true);
 	}
 	
 	public void install_Q7(){
@@ -139,7 +139,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q5(){
 		install_Q00_DataAggregation(false);
-		install_New_Q12_PeriodBetweenDatastreamTuples(false);
+		install_Q12_DataStreamPeriodicity(false);
 		install_New_Q5_PeriodOutOfBounds(true);
 	}
 	
@@ -278,16 +278,18 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_New_Q12_PeriodBetweenDatastreamTuples(boolean addListener){		
-		String statement = 	"INSERT INTO New_Q12_DeltaBetweenTuples "	 											+
-							"SELECT device_pk, " 																	+
-									"device_location, " 															+
-									"last(measure_timestamp, 0) AS measure_timestamp_last, " 						+
-									"last(measure_timestamp, 1) AS measure_timestamp_2nd_Last, " 					+
-									"(DateTime.toMillisec(last(measure_timestamp, 0),\"yyyy-MM-dd HH:mm:ss\") " 							+
-									" - DateTime.toMillisec(last(measure_timestamp, 1),\"yyyy-MM-dd HH:mm:ss\"))/1000 AS delta_seconds "	+
-				 			"FROM DenormalizedAggPhases.std:groupwin(device_pk).win:length(2) "						+
-				 			"GROUP BY device_pk " 																	+
+	public void install_Q12_DataStreamPeriodicity(boolean addListener){		
+		String statement = 	"INSERT INTO _Q12_DataStreamPeriodicity "	 																		  +
+							"SELECT device_pk, " 																								  +									
+									"last(measure_timestamp, 0) 														AS measure_timestamp, "	  +
+									"(DateTime.toMillisec(last(measure_timestamp, 0),\"yyyy-MM-dd HH:mm:ss\") " 								  +
+									" - DateTime.toMillisec(last(measure_timestamp, 1),\"yyyy-MM-dd HH:mm:ss\"))/1000 	AS measure, "			  +
+									"\"Time Seconds\" 																	AS measure_unit," 		  +
+									" \"Period between two last power consumption measurements.\" 						AS measure_description, " + 
+									"device_location, "																							  +
+									"location_area_m2 "																							  +
+				 			"FROM _Q00_DataAggregation.std:groupwin(device_pk).win:length(2) "													  +
+				 			"GROUP BY device_pk " 																								  +
 				 			"HAVING count(*) > 1";		
 		esperEngine.installQuery(statement, addListener);
 	}
