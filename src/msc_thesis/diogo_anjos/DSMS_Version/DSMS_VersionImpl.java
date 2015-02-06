@@ -45,7 +45,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q11();
 //		install_Q12();
 //		install_Q7();
-//		install_Q8();
+		install_Q8();
 //		install_Q9();
 //		install_Q10();
 //		install_Q14();
@@ -57,7 +57,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
 //		install_Q17();
-		install_Q16();
+//		install_Q16();
 		//=== Query to be Executed ============
 	}
 	
@@ -100,34 +100,34 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q8(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
+		install_Q08_SquareMeterNormalization(true);
 	}
 	
 	public void install_Q9(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q9_FractionateConsumptions(true);
 	}
 	
 	public void install_Q10(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q10_OrderByConsumptions(true);
 	}
 	
 	public void install_Q14(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(true);
 	}
 	
 	public void install_Q13(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(true);
 	}
 	
@@ -146,21 +146,21 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q1(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q1_ConsumptionsAboveThreshold(true);
 	}
 	
 	public void install_Q3(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
 	}
 	
 	public void install_Q6_with_Q14_asInput(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
 		install_New_Q6_withQ14AsInput_DeltaAbove(true);
 	}
@@ -168,7 +168,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q6_with_Q13_asInput(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
 		install_New_Q6_withQ13AsInput_DeltaAbove(true);
 	}
@@ -176,7 +176,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q17(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
+		install_Q08_SquareMeterNormalization(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
 		install_New_Q17(true);
 	}
@@ -311,37 +311,41 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	
 	
-	public void install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(boolean addListener){		
+	public void install_Q08_SquareMeterNormalization(boolean addListener){		
 		
-		String subStatement1 =	"INSERT INTO Q8_Aux_NormalizeConsumptionsByLocationSquareMeters "										+
+		String subStatement1 =	"INSERT INTO _Q08_Aux_SquareMeterNormalization "														+
 								"SELECT device_pk, "																					+
 										"measure_timestamp, "																			+
-										"measure_avg_10min/location_area_m2									AS measure, "				+
+										"measure/location_area_m2											AS measure, "				+
 										"\"WATT/m^2\"	 													AS measure_unit, "			+
-										"\"Energy consumption Normalized by energy meter location area\"  	AS measure_description, "	+
+										"\"Power Consumption Normalized by each location square " 										+
+										"meter area and all building as a whole.\" 							AS measure_description, "	+
 										"device_location "																				+
-								"FROM	Q7_Sliding10minAVGbyDevice ";
+								"FROM	_Q07_SmoothingConsumption ";
 		
-		String subStatement2 =	"INSERT INTO Q8_Aux_NormalizeConsumptionsByLocationSquareMeters "										+
+		String subStatement2 =	"INSERT INTO _Q08_Aux_SquareMeterNormalization "										+
 								"SELECT  0L	 																AS device_pk, "				+
 										"min(measure_timestamp)												AS measure_timestamp, " 	+
-										"sum(measure_avg_10min)/sum(location_area_m2) 						AS measure, " 				+
+										"sum(measure)/sum(location_area_m2) 								AS measure, " 				+
 										"\"WATT/m^2\"	 													AS measure_unit, " 			+
 										"\"Energy consumption Normalized by energy meter location area\"	AS measure_description, "	+
 										"\"ALL_BUILDING\" 													AS device_location " 		+					
-								"FROM 	Q7_Sliding10minAVGbyDevice.std:unique(device_pk).win:time(1 min) " 								+
+								"FROM 	_Q07_SmoothingConsumption.std:unique(device_pk).win:time(1 min) " 								+
 								"HAVING count(device_pk) = 8 " 																			+
 								"OUTPUT LAST EVERY 8 EVENTS"; 
 
-		String statement =	"INSERT INTO Q8_NormalizeConsumptionsByLocationSquareMeters "												+
-							"SELECT	* "						 					   														+
-							"FROM  Q8_Aux_NormalizeConsumptionsByLocationSquareMeters ";	
-									
-		
-		
+		String statement =	"INSERT INTO _Q08_SquareMeterNormalization "																+
+							"SELECT	 device_pk, "			 					   														+
+									"measure_timestamp, "+
+									"measure, "+
+									"measure_unit, "+
+									"measure_description, "+
+									"device_location "+							
+							"FROM  _Q08_Aux_SquareMeterNormalization ";	
+
 		esperEngine.installQuery(subStatement1, false);
 		esperEngine.installQuery(subStatement2, false);
-		esperEngine.installQuery(statement,  addListener);
+		esperEngine.installQuery(statement, addListener);
 		
 	}
 	
