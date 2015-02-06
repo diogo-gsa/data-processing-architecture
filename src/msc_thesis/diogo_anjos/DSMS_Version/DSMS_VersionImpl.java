@@ -43,7 +43,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		//=== Query to be Executed ============
 //		install_Q0();
 //		install_Q11();
-		install_Q12();
+//		install_Q12();
 //		install_Q7();
 //		install_Q8();
 //		install_Q9();
@@ -51,7 +51,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q14();
 //		install_Q13();
 //		install_Q4();
-//		install_Q5();
+		install_Q5();
 //		install_Q1();
 //		install_Q3();
 //		install_Q6_with_Q14_asInput();
@@ -140,7 +140,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q5(){
 		install_Q00_DataAggregation(false);
 		install_Q12_DataStreamPeriodicity(false);
-		install_New_Q5_PeriodOutOfBounds(true);
+		install_Q05_StreamPeriodicityOutOfRange(true);
 	}
 	
 	public void install_Q1(){
@@ -439,10 +439,17 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	
 	
-	public void install_New_Q5_PeriodOutOfBounds(boolean addListener){
-		String statement = 	"SELECT * "							+
-				 			"FROM New_Q12_DeltaBetweenTuples "  +
-				 			"WHERE NOT(55 <= delta_seconds  AND  delta_seconds <= 65) ";
+	public void install_Q05_StreamPeriodicityOutOfRange(boolean addListener){
+		String statement = 	"SELECT device_pk, "							+
+									"measure_timestamp, " +
+									"measure, " +
+									"\"Time Seconds\" 																				AS measure_unit, " +
+									"\"Period between two last power consumption measurements is out of range: [55, 65] seconds.\" 	AS measure_description, " +
+									"device_location, " +
+									"location_area_m2 " +
+				 			"FROM _Q12_DataStreamPeriodicity "  			+
+				 			"WHERE NOT(55 <= measure  AND  measure <= 65) ";
+							//Important: Universal condition required for worst case scenario
 		esperEngine.installQuery(statement, addListener);
 	}
 	
