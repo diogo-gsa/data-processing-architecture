@@ -44,13 +44,13 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 // ============= Query to be Executed ========================================================================= 
-		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
+//		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio();
 //		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold();
 //		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange();
 //		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected();
 //		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions();
-//		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
+		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
 //		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold();
 //		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter();
 //============================================================================================================= 

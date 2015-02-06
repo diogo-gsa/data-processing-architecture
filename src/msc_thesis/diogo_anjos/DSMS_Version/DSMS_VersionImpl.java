@@ -41,7 +41,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		//=== Query to be Executed ============
-//		install_Q0();
+		install_Q0();
 //		install_Q11();
 //		install_Q12();
 //		install_Q7();
@@ -52,7 +52,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q13();
 //		install_Q4();
 //		install_Q5();
-		install_Q1();
+//		install_Q1();
 //		install_Q3();
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
@@ -79,86 +79,86 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	// Queries Installation Functions	
 	public void install_Q0(){
-		install_New_Q0_BaseView(true);
+		install_Q00_DataAggregation(true);
 	}
 	
 	public void install_Q11(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q11_ConsumptionsVariationOverLast5min(true);
 	}
 	
 	public void install_Q12(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q12_PeriodBetweenDatastreamTuples(true);
 	}
 	
 	public void install_Q7(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(true);
 	}
 	
 	public void install_Q8(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
 	}
 	
 	public void install_Q9(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q9_FractionateConsumptions(true);
 	}
 	
 	public void install_Q10(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q10_OrderByConsumptions(true);
 	}
 	
 	public void install_Q14(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(true);
 	}
 	
 	public void install_Q13(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(true);
 	}
 	
 	public void install_Q4(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q11_ConsumptionsVariationOverLast5min(false);
 		install_New_Q4_VariationsAboveThreshold(true);
 	}
 	
 	public void install_Q5(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q12_PeriodBetweenDatastreamTuples(false);
 		install_New_Q5_PeriodOutOfBounds(true);
 	}
 	
 	public void install_Q1(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q1_ConsumptionsAboveThreshold(true);
 	}
 	
 	public void install_Q3(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
 	}
 	
 	public void install_Q6_with_Q14_asInput(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
@@ -166,7 +166,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q6_with_Q13_asInput(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
@@ -174,7 +174,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q17(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
@@ -182,7 +182,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q16(){
-		install_New_Q0_BaseView(false);
+		install_Q00_DataAggregation(false);
 		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
 		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
 	}
@@ -191,7 +191,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
  * 										Data Integration and Evaluation Queries
  * ========================================================================================================*/
 	
-	public void install_New_Q0_BaseView(boolean addListener){
+	public void install_Q00_DataAggregation(boolean addListener){
 		
 		String sqlQuery="SELECT  dev.device_pk 			 AS device_pk, "						 +
 								"dpu.unit                AS measure_unit, "						 +
@@ -214,18 +214,18 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 						       "OR dpd.datapoint_description_pk = 11 " 							 +
 						       "OR dpd.datapoint_description_pk = 12) " 						 ;
 						
-		String statement = 	"INSERT INTO DenormalizedAggPhases "								+
-							"SELECT 	bd.device_pk 				AS device_pk, "				+
-										"stream.measureTS          	AS measure_timestamp, "		+
-										"sum(stream.measure) 		AS measure, "				+
-										"\"WATT.HOUR\"	 			AS measure_unit, "			+
-										"\"EnergyConsumptionPh123\" AS measure_description, "	+
-										"bd.device_location  		AS device_location, "		+		
-										"bd.location_area_m2        AS location_area_m2 "		+
-							"FROM		Datastream.Measure 				AS stream , " 			+
-										"sql:database ['"+sqlQuery+"'] 	AS bd "					+
-							"GROUP BY	bd.device_pk," 											+
-										"stream.measureTS "										+
+		String statement = 	"INSERT INTO _Q00_DataAggregation "												+
+							"SELECT 	bd.device_pk 								AS device_pk, "				+
+										"stream.measureTS          					AS measure_timestamp, "		+
+										"sum(stream.measure) 						AS measure, "				+
+										"\"WATT\"	 								AS measure_unit, "			+
+										"\"Power Consumption: 3-Phase Aggregate.\" 	AS measure_description, "	+
+										"bd.device_location  						AS device_location, "		+		
+										"bd.location_area_m2        				AS location_area_m2 "		+
+							"FROM		Datastream.Measure 				AS stream , " 							+
+										"sql:database ['"+sqlQuery+"'] 	AS bd "									+
+							"GROUP BY	bd.device_pk," 															+
+										"stream.measureTS "														+
 							"HAVING		count(stream.measureTS) = 3"; //3 Phases
 		
 		esperEngine.installQuery(statement,addListener);
