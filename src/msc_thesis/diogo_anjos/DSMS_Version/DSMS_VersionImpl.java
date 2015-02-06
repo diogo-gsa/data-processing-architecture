@@ -44,14 +44,14 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q0();
 //		install_Q11();
 //		install_Q12();
-//		install_Q7();
+		install_Q7();
 //		install_Q8();
 //		install_Q9();
 //		install_Q10();
 //		install_Q14();
 //		install_Q13();
 //		install_Q4();
-		install_Q5();
+//		install_Q5();
 //		install_Q1();
 //		install_Q3();
 //		install_Q6_with_Q14_asInput();
@@ -94,39 +94,39 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q7(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(true);
+		install_Q07_SmoothingConsumption(true);
 	}
 	
 	public void install_Q8(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(true);
 	}
 	
 	public void install_Q9(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q9_FractionateConsumptions(true);
 	}
 	
 	public void install_Q10(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q10_OrderByConsumptions(true);
 	}
 	
 	public void install_Q14(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(true);
 	}
 	
 	public void install_Q13(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(true);
 	}
@@ -145,21 +145,21 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q1(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q1_ConsumptionsAboveThreshold(true);
 	}
 	
 	public void install_Q3(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
 	}
 	
 	public void install_Q6_with_Q14_asInput(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
 		install_New_Q6_withQ14AsInput_DeltaAbove(true);
@@ -167,7 +167,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q6_with_Q13_asInput(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
 		install_New_Q6_withQ13AsInput_DeltaAbove(true);
@@ -175,7 +175,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q17(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q8_NormalizeConsumptionsByLocationSquareMeters(false);
 		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
 		install_New_Q17(true);
@@ -183,7 +183,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q16(){
 		install_Q00_DataAggregation(false);
-		install_New_Q7_AVG10minByDevice_IntegrationQuery(false);
+		install_Q07_SmoothingConsumption(false);
 		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
 	}
 	
@@ -295,19 +295,17 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	
-	//NOTA: Esta é a NEW_Q7, que é igual à versão original(inicial/old) (não houve alterações)
-	public void install_New_Q7_AVG10minByDevice_IntegrationQuery(boolean addListener){
-		String statement = 	"INSERT INTO Q7_Sliding10minAVGbyDevice "	 											+
-							"SELECT device_pk, " 																+
-									"measure_timestamp, " 														+
-									"avg(measure)							AS measure_avg_10min, " 			+
-									"measure_unit, "															+
-									"\"EnergyConsumptionAVG10min\"			AS measure_description, "			+
-									"device_location,  "														+
-									"location_area_m2 "															+
-							"FROM  DenormalizedAggPhases.win:time(10 min) " 									+
+	public void install_Q07_SmoothingConsumption(boolean addListener){
+		String statement = 	"INSERT INTO _Q07_SmoothingConsumption "	 															+
+							"SELECT device_pk, " 																					+
+									"measure_timestamp, " 																			+
+									"avg(measure)														 AS measure, " 				+
+									"\"WATT\" 															 AS  measure_unit, "		+
+									"\"Smoothed Power Consumption through 10 minutes sliding average.\"	 AS measure_description, "	+
+									"device_location,  "																			+
+									"location_area_m2 "																				+
+							"FROM  _Q00_DataAggregation.win:time(10 min) " 															+
 							"GROUP BY device_pk";
-	
 		esperEngine.installQuery(statement, addListener);
 	}
 	
