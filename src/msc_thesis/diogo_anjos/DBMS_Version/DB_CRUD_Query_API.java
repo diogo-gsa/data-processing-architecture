@@ -195,6 +195,22 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport execute_Q10_ConsumptionsRankingList(){	
+		String queryStatement = "SELECT device_pk, " 																					+
+		    							"measure_timestamp, " 																			+
+		    							"rank() OVER sortedwindow AS measrure, " 														+
+		    							"measure AS current_power_consumption, " 														+
+		    							"'Ranking List Position' 											 AS measure_unit, " 		+ 
+		    							"'Descendig Ranking List of each Location by its power consumption.' AS measure_description, " 	+
+		    							"device_location " 																				+
+		    					"FROM \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" "											+
+		    					"WHERE index = 1 " 																						+
+		    					"WINDOW sortedwindow AS (PARTITION BY NULL::text "														+  
+		    											"ORDER BY measure DESC) ";
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	
 	public QueryEvaluationReport executeEvaluationQuery_New_Q1_ConsumptionsAboveThreshold(){
 		String queryStatement =	"SELECT  device_pk, " 																	+                                         
 		        						"measure_timestamp, " 															+                                        
