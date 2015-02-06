@@ -53,7 +53,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 //		QueryEvaluationReport report = this.execute_New_Q17();
 //		QueryEvaluationReport report = this.execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
 //		QueryEvaluationReport report = this.execute_New_Q09_ProportionsFromConsumptions();
-		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
+//		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
+		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
 //============================================================================================================= 
 		
 		
@@ -129,8 +130,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		return report;
 	}
 	
-	public QueryEvaluationReport execute_New_Q1_ConsumptionsAboveThreshold(){
-		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q1_ConsumptionsAboveThreshold();
+	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(){
+		QueryEvaluationReport report = dbAPI.execute_Q01_ConsumptionOverThreshold();
 		return report;
 	}
 	
