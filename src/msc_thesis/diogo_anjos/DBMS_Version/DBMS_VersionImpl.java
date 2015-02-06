@@ -48,9 +48,9 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 //		QueryEvaluationReport report = this.execute_New_Q5_PeriodOutOfBounds();
 //		QueryEvaluationReport report = this.execute_New_Q1_ConsumptionsAboveThreshold();
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio();
-		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected();
+//		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected();
 //		QueryEvaluationReport report = this.execute_New_Q6_DeltaAboveThreshold_WithQ14AsInput();
-//		QueryEvaluationReport report = this.execute_New_Q17();
+		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter();
 //		QueryEvaluationReport report = this.execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
 //		QueryEvaluationReport report = this.execute_New_Q09_ProportionsFromConsumptions();
 //		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
@@ -151,8 +151,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	}
 	
 	
-	public QueryEvaluationReport execute_New_Q17(){
-		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q17();
+	public QueryEvaluationReport execute_Q17_ConsumptionAboveExpectedCounter(){
+		QueryEvaluationReport report = dbAPI.execute_Q17_ConsumptionAboveExpectedCounter();
 		return report;
 	}
 	
