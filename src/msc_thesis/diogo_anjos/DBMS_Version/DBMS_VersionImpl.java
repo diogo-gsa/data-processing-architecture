@@ -47,14 +47,14 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 //		QueryEvaluationReport report = this.execute_New_Q4_VariationsAboveThreshold();
 //		QueryEvaluationReport report = this.execute_New_Q5_PeriodOutOfBounds();
 //		QueryEvaluationReport report = this.execute_New_Q1_ConsumptionsAboveThreshold();
-//		QueryEvaluationReport report = this.execute_New_Q3_MinMaxConsumptionsRatioOverLast1Hour();
+		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio();
 //		QueryEvaluationReport report = this.execute_New_Q6_DeltaAboveThreshold_WithQ13AsInput();
 //		QueryEvaluationReport report = this.execute_New_Q6_DeltaAboveThreshold_WithQ14AsInput();
 //		QueryEvaluationReport report = this.execute_New_Q17();
 //		QueryEvaluationReport report = this.execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
 //		QueryEvaluationReport report = this.execute_New_Q09_ProportionsFromConsumptions();
 //		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
-		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
+//		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
 //============================================================================================================= 
 		
 		
@@ -135,8 +135,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		return report;
 	}
 	
-	public QueryEvaluationReport execute_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(){
-		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q3_MinMaxConsumptionsRatioOverLast1Hour();
+	public QueryEvaluationReport execute_Q03_MinMaxConsumptionRatio(){
+		QueryEvaluationReport report = dbAPI.execute_Q03_MinMaxConsumptionRatio();
 		return report;
 	}
 	
