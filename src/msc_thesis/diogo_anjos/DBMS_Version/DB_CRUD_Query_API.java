@@ -259,18 +259,18 @@ public class DB_CRUD_Query_API {
 	}
 	
 	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ13AsInput(){
-		String queryStatement = "SELECT	device_pk, "																								+
-		        						"measure_timestamp, "																						+
-		        						"(measure/(expecetd_measure+0.0001) - 1)*100                                    AS measure, "				+
-		        						"measure                                                                        AS current_cosnumption, "	+
-		        						"expecetd_measure                                                               AS expected_consumption, " 	+
-		        						"'%percent'                                                                     AS measure_unit, "			+
-		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+ 
-		        						"device_location "																							+
-		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPredicti\" " 					+
-								// IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
-		        				"WHERE  rank = 1 AND (measure/(expecetd_measure+0.0001) - 1)*100 >= 10";
+	public QueryEvaluationReport execute_Q06_ConsumptionAboveExpected(){
+		String queryStatement = "SELECT	device_pk, " 																												+
+										"measure_timestamp, " 																										+
+										"(current_measure/(expecetd_measure+0.0001) - 1)*100                                 	   AS measure, " 					+                                                       
+										"'Percentage%'::text                                                                       AS measure_unit, " 				+
+										"'Delta between current and expecetd power consumption exceeded a given threshold.'::text  AS measure_description, "		+
+										"device_location, " 																										+
+										"current_measure 									  										AS current_power_consumption, "	+                                                           
+										"expecetd_measure 									  										AS expected_power_consumption "	+
+								"FROM   \"DBMS_EMS_Schema\".\"_Q13_ExpectedConsumptionByMonthlyHourAvg\" " 															+
+								"WHERE  index = 1 AND (current_measure/(expecetd_measure+0.0001) - 1)*00 >= 00 ";
+								/*IMPORTANT: (current_measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case*/
 		
 		 return executeEvaluationQuery(queryStatement);	
 	}
