@@ -45,8 +45,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q11();
 //		install_Q12();
 //		install_Q7();
-		install_Q8();
-//		install_Q9();
+//		install_Q8();
+		install_Q9();
 //		install_Q10();
 //		install_Q14();
 //		install_Q13();
@@ -107,7 +107,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q9_FractionateConsumptions(true);
+		install_Q09_ProportionsFromConsumptions(true);
 	}
 	
 	public void install_Q10(){
@@ -349,18 +349,17 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 	}
 	
-	public void install_New_Q9_FractionateConsumptions(boolean addListener){		
-		
+	public void install_Q09_ProportionsFromConsumptions(boolean addListener){		
 		String statement = 	"SELECT device_pk, " 																			+																	
 									"measure_timestamp, " 																	+
-									"(measure/SUM(measure))*100 				AS measure, "								+
-									"\"percentage\" 							AS measure_unit, "							+						
-									"\"%ofTotalNormalizedEnergyConsumption\"  	AS measure_description, " 					+
+									"(measure/SUM(measure))*100 						AS measure, "						+
+									"\"Percentage%\" 									AS measure_unit, "					+						
+									"\"Proportion of each location power consumption " 										+
+									"by comparation with all other locations.\"  		AS measure_description, "			+
 									"device_location "																		+
-							"FROM Q8_NormalizeConsumptionsByLocationSquareMeters.std:unique(device_pk).win:time(2 min) "	+
+							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "						+
 							"WHERE device_pk != 0 "																			+
 							"OUTPUT SNAPSHOT EVERY 1 EVENTS";
-	
 		esperEngine.installQuery(statement, addListener);
 	}
 	
