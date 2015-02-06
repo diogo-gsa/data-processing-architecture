@@ -44,17 +44,15 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		this.insertInto_DatapointReadingTable(tuple);
 // ============= Query to be Executed ========================================================================= 
-//		QueryEvaluationReport report = this.execute_New_Q4_VariationsAboveThreshold();
-//		QueryEvaluationReport report = this.execute_New_Q5_PeriodOutOfBounds();
-//		QueryEvaluationReport report = this.execute_New_Q1_ConsumptionsAboveThreshold();
+		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio();
+//		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold();
+//		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange();
 //		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected();
-//		QueryEvaluationReport report = this.execute_New_Q6_DeltaAboveThreshold_WithQ14AsInput();
-		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter();
-//		QueryEvaluationReport report = this.execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg();
-//		QueryEvaluationReport report = this.execute_New_Q09_ProportionsFromConsumptions();
+//		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions();
 //		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
-//		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
+//		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold();
+//		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter();
 //============================================================================================================= 
 		
 		
@@ -110,26 +108,6 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
  * 										Data Evaluation Queries
  * ========================================================================================================*/	
 	
-	public QueryEvaluationReport execute_New_Q4_VariationsAboveThreshold(){
-		QueryEvaluationReport report = dbAPI.execute_Q04_InstantVariationAboveThreshold();
-		return report;
-	}
-	
-	public QueryEvaluationReport execute_New_Q5_PeriodOutOfBounds(){
-		QueryEvaluationReport report = dbAPI.execute_Q05_StreamPeriodicityOutOfRange();
-		return report;
-	}
-	
-	public QueryEvaluationReport execute_New_Q09_ProportionsFromConsumptions(){
-		QueryEvaluationReport report = dbAPI.execute_Q09_ProportionsFromConsumptions();
-		return report;
-	}
-	
-	public QueryEvaluationReport execute_Q10_ConsumptionsRankingList(){
-		QueryEvaluationReport report = dbAPI.execute_Q10_ConsumptionsRankingList();
-		return report;
-	}
-	
 	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(){
 		QueryEvaluationReport report = dbAPI.execute_Q01_ConsumptionOverThreshold();
 		return report;
@@ -140,25 +118,38 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		return report;
 	}
 	
+	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(){
+		QueryEvaluationReport report = dbAPI.execute_Q04_InstantVariationAboveThreshold();
+		return report;
+	}
+	
+	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(){
+		QueryEvaluationReport report = dbAPI.execute_Q05_StreamPeriodicityOutOfRange();
+		return report;
+	}
+	
 	public QueryEvaluationReport execute_Q06_ConsumptionAboveExpected(){
 		QueryEvaluationReport report = dbAPI.execute_Q06_ConsumptionAboveExpected();
 		return report;
 	}
 	
-	public QueryEvaluationReport execute_New_Q6_DeltaAboveThreshold_WithQ14AsInput(){
-		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ14AsInput();
+	public QueryEvaluationReport execute_Q09_ProportionsFromConsumptions(){
+		QueryEvaluationReport report = dbAPI.execute_Q09_ProportionsFromConsumptions();
 		return report;
 	}
 	
+	public QueryEvaluationReport execute_Q10_ConsumptionsRankingList(){
+		QueryEvaluationReport report = dbAPI.execute_Q10_ConsumptionsRankingList();
+		return report;
+	}
+	
+	public QueryEvaluationReport execute_Q16_ConsumptionAboveSlidingAvgThreshold(){
+		QueryEvaluationReport report = dbAPI.execute_Q16_ConsumptionAboveSlidingAvgThreshold();
+		return report;
+	}
 	
 	public QueryEvaluationReport execute_Q17_ConsumptionAboveExpectedCounter(){
 		QueryEvaluationReport report = dbAPI.execute_Q17_ConsumptionAboveExpectedCounter();
-		return report;
-	}
-	
-	
-	public QueryEvaluationReport execute_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(){
-		QueryEvaluationReport report = dbAPI.execute_Q16_ConsumptionAboveSlidingAvgThreshold();
 		return report;
 	}
 	
@@ -282,6 +273,12 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage(){
 		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_Q6_withQ13AsInput_CurrentAndExpectedConsumptionAboveGivenPercentage();
+		return report;
+	}
+	
+	@Deprecated
+	public QueryEvaluationReport execute_New_Q6_DeltaAboveThreshold_WithQ14AsInput(){
+		QueryEvaluationReport report = dbAPI.executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ14AsInput();
 		return report;
 	}
 	

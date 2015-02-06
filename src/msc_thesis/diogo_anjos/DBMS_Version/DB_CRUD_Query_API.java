@@ -138,79 +138,6 @@ public class DB_CRUD_Query_API {
 //								Case Study Queries Implementation 
 //	==========================================================================================
 	
-	// _Q04_InstantVariationAboveThreshold
-	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(){
-		String queryStatement =	"SELECT  device_pk, " 																					+
-										"measure_timestamp, " 																			+
-										"measure, " 																					+
-										"current_power_consumption, " 																	+
-										"'Percentage%' 														AS measure_unit, " 			+
-										"'Variation between current and last 5 minutes average power " 									+
-											"consumption that exceeded a given threshold.' 					AS measure_description, " 	+
-										"device_location, " 																			+
-										"location_area_m2 " 																			+
-								"FROM \"DBMS_EMS_Schema\".\"_Q11_InstantVariation\" " 													+
-								"WHERE index = 1 " 																						+
-								  "AND ((device_pk = 1 AND measure >= -100) " 															+
-								    "OR (device_pk = 2 AND measure >= -100) " 															+
-								    "OR (device_pk = 3 AND measure >= -100) " 															+
-								    "OR (device_pk = 4 AND measure >= -100) " 															+
-								    "OR (device_pk = 5 AND measure >= -100) " 															+
-								    "OR (device_pk = 6 AND measure >= -100) " 															+		 	
-								    "OR (device_pk = 7 AND measure >= -100) " 															+
-								    "OR (device_pk = 8 AND measure >= -100)) ";
-							//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
-
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(){	
-		String queryStatement = "SELECT  device_pk, "																											+
-		        						"measure_timestamp, " 																									+
-		        						"measure, "																												+
-		        						"'Time Seconds' AS measure_unit, " 																						+
-		        						"'Period between two last power consumption measurements is out of range: [55, 65] seconds.' AS meausre_description, " 	+
-		        						"device_location, " 																									+
-		        						"location_area_m2 " 																									+
-		        				"FROM    \"DBMS_EMS_Schema\".\"_Q12_DataStreamPeriodicity\" " 																	+
-		        				"WHERE   index = 1 "  																											+
-		        				    "AND NOT('00:00:55' <= measure  AND  measure <= '00:01:05') ";
-		//catch periods between measures out of [50,70] seconds range
-		
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport execute_Q09_ProportionsFromConsumptions(){	
-		String queryStatement = "SELECT	device_pk, " 																											+
-										"measure_timestamp, " 																									+
-										"measure/sum(measure) OVER wintotal * 100::double precision 				   				AS measure, " 				+
-										"'Percentage%' 						   				   										AS measure_unit, " 			+
-										"'%Proportion of each location power consumption by comparation with all other locations.'  AS measure_description, " 	+
-										"device_location " 																										+
-								"FROM 	\"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" "																	+
-								"WHERE 	device_pk <> 0 AND index = 1 " 																							+
-								"WINDOW 	wintotal AS (PARTITION BY NULL::text) ";
-		//catch periods between measures out of [50,70] seconds range
-		
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	public QueryEvaluationReport execute_Q10_ConsumptionsRankingList(){	
-		String queryStatement = "SELECT device_pk, " 																					+
-		    							"measure_timestamp, " 																			+
-		    							"rank() OVER sortedwindow AS measrure, " 														+
-		    							"measure AS current_power_consumption, " 														+
-		    							"'Ranking List Position' 											 AS measure_unit, " 		+ 
-		    							"'Descendig Ranking List of each Location by its power consumption.' AS measure_description, " 	+
-		    							"device_location " 																				+
-		    					"FROM \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" "											+
-		    					"WHERE index = 1 " 																						+
-		    					"WINDOW sortedwindow AS (PARTITION BY NULL::text "														+  
-		    											"ORDER BY measure DESC) ";
-		return executeEvaluationQuery(queryStatement);	
-	}
-	
-	
 	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(){
 		String queryStatement =	"SELECT  device_pk, " 																	+
 										"measure_timestamp, " 															+
@@ -254,10 +181,48 @@ public class DB_CRUD_Query_API {
 								         "r1.measure_unit, "                                       											+
 								         "r1.measure_description, "                                 										+ 	  
 								         "r1.device_location ";
-		
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(){
+		String queryStatement =	"SELECT  device_pk, " 																					+
+										"measure_timestamp, " 																			+
+										"measure, " 																					+
+										"current_power_consumption, " 																	+
+										"'Percentage%' 														AS measure_unit, " 			+
+										"'Variation between current and last 5 minutes average power " 									+
+											"consumption that exceeded a given threshold.' 					AS measure_description, " 	+
+										"device_location, " 																			+
+										"location_area_m2 " 																			+
+								"FROM \"DBMS_EMS_Schema\".\"_Q11_InstantVariation\" " 													+
+								"WHERE index = 1 " 																						+
+								  "AND ((device_pk = 1 AND measure >= -100) " 															+
+								    "OR (device_pk = 2 AND measure >= -100) " 															+
+								    "OR (device_pk = 3 AND measure >= -100) " 															+
+								    "OR (device_pk = 4 AND measure >= -100) " 															+
+								    "OR (device_pk = 5 AND measure >= -100) " 															+
+								    "OR (device_pk = 6 AND measure >= -100) " 															+		 	
+								    "OR (device_pk = 7 AND measure >= -100) " 															+
+								    "OR (device_pk = 8 AND measure >= -100)) ";
+							//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
+		return executeEvaluationQuery(queryStatement);	
+	}
+	
+	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(){	
+		String queryStatement = "SELECT  device_pk, "																											+
+		        						"measure_timestamp, " 																									+
+		        						"measure, "																												+
+		        						"'Time Seconds' AS measure_unit, " 																						+
+		        						"'Period between two last power consumption measurements is out of range: [55, 65] seconds.' AS meausre_description, " 	+
+		        						"device_location, " 																									+
+		        						"location_area_m2 " 																									+
+		        				"FROM    \"DBMS_EMS_Schema\".\"_Q12_DataStreamPeriodicity\" " 																	+
+		        				"WHERE   index = 1 "  																											+
+		        				    "AND NOT('00:00:55' <= measure  AND  measure <= '00:01:05') ";
+		//catch periods between measures out of [50,70] seconds range
+		
+		return executeEvaluationQuery(queryStatement);	
+	}
 	
 	public QueryEvaluationReport execute_Q06_ConsumptionAboveExpected(){
 		String queryStatement = "SELECT	device_pk, " 																												+
@@ -275,38 +240,33 @@ public class DB_CRUD_Query_API {
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ14AsInput(){
-		String queryStatement = "SELECT  device_pk, "                                                                                   			+
-		        						"measure_timestamp, "																						+
-		        						"(measure/(expected_measure+0.0001) - 1)*100                                    AS measure, "				+
-		        						"measure                                                                        AS current_consumption, "	+
-		        						"expected_measure+0.0001                                                        AS expected_consumption, "	+
-		        						"'%percent'                                                                     AS measure_unit, "			+
-		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+
-		        						"device_location "                                                                                      	+
-		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" "                		+
-		        				// IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
-		        				"WHERE rank = 1 AND  (measure/(expected_measure+0.0001) - 1)*100 >= 10 ";	
-		 return executeEvaluationQuery(queryStatement);	
+	public QueryEvaluationReport execute_Q09_ProportionsFromConsumptions(){	
+		String queryStatement = "SELECT	device_pk, " 																											+
+										"measure_timestamp, " 																									+
+										"measure/sum(measure) OVER wintotal * 100::double precision 				   				AS measure, " 				+
+										"'Percentage%' 						   				   										AS measure_unit, " 			+
+										"'%Proportion of each location power consumption by comparation with all other locations.'  AS measure_description, " 	+
+										"device_location " 																										+
+								"FROM 	\"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" "																	+
+								"WHERE 	device_pk <> 0 AND index = 1 " 																							+
+								"WINDOW 	wintotal AS (PARTITION BY NULL::text) ";
+		//catch periods between measures out of [50,70] seconds range
+		
+		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q17_ConsumptionAboveExpectedCounter(){
-		String queryStatement =	"SELECT  r2.device_pk, " 																										+  																			
-										"max(r2.measure_timestamp) 																	AS measure_timestamp, " 	+  											
-										"count(r2.current_measure) 																	AS measure, " 				+
-										"'Positive Integer'::text																	AS measure_unit, " 			+ 
-										"'Counter of times that, in last hour, current consumption as exceeded the expected one. " 								+
-										" Being the counter limited by a min and max value.' 										AS measure_description, " 	+
-										"r2.device_location " 																									+
-								"FROM 	\"DBMS_EMS_Schema\".\"_Q14_ExpectedConsumptionByUDF\" r1 " 																+  	
-										"INNER JOIN "  																											+
-										"\"DBMS_EMS_Schema\".\"_Q14_ExpectedConsumptionByUDF\" r2 " 															+  	
-										"ON r1.device_pk = r2.device_pk "  																						+								
-										"AND r1.index = 1 " 																									+															
-										"AND r2.measure_timestamp > (r1.measure_timestamp - '01:00:00'::interval) " 											+  				 
-								"WHERE  r2.current_measure > r2.expected_measure "  																			+							 
-								"GROUP BY r2.device_pk, r2.expected_measure, r2.device_location "	 															+ 														
-								"HAVING 5 <= COUNT(r2.current_measure) AND COUNT(r2.current_measure) <= 10 ";
+	public QueryEvaluationReport execute_Q10_ConsumptionsRankingList(){	
+		String queryStatement = "SELECT device_pk, " 																					+
+		    							"measure_timestamp, " 																			+
+		    							"rank() OVER sortedwindow AS measrure, " 														+
+		    							"measure AS current_power_consumption, " 														+
+		    							"'Ranking List Position' 											 AS measure_unit, " 		+ 
+		    							"'Descendig Ranking List of each Location by its power consumption.' AS measure_description, " 	+
+		    							"device_location " 																				+
+		    					"FROM \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" "											+
+		    					"WHERE index = 1 " 																						+
+		    					"WINDOW sortedwindow AS (PARTITION BY NULL::text "														+  
+		    											"ORDER BY measure DESC) ";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
@@ -342,6 +302,25 @@ public class DB_CRUD_Query_API {
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
+	public QueryEvaluationReport execute_Q17_ConsumptionAboveExpectedCounter(){
+		String queryStatement =	"SELECT  r2.device_pk, " 																										+  																			
+										"max(r2.measure_timestamp) 																	AS measure_timestamp, " 	+  											
+										"count(r2.current_measure) 																	AS measure, " 				+
+										"'Positive Integer'::text																	AS measure_unit, " 			+ 
+										"'Counter of times that, in last hour, current consumption as exceeded the expected one. " 								+
+										" Being the counter limited by a min and max value.' 										AS measure_description, " 	+
+										"r2.device_location " 																									+
+								"FROM 	\"DBMS_EMS_Schema\".\"_Q14_ExpectedConsumptionByUDF\" r1 " 																+  	
+										"INNER JOIN "  																											+
+										"\"DBMS_EMS_Schema\".\"_Q14_ExpectedConsumptionByUDF\" r2 " 															+  	
+										"ON r1.device_pk = r2.device_pk "  																						+								
+										"AND r1.index = 1 " 																									+															
+										"AND r2.measure_timestamp > (r1.measure_timestamp - '01:00:00'::interval) " 											+  				 
+								"WHERE  r2.current_measure > r2.expected_measure "  																			+							 
+								"GROUP BY r2.device_pk, r2.expected_measure, r2.device_location "	 															+ 														
+								"HAVING 5 <= COUNT(r2.current_measure) AND COUNT(r2.current_measure) <= 10 ";
+		return executeEvaluationQuery(queryStatement);	
+	}
 	
 // =================================== DEPRECATED FUNCTIONS ==================================
 	
@@ -493,6 +472,21 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	@Deprecated
+	public QueryEvaluationReport executeEvaluationQuery_New_Q6_DeltaAboveThreshold_WithQ14AsInput(){
+		String queryStatement = "SELECT  device_pk, "                                                                                   			+
+		        						"measure_timestamp, "																						+
+		        						"(measure/(expected_measure+0.0001) - 1)*100                                    AS measure, "				+
+		        						"measure                                                                        AS current_consumption, "	+
+		        						"expected_measure+0.0001                                                        AS expected_consumption, "	+
+		        						"'%percent'                                                                     AS measure_unit, "			+
+		        						"'Percent variation between current and expected consumption greater than 10%'  AS measure_description, "	+
+		        						"device_location "                                                                                      	+
+		        				"FROM   \"DBMS_EMS_Schema\".\"New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction\" "                		+
+		        				// IMPORTANT: (measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case
+		        				"WHERE rank = 1 AND  (measure/(expected_measure+0.0001) - 1)*100 >= 10 ";	
+		 return executeEvaluationQuery(queryStatement);	
+	}
 	
 	@Deprecated
 	public QueryEvaluationReport executeEvaluationQuery_Q3_MinMaxRatio(){
