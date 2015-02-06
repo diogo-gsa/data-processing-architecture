@@ -44,7 +44,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q0();
 //		install_Q11();
 //		install_Q12();
-		install_Q7();
+//		install_Q7();
 //		install_Q8();
 //		install_Q9();
 //		install_Q10();
@@ -57,7 +57,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
 //		install_Q17();
-//		install_Q16();
+		install_Q16();
 		//=== Query to be Executed ============
 	}
 	
@@ -184,7 +184,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q16(){
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
-		install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(true);
+		install_Q16_ConsumptionAboveSlidingAvgThreshold(true);
 	}
 	
 /* ==========================================================================================================
@@ -530,20 +530,18 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_New_Q16_CurrentConsumptions20percentAbove24hrsSlidingAvg(boolean addListener){		
-		//Nota é igual à original Q16, não houve nenhuma alteração, no entanto fiz copy+past para as queries ficarem separadas/arrumadas
-		String statement = 	"SELECT device_pk, "	 																+
-									"measure_timestamp, "															+
-									"measure_avg_10min 									AS measure, "				+
-									"avg(measure_avg_10min)*1.25 						AS threshold_measure, "		+
-									"device_location, "																+
-									"measure_unit, "																+
-									"\"Measures 25% higher than the past 24h average\" AS measure_description "		+
-							"FROM Q7_Sliding10minAVGbyDevice.win:time(24 hours) "									+
-							"GROUP BY device_pk "																	+
-							// IMPORTANT: current_measure >= measure_sliding24h_avg*0.0 0 Universal Condition/Worst Case
-							"HAVING measure_avg_10min >= avg(measure_avg_10min)*0.0 ";
-		
+	public void install_Q16_ConsumptionAboveSlidingAvgThreshold(boolean addListener){		
+		String statement = 	"SELECT device_pk, "	 																					 +
+									"measure_timestamp, "																				 +
+									"measure, "																							 +
+									"avg(measure)*1.20 															AS measure_threshold, "	 +
+									"\"WATT\" 																	AS measure_unit, "	 	 +
+									"\"Power consumption 20% above the average consumption of last 24 hours.\" 	AS measure_description, "+
+									"device_location "																					 +
+							"FROM _Q07_SmoothingConsumption.win:time(24 hours) "														 +
+							"GROUP BY device_pk "																						 +
+							"HAVING measure >= avg(measure)*0.0 ";
+							//Important: Universal condition required for worst case scenario
 		esperEngine.installQuery(statement, addListener);
 	}
 
