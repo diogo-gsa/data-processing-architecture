@@ -41,8 +41,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
 		//=== Query to be Executed ============
-		install_Q0();
-//		install_Q11();
+//		install_Q0();
+		install_Q11();
 //		install_Q12();
 //		install_Q7();
 //		install_Q8();
@@ -84,7 +84,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q11(){
 		install_Q00_DataAggregation(false);
-		install_New_Q11_ConsumptionsVariationOverLast5min(true);
+		install_Q11_InstantVariation(true);
 	}
 	
 	public void install_Q12(){
@@ -133,7 +133,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q4(){
 		install_Q00_DataAggregation(false);
-		install_New_Q11_ConsumptionsVariationOverLast5min(false);
+		install_Q11_InstantVariation(false);
 		install_New_Q4_VariationsAboveThreshold(true);
 	}
 	
@@ -231,7 +231,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement,addListener);
 	}
 	
-	public void install_New_Q11_ConsumptionsVariationOverLast5min(boolean addListener){
+	public void install_Q11_InstantVariation(boolean addListener){
 		/* Query foi reescrita de uma forma mais simples e mais eficiente:
 		 *
 		 *		SELECT (measure/avg(measure) - 1) 	AS variation,
@@ -263,14 +263,16 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							"OUTPUT LAST EVERY 1 EVENTS ";
 		*/
 		
-		String statement = 	"INSERT INTO New_Q11_VariationStream " 										 +
-							"SELECT 	device_pk 								  AS device_pk, "		 +
-										"measure_timestamp 						  AS measure_timestamp, " +
-										"(measure/(avg(measure)+0.00001) - 1)*100 AS variation, "		 +
-										"measure 								  AS current_measure, "  +
-										"avg(measure)							  AS win_measure, "		 +
-										"device_location 						  AS device_location "	 +
-							"FROM		DenormalizedAggPhases.win:time(5 min) " 						 +
+		String statement = 	"INSERT INTO _Q11_InstantVariation " 										 													+
+							"SELECT 	device_pk 								  										AS device_pk, "		 				+
+										"measure_timestamp 						  										AS measure_timestamp, " 			+	
+										"(measure/(avg(measure)+0.00001) - 1)*100 										AS measure, "		 				+
+										"measure 								  										AS current_power_consumption, "  	+
+										"\"Percentage%\" 						  										AS measure_unit, " 					+
+										"\"Variation between current and last 5 minutes average power consumption.\"	AS measure_description, " 			+
+										"device_location 						  										AS device_location, "	 			+
+										"location_area_m2 "																									+
+							"FROM		_Q00_DataAggregation.win:time(5 min) " 						 														+
 							"GROUP BY 	device_pk ";
 	
 		esperEngine.installQuery(statement, addListener);
