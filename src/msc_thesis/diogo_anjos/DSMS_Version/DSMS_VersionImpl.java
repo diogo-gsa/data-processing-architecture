@@ -52,8 +52,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q13();
 //		install_Q4();
 //		install_Q5();
-		install_Q1();
-//		install_Q3();
+//		install_Q1();
+		install_Q3();
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
 //		install_Q17();
@@ -154,7 +154,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(true);
+		install_Q03_MinMaxConsumptionRatio(true);
 	}
 	
 	public void install_Q6_with_Q14_asInput(){
@@ -476,16 +476,16 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_New_Q3_MinMaxConsumptionsRatioOverLast1Hour(boolean addListener){
-		String statement = 	"SELECT  device_pk, "														+
-        							"measure_timestamp, "												+
-        							"min(measure)/max(measure)            AS measure, "					+
-        							"min(measure)                         AS min_measure, "				+
-        							"max(measure)                         AS max_measure, "				+
-        							"measure_unit, "													+
-        							"'Min/Max Ratio over last 60 minutes' AS measure_description, "		+
-        							"device_location "													+
-        					"FROM   Q8_NormalizeConsumptionsByLocationSquareMeters.win:time(60 min) "	+
+	public void install_Q03_MinMaxConsumptionRatio(boolean addListener){
+		String statement = 	"SELECT  device_pk, "																					+
+        							"measure_timestamp, "																			+
+        							"min(measure)/max(measure)            					AS measure, "							+
+        							"\"Ratio = [0,1]\" 										AS measure_unit, "						+
+        							"'Min/Max Power Consumption Ratio during last hour.' 	AS measure_description, "				+
+        							"device_location, "																				+
+        							"min(measure)                         					AS min_last_hour_power_consumption, "	+
+        							"max(measure)                         					AS max_last_hour_power_consumption "	+
+        					"FROM   _Q08_SquareMeterNormalization.win:time(60 min) "												+
         					"WHERE device_pk = 0";
 		esperEngine.installQuery(statement, addListener);
 	}
