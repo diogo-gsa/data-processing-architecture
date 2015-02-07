@@ -46,8 +46,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q12();
 //		install_Q7();
 //		install_Q8();
-		install_Q9();
-//		install_Q10();
+//		install_Q9();
+		install_Q10();
 //		install_Q14();
 //		install_Q13();
 //		install_Q4();
@@ -114,7 +114,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q10_OrderByConsumptions(true);
+		install_Q10_ConsumptionsRankingList(true);
 	}
 	
 	public void install_Q14(){
@@ -363,16 +363,16 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_New_Q10_OrderByConsumptions(boolean addListener){		
+	public void install_Q10_ConsumptionsRankingList(boolean addListener){		
 		
-		String statement = 	"SELECT device_pk," 																			+
-									"measure_timestamp, "																	+
-									"measure, "																				+
-									"measure_unit, "																		+
-									"measure_description, "																	+
-									"device_location "																		+	
-							"FROM Q8_NormalizeConsumptionsByLocationSquareMeters.std:unique(device_pk).win:time(2 min) "	+
-							"OUTPUT SNAPSHOT EVERY 1 EVENTS "																+
+		String statement = 	"SELECT device_pk," 																					+
+									"measure_timestamp, "																			+
+									"measure, "																						+
+									"\"WATT\" 															   AS measure_unit, "		+
+									"\"Descendig Ranking List of each Location by its power consumption.\" AS measure_description, "+
+									"device_location "																				+	
+							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "								+
+							"OUTPUT SNAPSHOT EVERY 1 EVENTS "																		+
 							"ORDER BY measure DESC";
 		
 		esperEngine.installQuery(statement, addListener);
