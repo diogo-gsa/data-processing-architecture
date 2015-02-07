@@ -47,12 +47,12 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q7();
 //		install_Q8();
 //		install_Q9();
-		install_Q10();
+//		install_Q10();
 //		install_Q14();
 //		install_Q13();
 //		install_Q4();
 //		install_Q5();
-//		install_Q1();
+		install_Q1();
 //		install_Q3();
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
@@ -147,7 +147,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q1_ConsumptionsAboveThreshold(true);
+		install_Q01_ConsumptionOverThreshold(true);
 	}
 	
 	public void install_Q3(){
@@ -454,24 +454,25 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_New_Q1_ConsumptionsAboveThreshold(boolean addListener){
-		String statement = 	"SELECT  device_pk, "									+
-									"measure_timestamp, "							+
-									"measure, "										+
-									"measure_unit, "								+
-									"measure_description, "							+
-									"device_location "                              +                 
-							"FROM  Q8_NormalizeConsumptionsByLocationSquareMeters "	+
-							"WHERE  (device_pk = 0 AND measure >= 0) "				+
-		   					   "OR  (device_pk = 1 AND measure >= 0) "				+
-		   					   "OR  (device_pk = 2 AND measure >= 0) "				+
-		   					   "OR  (device_pk = 3 AND measure >= 0) "				+
-		   					   "OR  (device_pk = 4 AND measure >= 0) "				+
-		   					   "OR  (device_pk = 5 AND measure >= 0) "				+
-		   					   "OR  (device_pk = 6 AND measure >= 0) "				+
-		   					   "OR  (device_pk = 7 AND measure >= 0) "				+
-		   					   "OR  (device_pk = 8 AND measure >= 0) "				+
+	public void install_Q01_ConsumptionOverThreshold(boolean addListener){
+		String statement = 	"SELECT  device_pk, "																+
+									"measure_timestamp, "														+
+									"measure, "																	+
+									"\"WATT/m^2\" 									AS measure_unit, "			+
+									"\"Power consumption above a given threshold.\" AS measure_description, "	+
+									"device_location "                              							+                 
+							"FROM  _Q08_SquareMeterNormalization "												+
+							"WHERE  (device_pk = 0 AND measure >= 0) "											+
+		   					   "OR  (device_pk = 1 AND measure >= 0) "											+
+		   					   "OR  (device_pk = 2 AND measure >= 0) "											+
+		   					   "OR  (device_pk = 3 AND measure >= 0) "											+
+		   					   "OR  (device_pk = 4 AND measure >= 0) "											+
+		   					   "OR  (device_pk = 5 AND measure >= 0) "											+
+		   					   "OR  (device_pk = 6 AND measure >= 0) "											+
+		   					   "OR  (device_pk = 7 AND measure >= 0) "											+
+		   					   "OR  (device_pk = 8 AND measure >= 0) "											+
 		   					   "OR  (device_pk = 0 AND measure >= 0)";	
+		//Important: Universal condition required for worst case scenario	
 		esperEngine.installQuery(statement, addListener);
 	}
 	
