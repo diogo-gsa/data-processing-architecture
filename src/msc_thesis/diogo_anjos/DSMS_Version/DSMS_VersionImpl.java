@@ -49,14 +49,14 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q9();
 //		install_Q10();
 //		install_Q14();
-//		install_Q13();
+		install_Q13();
 //		install_Q4();
 //		install_Q5();
 //		install_Q1();
 //		install_Q3();
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
-		install_Q17();
+//		install_Q17();
 //		install_Q16();
 		//=== Query to be Executed ============
 	}
@@ -128,7 +128,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(true);
+		install_Q13_ExpectedConsumptionByMonthlyHourAvg(true);
 	}
 	
 	public void install_Q4(){
@@ -169,7 +169,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(false);
+		install_Q13_ExpectedConsumptionByMonthlyHourAvg(false);
 		install_New_Q6_withQ13AsInput_DeltaAbove(true);
 	}
 	
@@ -391,18 +391,18 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 	
-	public void install_New_Q13_DeltaBetweenCurrentConsumptionAndLastMonthBasedPrediction(boolean addListener){
+	public void install_Q13_ExpectedConsumptionByMonthlyHourAvg(boolean addListener){
 		
-		String statement = 	"INSERT INTO New_Q13_CurrentAndExpectedMeasure "                                                +      
+		String statement = 	"INSERT INTO _Q13_ExpectedConsumptionByMonthlyHourAvg "                                         +      
 							"SELECT  device_pk, "                                                                    		+
 		        					"measure_timestamp, "                                                                   +         
-		        					"measure, "																				+
-		        					"avg(measure)                AS expected_measure, "										+
-		        					"measure - avg(measure)      AS delta, "           										+
-		        					"measure_description, "                                                               	+
-		        					"measure_unit, "                                                                        +       
+		        					"measure					 								AS current_measure, "		+
+		        					"avg(measure)                								AS expected_measure, "		+
+		        					"\"WATT/m^2\" 												AS measure_unit, "          +       
+		        					"\"Current and Expected Power consumption given by last " 								+
+		        					"month average consumption of the current hour.\" 			AS measure_description, "  	+
 		        					"device_location "                                                                      +                          
-							"FROM Q8_NormalizeConsumptionsByLocationSquareMeters.win:time(1 month) "						+
+							"FROM _Q08_SquareMeterNormalization.win:time(1 month) "											+
 							"GROUP BY device_pk, DateTime.toDate(measure_timestamp, \"yyyy-MM-dd HH:mm:ss\").getHours()"; 
 		
 		esperEngine.installQuery(statement, addListener);
