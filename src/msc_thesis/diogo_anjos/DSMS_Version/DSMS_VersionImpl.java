@@ -48,12 +48,12 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q8();
 //		install_Q9();
 //		install_Q10();
-//		install_Q14();
+		install_Q14();
 //		install_Q13();
 //		install_Q4();
 //		install_Q5();
 //		install_Q1();
-		install_Q3();
+//		install_Q3();
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
 //		install_Q17();
@@ -121,7 +121,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(true);
+		install_Q14_ExpectedConsumptionByUDF(true);
 	}
 	
 	public void install_Q13(){
@@ -161,7 +161,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
+		install_Q14_ExpectedConsumptionByUDF(false);
 		install_New_Q6_withQ14AsInput_DeltaAbove(true);
 	}
 	
@@ -177,7 +177,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q00_DataAggregation(false);
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
-		install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(false);
+		install_Q14_ExpectedConsumptionByUDF(false);
 		install_New_Q17(true);
 	}
 	
@@ -364,7 +364,6 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q10_ConsumptionsRankingList(boolean addListener){		
-		
 		String statement = 	"SELECT device_pk," 																					+
 									"measure_timestamp, "																			+
 									"measure, "																						+
@@ -374,24 +373,21 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "								+
 							"OUTPUT SNAPSHOT EVERY 1 EVENTS "																		+
 							"ORDER BY measure DESC";
-		
 		esperEngine.installQuery(statement, addListener);
 	}
 	
 	
-	public void install_New_Q14_DeltaBetweenCurrentConsumptionAndUDFBasedPrediction(boolean addListener){		
-							
-		String statement =  "INSERT INTO New_Q14_CurrentAndExpectedMeasure "                                                +
-							"SELECT device_pk, "  																			+	
-			       					"measure_timestamp, "                                                               	+                    
-			       					"measure                                                    AS measure, "           	+
-			       					"getExpectedMeasure(device_pk, measure_timestamp)           AS expected_measure, "  	+
-			       					"measure - getExpectedMeasure(device_pk, measure_timestamp) AS delta, "					+
-			       					"measure_unit, "                                                                    	+                     
-			       					"measure_description, "                                                             	+                    
-			       					"device_location "                                                                  	+            
-			       			"FROM Q8_NormalizeConsumptionsByLocationSquareMeters ";
-		
+	public void install_Q14_ExpectedConsumptionByUDF(boolean addListener){							
+		String statement =  "INSERT INTO _Q14_ExpectedConsumptionByUDF "                    	                   		+
+							"SELECT device_pk, "  																		+	
+			       					"measure_timestamp, "                                                          		+                    
+			       					"measure                                                AS current_measure, "  		+
+			       					"getExpectedMeasure(device_pk, measure_timestamp)       AS expected_measure, "  	+
+			       					"\"WATT/m^2\" 											AS measure_unit, "         	+                     
+			       					"\"Current and Expected Power consumption given by a " 								+
+			       					"User Defined Function (UDF).\" 						AS measure_description, " 	+                    
+			       					"device_location "                                                              	+            
+			       			"FROM _Q08_SquareMeterNormalization ";
 		esperEngine.installQuery(statement, addListener);
 	}
 	
