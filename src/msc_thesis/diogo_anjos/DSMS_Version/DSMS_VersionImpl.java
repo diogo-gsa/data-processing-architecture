@@ -48,7 +48,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q8();
 //		install_Q9();
 //		install_Q10();
-		install_Q14();
+//		install_Q14();
 //		install_Q13();
 //		install_Q4();
 //		install_Q5();
@@ -56,7 +56,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q3();
 //		install_Q6_with_Q14_asInput();
 //		install_Q6_with_Q13_asInput();
-//		install_Q17();
+		install_Q17();
 //		install_Q16();
 		//=== Query to be Executed ============
 	}
@@ -178,7 +178,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		install_Q07_SmoothingConsumption(false);
 		install_Q08_SquareMeterNormalization(false);
 		install_Q14_ExpectedConsumptionByUDF(false);
-		install_New_Q17(true);
+		install_Q17_ConsumptionAboveExpectedCounter(true);
 	}
 	
 	public void install_Q16(){
@@ -496,9 +496,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							        "\"Percent variation between current and expected consumption greater than 10%\" AS measure_description, " 	+
 							        "measure_description, "																						+
 							        "device_location "                                                                      					+    
-							"FROM   New_Q13_CurrentAndExpectedMeasure "																			+
-							//IMPORTANT: (measure/(expected_measure+0.0001) - 1)*0 >= 0 Universal Condition 
+							"FROM   New_Q13_CurrentAndExpectedMeasure "																			+ 
 							"WHERE  (measure/(expected_measure+0.0001) - 1)*100 >= 0";
+							//Important: Universal condition required for worst case scenario
 		
 		esperEngine.installQuery(statement, addListener);
 	}
@@ -518,14 +518,20 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		esperEngine.installQuery(statement, addListener);
 	}
 			
-	public void install_New_Q17(boolean addListener){
-		String statement = 	"SELECT  device_pk, " +
-		        					"measure_timestamp, " +
-		        					"count(measure) " +
-		        			"FROM   New_Q14_CurrentAndExpectedMeasure.win:time(60 min) " +
-		        			"WHERE  measure > expected_measure " +
-		        			"GROUP BY device_pk " +
-		        			"HAVING 5 <= count(measure) AND count(measure) <= 10 ";
+	public void install_Q17_ConsumptionAboveExpectedCounter(boolean addListener){
+		String statement = 	"SELECT  device_pk, " 																		+
+		        					"measure_timestamp, " 																+
+		        					"count(current_measure) 								AS measure, " 				+
+		        					"\"Positive Integer\" 									AS measure_unit, " 			+
+		        					"\"Counter of times that, in last hour,  current " 									+
+		        					"consumption as exceeded the expected one. " 										+
+		        					"Being the counter limited by a min and max value.\" 	AS measure_description, " 	+
+		        					"device_location " 																	+ 
+		        			"FROM   _Q14_ExpectedConsumptionByUDF.win:time(60 min) " 									+
+		        			"WHERE  current_measure > expected_measure " 												+
+		        			"GROUP BY device_pk " 																		+
+		        			"HAVING 5 <= count(current_measure) AND count(current_measure) <= 10 ";
+							//Important: Universal condition required for worst case scenario
 		
 		esperEngine.installQuery(statement, addListener);
 	}
