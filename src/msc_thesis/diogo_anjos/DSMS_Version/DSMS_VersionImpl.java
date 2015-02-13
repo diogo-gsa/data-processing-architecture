@@ -43,8 +43,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		//=== Query to be Executed ============
 //		install_Q0();
 //		install_Q1();
-//		install_Q3();
-		install_Q4();
+		install_Q3();
+//		install_Q4();
 //		install_Q5();
 //		install_Q6();
 //		install_Q7();
@@ -70,7 +70,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		List<Measure> datastreamTuples = inputAdapter(tuple);
 		for(Measure m : datastreamTuples){
 			if(DUMP_PUSHED_INPUT){
-				System.out.println("Pushing into Esper's engine -> "+m+"\n");
+				System.out.println("Pushing into Esper engine -> "+m+"\n");
 			}	
 			esperEngine.pushInput(m);
 		}	
@@ -446,7 +446,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"device_location, " +
 									"location_area_m2 " +
 				 			"FROM _Q12_DataStreamPeriodicity "  			+
-				 			"WHERE NOT(55 <= measure  AND  measure <= 65) ";
+				 			//"WHERE NOT(55 <= measure  AND  measure <= 65) ";   		// Real Condition
+							"WHERE (-9999999 <= measure  AND  measure <= 9999999) ";	// Universal Condition
+		
 							//Important: Universal condition required for worst case scenario
 		esperEngine.installQuery(statement, addListener);
 	}
@@ -476,14 +478,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q03_MinMaxConsumptionRatio(boolean addListener){
 		String statement = 	"SELECT  device_pk, "																					+
         							"measure_timestamp, "																			+
-        							"min(measure)/max(measure)            					AS measure, "							+
+        							"min(measure)/(max(measure)+0.000001)            		AS measure, "							+
         							"\"Ratio = [0,1]\" 										AS measure_unit, "						+
         							"'Min/Max Power Consumption Ratio during last hour.' 	AS measure_description, "				+
         							"device_location, "																				+
         							"min(measure)                         					AS min_last_hour_power_consumption, "	+
         							"max(measure)                         					AS max_last_hour_power_consumption "	+
-        					"FROM   _Q08_SquareMeterNormalization.win:time(60 min) "												+
-        					"WHERE device_pk = 0";
+        					"FROM   _Q08_SquareMeterNormalization.win:time(60 min) "												;
 		esperEngine.installQuery(statement, addListener);
 	}
 	
@@ -497,7 +498,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 							        "\"Delta between current and expecetd power consumption exceeded a given threshold.\" AS measure_description, " 		+
 							        "device_location "                                                                      								+    
 							"FROM   _Q13_ExpectedConsumptionByMonthlyHourAvg "																				+ 
-							"WHERE  (current_measure/(expected_measure+0.0001) - 1)*100 >= 0";
+							"WHERE  (current_measure/(expected_measure+0.0001) - 1)*0 >= 0";	//Universal Condition
+//							"WHERE  (current_measure/(expected_measure+0.0001) - 1)*100 >= 10"; //Real Condition
 							//Important: Universal condition required for worst case scenario
 		esperEngine.installQuery(statement, addListener);
 	}
@@ -512,9 +514,11 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"Being the counter limited by a min and max value.\" 	AS measure_description, " 	+
 		        					"device_location " 																	+ 
 		        			"FROM   _Q14_ExpectedConsumptionByUDF.win:time(60 min) " 									+
-		        			"WHERE  current_measure > expected_measure " 												+
+//		        			"WHERE  current_measure >= expected_measure*0 " 											+	//Universal Condition
+		        			"WHERE  current_measure > expected_measure " 												+	//Real condition
 		        			"GROUP BY device_pk " 																		+
-		        			"HAVING 5 <= count(current_measure) AND count(current_measure) <= 10 ";
+		        			"HAVING 0 <= count(current_measure) AND count(current_measure) <= 999999 ";		// Universal condition
+//		        			"HAVING 5 <= count(current_measure) AND count(current_measure) <= 10 "; 	// Real condition
 							//Important: Universal condition required for worst case scenario
 		
 		esperEngine.installQuery(statement, addListener);

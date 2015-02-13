@@ -68,7 +68,7 @@ public class EsperEngine {
        
     public void pushInput(Measure event){        
     	if(countInitializedQueries==0){
-    		System.out.println("There is any query installed in the Esper's Engine");
+    		System.out.println("There is any query installed in the Esper Engine");
     	}
     	lastPushedEventSystemTS = System.nanoTime();
         engineRuntime.sendEvent(event);
