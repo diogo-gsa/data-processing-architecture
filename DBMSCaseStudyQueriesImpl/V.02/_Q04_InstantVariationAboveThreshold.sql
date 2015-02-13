@@ -18,3 +18,4 @@ AND ((device_pk = 1 AND measure >= -100)
   OR (device_pk = 6 AND measure >= -100)
   OR (device_pk = 7 AND measure >= -100)
   OR (device_pk = 8 AND measure >= -100))
+

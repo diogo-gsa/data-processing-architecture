@@ -20,7 +20,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	//	DBMS_CRUD_Query_API --> DBMS_VersionImpl		
 
 	// DUMP Configuration Flags ======================================
-	private boolean DUMP_PUSHED_INPUT 		= false;
+	private boolean DUMP_PUSHED_INPUT 		= true;
 	private boolean DUMP_INPUTBUFFER_LENGTH = true;
 	//=================================================================
 
@@ -42,21 +42,22 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		bufferConsumerThread.start();
 		//=== Query to be Executed ============
 //		install_Q0();
-//		install_Q11();
-//		install_Q12();
+//		install_Q1();
+//		install_Q3();
+		install_Q4();
+//		install_Q5();
+//		install_Q6();
 //		install_Q7();
 //		install_Q8();
 //		install_Q9();
 //		install_Q10();
-//		install_Q14();
+//		install_Q11();
+//		install_Q12();	
 //		install_Q13();
-//		install_Q4();
-//		install_Q5();
-//		install_Q1();
-//		install_Q3();
-		install_Q6();
-//		install_Q17();
+//		install_Q14();
 //		install_Q16();
+//		install_Q17();
+
 		//=== Query to be Executed ============
 	}
 	
@@ -310,7 +311,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	
-	
+		
 	public void install_Q08_SquareMeterNormalization(boolean addListener){		
 		
 		String subStatement1 =	"INSERT INTO _Q08_Aux_SquareMeterNormalization "														+

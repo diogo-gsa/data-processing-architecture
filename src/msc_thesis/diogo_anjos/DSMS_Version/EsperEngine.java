@@ -35,7 +35,9 @@ public class EsperEngine {
     // TODO:Esta solução apenas funionas para cliente isolados,
     //		i.e. se existirem dois sensores a enviar measures para o engine
     //		esta abordagem deixa de funionar. Nessa altura tem de se passar 
-    //		para um Map<DatapointReadingPK:key, TS:value> 
+    //		para um Map<DatapointReadingPK:key, TS:value>
+    
+    //TODO isto não devia ser volatile???
     public long lastPushedEventSystemTS = 0;
      
     
