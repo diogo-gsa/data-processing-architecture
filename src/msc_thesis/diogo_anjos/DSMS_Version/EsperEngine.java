@@ -37,7 +37,8 @@ public class EsperEngine {
     //		esta abordagem deixa de funionar. Nessa altura tem de se passar 
     //		para um Map<DatapointReadingPK:key, TS:value>
     
-    //TODO isto não devia ser volatile???
+    //TODO isto não devia ser volatile??? Itso vai deixar de estar aqui, todas as
+    // as contas relacionadas com ET vão estar no lado do listener
     public long lastPushedEventSystemTS = 0;
      
     
@@ -70,6 +71,8 @@ public class EsperEngine {
     	if(countInitializedQueries==0){
     		System.out.println("There is any query installed in the Esper Engine");
     	}
+    	//TODO lastPushedEventSystemTS = System.nanoTime(); vai deixar de estar aqui, 
+    	//estas constas vão passar p/ o lado do listener
     	lastPushedEventSystemTS = System.nanoTime();
         engineRuntime.sendEvent(event);
     }
@@ -82,6 +85,10 @@ public class EsperEngine {
         
         // I may don't want to listen the output of integration/intermediate queries 
         if(addListener){
+        	//TODO Este listener vai passar a ser uma variavel de estado do EsperEngine Object
+        	// só pode a haver um unico listener em simulataneo, que é o da "cabeça" do cenário
+        	// antesde inicializares o listner faz sempre um If( !=null) cc. lança uma RUNTIME EXCEPTIOn
+        	// para parar o programa.	
         	QueryListener listener = new QueryListener(qmd, this);
         	queryEngineObject.addListener(listener);
         }
