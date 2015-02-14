@@ -44,7 +44,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q0();
 //		install_Q1();
 //		install_Q3();
-		install_Q4();
+//		install_Q4();
 //		install_Q5();
 //		install_Q6();
 //		install_Q7();
@@ -55,7 +55,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q12();	
 //		install_Q13();
 //		install_Q14();
-//		install_Q16();
+		install_Q16();
 //		install_Q17();
 
 		//=== Query to be Executed ============
@@ -70,7 +70,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		List<Measure> datastreamTuples = inputAdapter(tuple);
 		for(Measure m : datastreamTuples){
 			if(DUMP_PUSHED_INPUT){
-				System.out.println("Pushing into Esper engine -> "+m+"\n");
+				System.out.println("Input:"+m+"\n");
 			}	
 			esperEngine.pushInput(m);
 		}	
@@ -423,15 +423,15 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"device_location,  "																			+
 									"location_area_m2  "																			+
 							"FROM	_Q11_InstantVariation	"																		+	
-							"WHERE ((device_pk = 1 AND measure >= 0) " 																+  									
-							   "OR  (device_pk = 2 AND measure >= 0) "																+								
-							   "OR  (device_pk = 3 AND measure >= 0) "																+								
-							   "OR  (device_pk = 4 AND measure >= 0) "																+								
-							   "OR  (device_pk = 5 AND measure >= 0) "																+								
-							   "OR  (device_pk = 6 AND measure >= 0) "																+								
-							   "OR  (device_pk = 7 AND measure >= 0) "																+								
-							   "OR  (device_pk = 8 AND measure >= 0)) ";
-			//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
+							"WHERE ((device_pk = 1 AND measure*0 >= 0) " 																+  									
+							   "OR  (device_pk = 2 AND measure*0 >= 0) "																+								
+							   "OR  (device_pk = 3 AND measure*0 >= 0) "																+								
+							   "OR  (device_pk = 4 AND measure*0 >= 0) "																+								
+							   "OR  (device_pk = 5 AND measure*0 >= 0) "																+								
+							   "OR  (device_pk = 6 AND measure*0 >= 0) "																+								
+							   "OR  (device_pk = 7 AND measure*0 >= 0) "																+								
+							   "OR  (device_pk = 8 AND measure*0 >= 0)) ";
+			//IMPORTANT: Use device_pk = X AND measure*0 >= 0 for universal condition
 		esperEngine.installQuery(statement, addListener);
 	}
 	
@@ -514,8 +514,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"Being the counter limited by a min and max value.\" 	AS measure_description, " 	+
 		        					"device_location " 																	+ 
 		        			"FROM   _Q14_ExpectedConsumptionByUDF.win:time(60 min) " 									+
-//		        			"WHERE  current_measure >= expected_measure*0 " 											+	//Universal Condition
-		        			"WHERE  current_measure > expected_measure " 												+	//Real condition
+		        			"WHERE  current_measure >= expected_measure*0 " 											+	//Universal Condition
+//		        			"WHERE  current_measure > expected_measure " 												+	//Real condition
 		        			"GROUP BY device_pk " 																		+
 		        			"HAVING 0 <= count(current_measure) AND count(current_measure) <= 999999 ";		// Universal condition
 //		        			"HAVING 5 <= count(current_measure) AND count(current_measure) <= 10 "; 	// Real condition

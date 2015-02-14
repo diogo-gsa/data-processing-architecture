@@ -79,7 +79,9 @@ public class EsperEngine {
        
     	
     	queryScenarioListener.logNewInputEvent(event);
+    	//TODO medir aqui Tbegin mete mesmo o UNIX_TS para veres o tempo cronologico e a semantia happens before
     	engineRuntime.sendEvent(event);
+    	//TODO medir aqui Tend e medir ET e comprar com o metodo actual de medir ET
 //    	queryScenarioListener.dumpInputEventslog(); //TODO DEBUG
     }
     
@@ -96,7 +98,7 @@ public class EsperEngine {
         		queryScenarioListener = new QueryListener(qmd, this);
             	queryEngineObject.addListener(queryScenarioListener);
         	}else{
-        		throw new RuntimeException("\n\n[FATAL ERROR]:One of the pipeline queries that compose this scenario already already has a listener.\n" +
+        		throw new RuntimeException("\n\n[FATAL ERROR]:One of the pipeline queries that compose this scenario already has a listener.\n" +
         									"\tCan NOT be installed more than one listener per scenario.\n" +
         									"\tThis situation must be fixed on Engine's Query/Insatallation phase (at compile time).\n" +
         									"\tThe program will be terminated.\n");

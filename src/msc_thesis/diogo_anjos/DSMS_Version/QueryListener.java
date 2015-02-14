@@ -57,7 +57,10 @@ public class QueryListener implements UpdateListener {
     }
     
     private void printOutput(EventBean[] events, String typeOfEvent){
+    	try {Thread.sleep(170);} catch (InterruptedException e) {/*TODO apagar*/}
+    	dumpInputEventslog();
     	computeElapsedTime(events);
+    	dumpInputEventslog();
     	
     	String res;
     	if(DUMP_ELAPSED_TIME){
@@ -76,8 +79,8 @@ public class QueryListener implements UpdateListener {
         System.out.println(res);
     }
 
-    private synchronized long computeElapsedTime(EventBean[] events){
-    	Long elapsedTime = null;
+    private synchronized void computeElapsedTime(EventBean[] events){
+    	Long elapsedTime = null;    	
     	long endTS = System.nanoTime();
     	boolean firstMatch = true;
     	
@@ -99,8 +102,7 @@ public class QueryListener implements UpdateListener {
     		}
     		
 		}
-    	
-    	return elapsedTime; //if (et==null) exit(1)
+    	//if (et==null) exit(1)
     }
     
     
