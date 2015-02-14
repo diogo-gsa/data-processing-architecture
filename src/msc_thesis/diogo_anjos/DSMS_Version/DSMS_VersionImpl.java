@@ -43,8 +43,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		//=== Query to be Executed ============
 //		install_Q0();
 //		install_Q1();
-		install_Q3();
-//		install_Q4();
+//		install_Q3();
+		install_Q4();
 //		install_Q5();
 //		install_Q6();
 //		install_Q7();
@@ -132,7 +132,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	}
 	
 	public void install_Q4(){
-		install_Q00_DataAggregation(false);
+		install_Q00_DataAggregation(false);	
 		install_Q11_InstantVariation(false);
 		install_Q04_InstantVariationAboveThreshold(true);
 	}

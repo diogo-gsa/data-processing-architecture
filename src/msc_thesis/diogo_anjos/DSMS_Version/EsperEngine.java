@@ -41,6 +41,8 @@ public class EsperEngine {
     // as contas relacionadas com ET vão estar no lado do listener
     public long lastPushedEventSystemTS = 0;
      
+    private QueryListener queryScenarioListener = null; 
+    
     
     public EsperEngine(){ 
         ConfigurationDBRef dbConfig = new ConfigurationDBRef();
@@ -74,7 +76,11 @@ public class EsperEngine {
     	//TODO lastPushedEventSystemTS = System.nanoTime(); vai deixar de estar aqui, 
     	//estas constas vão passar p/ o lado do listener
     	lastPushedEventSystemTS = System.nanoTime();
-        engineRuntime.sendEvent(event);
+       
+    	
+    	queryScenarioListener.logNewInputEvent(event);
+    	engineRuntime.sendEvent(event);
+//    	queryScenarioListener.dumpInputEventslog(); //TODO DEBUG
     }
     
     public void installQuery(String eplQueryExpression, boolean addListener) throws EPStatementException {
@@ -83,16 +89,19 @@ public class EsperEngine {
         countInitializedQueries++; //get queryID        
         QueryMetadata qmd = new QueryMetadata(countInitializedQueries, eplQueryExpression, queryEngineObject);
         
-        // I may don't want to listen the output of integration/intermediate queries 
+        // We just want to have *ONE* listener per scenario (for ET measurement purposes), then we have to choose is which 
+        // query (that composes the scenario) will the listener be installed.    
         if(addListener){
-        	//TODO Este listener vai passar a ser uma variavel de estado do EsperEngine Object
-        	// só pode a haver um unico listener em simulataneo, que é o da "cabeça" do cenário
-        	// antesde inicializares o listner faz sempre um If( !=null) cc. lança uma RUNTIME EXCEPTIOn
-        	// para parar o programa.	
-        	QueryListener listener = new QueryListener(qmd, this);
-        	queryEngineObject.addListener(listener);
-        }
-            
+        	if(queryScenarioListener == null){
+        		queryScenarioListener = new QueryListener(qmd, this);
+            	queryEngineObject.addListener(queryScenarioListener);
+        	}else{
+        		throw new RuntimeException("\n\n[FATAL ERROR]:One of the pipeline queries that compose this scenario already already has a listener.\n" +
+        									"\tCan NOT be installed more than one listener per scenario.\n" +
+        									"\tThis situation must be fixed on Engine's Query/Insatallation phase (at compile time).\n" +
+        									"\tThe program will be terminated.\n");
+        	}
+        }   
         queryCatalog.put(qmd.getQueryID(), qmd);
         System.out.println("Query: "+ eplQueryExpression + " installed\n");
     }          
