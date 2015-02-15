@@ -104,6 +104,8 @@ public class QueryListener implements UpdateListener {
 	}
 
 	private double nanoToMilliSeconds(long nanoValue){
+		// 1 nanoSecond / (10^6) = 1 milliSecond
+    	// measure with nano resolution, but present the result in milliseconds
 		return (((double)nanoValue)/((double)1000000));
 	}
 }

@@ -68,7 +68,7 @@ public class QueryEvaluationReport {
 			res += "Statement: " 	+	getExecutedQueryStatement() + "\n";
 		}
 		if(dumpElapsedTime){
-			res += "ElapsedTime: " + 	getQueryExecutionTime()     + " ms \n";
+			res += "ET= " + 	getQueryExecutionTime()     + " ms \n";
 		}
 		if(dumpResult){
 			res += getResultSetDump() + "\n";
@@ -77,7 +77,7 @@ public class QueryEvaluationReport {
 	}
 	
 	public String dumpElapsedTime(){
-		return "ElapsedTime: " + getQueryExecutionTime() + " ms"; 
+		return "ET= " + getQueryExecutionTime() + " ms"; 
 	}
 	
 	@Override

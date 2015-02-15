@@ -651,19 +651,22 @@ public class DB_CRUD_Query_API {
 	
 	private QueryEvaluationReport executeEvaluationQuery(String queryStatement){
 		ResultSet queryExecutionResultSet = null;
-		double queryExecutionTime = 0;
+		long elapsedTime = 0;
 		try{
 			long initTS = System.nanoTime();
 			queryExecutionResultSet = DButil.executeQuery(queryStatement, database);
-			// 1 nanoSecond / (10^6) = 1 milliSecond
-	    	// measure with nano resolution, but present the result in milliseconds 
-			queryExecutionTime = (double) (System.nanoTime() - initTS)/1000000;
+			elapsedTime = System.nanoTime() - initTS;
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-		return new QueryEvaluationReport(queryStatement, queryExecutionResultSet, queryExecutionTime);
+		return new QueryEvaluationReport(queryStatement, queryExecutionResultSet, nanoToMilliSeconds(elapsedTime));
 	}
 	
+	private double nanoToMilliSeconds(long nanoValue){
+		// 1 nanoSecond / (10^6) = 1 milliSecond
+    	// measure with nano resolution, but present the result in milliseconds
+		return (((double)nanoValue)/((double)1000000));
+	}
 	
 	
 	private List<EnergyMeasureTupleDTO> buildDtoListFromResultSet(ResultSet rs) {
