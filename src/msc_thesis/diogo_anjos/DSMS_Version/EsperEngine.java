@@ -28,20 +28,8 @@ public class EsperEngine {
     private EPAdministrator     engineAdmin;
     
     private int countInitializedQueries;// serves as QueryID/key in the map
-    private Map<Integer,QueryMetadata> queryCatalog; 
-    
-    //public field (to be accesible by the listeners) to measure elapse time 
-    // between the time that the engine takes to evaluate an pushed event
-    // TODO:Esta solução apenas funionas para cliente isolados,
-    //		i.e. se existirem dois sensores a enviar measures para o engine
-    //		esta abordagem deixa de funionar. Nessa altura tem de se passar 
-    //		para um Map<DatapointReadingPK:key, TS:value>
-    
-    //TODO isto não devia ser volatile??? Itso vai deixar de estar aqui, todas as
-    // as contas relacionadas com ET vão estar no lado do listener
-    public long lastPushedEventSystemTS = 0;
-     
-    private QueryListener queryScenarioListener = null; 
+    private Map<Integer,QueryMetadata> queryCatalog;    
+    private QueryListener queryScenarioListener = null;
     
     
     public EsperEngine(){ 
@@ -73,16 +61,10 @@ public class EsperEngine {
     	if(countInitializedQueries==0){
     		System.out.println("There is any query installed in the Esper Engine");
     	}
-    	//TODO lastPushedEventSystemTS = System.nanoTime(); vai deixar de estar aqui, 
-    	//estas constas vão passar p/ o lado do listener
-    	lastPushedEventSystemTS = System.nanoTime();
-       
     	
     	queryScenarioListener.logNewInputEvent(event);
-    	//TODO medir aqui Tbegin mete mesmo o UNIX_TS para veres o tempo cronologico e a semantia happens before
     	engineRuntime.sendEvent(event);
-    	//TODO medir aqui Tend e medir ET e comprar com o metodo actual de medir ET
-//    	queryScenarioListener.dumpInputEventslog(); //TODO DEBUG
+
     }
     
     public void installQuery(String eplQueryExpression, boolean addListener) throws EPStatementException {
@@ -95,7 +77,7 @@ public class EsperEngine {
         // query (that composes the scenario) will the listener be installed.    
         if(addListener){
         	if(queryScenarioListener == null){
-        		queryScenarioListener = new QueryListener(qmd, this);
+        		queryScenarioListener = new QueryListener(qmd);
             	queryEngineObject.addListener(queryScenarioListener);
         	}else{
         		throw new RuntimeException("\n\n[FATAL ERROR]:One of the pipeline queries that compose this scenario already has a listener.\n" +

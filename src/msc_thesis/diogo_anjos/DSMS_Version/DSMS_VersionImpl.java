@@ -20,7 +20,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	//	DBMS_CRUD_Query_API --> DBMS_VersionImpl		
 
 	// DUMP Configuration Flags ======================================
-	private boolean DUMP_PUSHED_INPUT 		= true;
+	private boolean DUMP_PUSHED_INPUT 		= false;
 	private boolean DUMP_INPUTBUFFER_LENGTH = true;
 	//=================================================================
 
@@ -50,12 +50,12 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q7();
 //		install_Q8();
 //		install_Q9();
-//		install_Q10();
+		install_Q10();
 //		install_Q11();
 //		install_Q12();	
 //		install_Q13();
 //		install_Q14();
-		install_Q16();
+//		install_Q16();
 //		install_Q17();
 
 		//=== Query to be Executed ============
@@ -71,9 +71,9 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		for(Measure m : datastreamTuples){
 			if(DUMP_PUSHED_INPUT){
 				System.out.println("Input:"+m+"\n");
-			}	
+			}
 			esperEngine.pushInput(m);
-		}	
+		}
 	}
 /* EOF Push Datastream and Queries execution ==============================================================*/
 	
@@ -932,7 +932,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 				}
 				tuple = bufferOfTuples.pollFirst();
 				if(DUMP_INPUTBUFFER_LENGTH){
-					System.out.print("Input_Buffer(remaining events): "+bufferOfTuples.size()+" | ");
+					System.out.print("Input_Buffer(remaining events)= "+bufferOfTuples.size()+" | ");
 				}
 			}
 			processConsumedTuple(tuple);

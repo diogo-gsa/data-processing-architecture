@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import msc_thesis.diogo_anjos.util.DataPoint_PK;
-
 import Datastream.Measure;
 
 import com.espertech.esper.client.EventBean;
@@ -15,64 +14,45 @@ import com.espertech.esper.client.UpdateListener;
  */
 
 public class QueryListener implements UpdateListener {
-
 	// DUMP Configuration Flags ======================================
 		private boolean DUMP_ELAPSED_TIME = true;
 		private boolean DUMP_QUERY_RESULT = true;
 	//=================================================================
-	
-    private QueryMetadata qMD;    
-    
+
     // contains all events that entered in engine but had not yet left the engine
     // Key = device_pk +"$"+measureTS e.g "1$2014-03-17 00:05:04"
     // Value = system unix timestamp e.g 1423917410 
     // rational: tuple of devicePK=1 with measureTS=2014-03-17 00:05:04 entered the engine at 1423917410.
-    private Map<String,Long> inputEventsMapForElapsedTime; 
+    private Map<String,Long> inputEventsMapForElapsedTime;
+    private QueryMetadata qMD;
+    private long processedTuples;
     
     
-    //TODO: estes 2 atributos vão desaparecer
-    private EsperEngine esperEngine;
-    private double queryExecutionTime = 0;
-    
-    //TODO: Listener vai deixar de receber engine pq o mapa vai estar no listener.
-    public QueryListener(QueryMetadata metadata, EsperEngine engine) {
+    public QueryListener(QueryMetadata metadata) {
     	inputEventsMapForElapsedTime = new TreeMap<String, Long>();
         qMD = metadata;
-        esperEngine = engine;    
+        processedTuples = 0;
     }
 
     @Override
     public void update(EventBean[] newEvents, EventBean[] oldEvents) {
-    	
-    	// 1 nanoSecond / (10^6) = 1 milliSecond
-    	// measure with nano resolution, but present the result in milliseconds
-    	queryExecutionTime = (double) (System.nanoTime() - esperEngine.lastPushedEventSystemTS)/1000000; 
-    	
     	if (newEvents != null) {
-            printOutput(newEvents,"NEW");
+            printOutputAndComputeElapsedTime(newEvents,"NEW");
         }
         if (oldEvents != null) {
-            printOutput(oldEvents,"OLD");
+            printOutputAndComputeElapsedTime(oldEvents,"OLD");
         }
     }
     
-    private void printOutput(EventBean[] events, String typeOfEvent){
-    	try {Thread.sleep(170);} catch (InterruptedException e) {/*TODO apagar*/}
-    	dumpInputEventslog();
-    	computeElapsedTime(events);
-    	dumpInputEventslog();
-    	
-    	String res;
+    private void printOutputAndComputeElapsedTime(EventBean[] events, String typeOfEvent){
     	if(DUMP_ELAPSED_TIME){
-    		res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events, DeprecatedElapsedTime = "+queryExecutionTime+" ms";
-    	}
-    	else{
-    		res = "Query with id=" + qMD.getQueryID() + " OUTPUT " + typeOfEvent + " Events, DeprecatedElapsedTime = not measured";
-    	}
-    	
+//	    	dumpInputEventslog();
+	    	computeElapsedTime(events);
+//	    	dumpInputEventslog();
+    	}   	
+    	String res = "QId:"+qMD.getQueryID()+" OUTPUT " + typeOfEvent +" Events";
     	if(DUMP_QUERY_RESULT){
     		for (EventBean eb : events) {
-//    			System.out.println("teste:"+eb.get("measure_timestamp"));
     			res += "\n| " + eb.getUnderlying();
     		}
     	}
@@ -80,42 +60,39 @@ public class QueryListener implements UpdateListener {
     }
 
     private synchronized void computeElapsedTime(EventBean[] events){
-    	Long elapsedTime = null;    	
     	long endTS = System.nanoTime();
-    	boolean firstMatch = true;
-    	
-    	
+    	long elapsedTime;    	
+    	int matchCounter = 0;
     	//Check all Rows from ResultSet and compare them with InputEventLog
+    	//for the unique founded match--there must always be one match--compute the elapsed time
+    	//and remove this pair from log
     	for (EventBean eb : events) {
     		String devicePK$measureTS_key = Long.toString(((Long) eb.get("device_pk"))) + "$" + eb.get("measure_timestamp");
     		if(inputEventsMapForElapsedTime.containsKey(devicePK$measureTS_key)){
-    			Long beginTS = inputEventsMapForElapsedTime.get(devicePK$measureTS_key);
+    			long beginTS = inputEventsMapForElapsedTime.get(devicePK$measureTS_key);
     			elapsedTime = endTS - beginTS;
     			inputEventsMapForElapsedTime.remove(devicePK$measureTS_key);
-    			if(firstMatch){
-    				System.out.println("True ET = "+(double)(elapsedTime/1000000)+"ms : "+devicePK$measureTS_key);
-    				firstMatch = false;
+    			if(matchCounter==0){
+    				System.out.println("ET = "+nanoToMilliSeconds(elapsedTime)+" ms ("+devicePK$measureTS_key+") | AllTuples = "+processedTuples);
+    				matchCounter++;
     			}else{
-    				System.err.println("??ERROR?? - Have found more than 1 match between logEt and output resultset rows, is that normal?");
-    				System.err.println("True ET = "+(double)(elapsedTime/1000000)+"ms : "+devicePK$measureTS_key);
+    				System.err.println("??ERROR?? - Have found more than 1 match between ElapsedTimeLog and output resultset rows, is that normal?");
+    				System.err.println("ET = "+nanoToMilliSeconds(elapsedTime)+" ms : "+devicePK$measureTS_key);
     			}
     		}
-    		
 		}
-    	//if (et==null) exit(1)
     }
     
     
 	public synchronized void logNewInputEvent(Measure event) {
 		int device_pk = DataPoint_PK.getDevice_PKByDatapoint_PK(event.getDatapointPk());
 		String measureTS = event.getMeasureTS();
-		
 		String devicePK$measureTS_key = device_pk +"$"+measureTS;
 		long beginTS_value = System.nanoTime();
-		
 		if(!inputEventsMapForElapsedTime.containsKey(devicePK$measureTS_key)){
 			inputEventsMapForElapsedTime.put(devicePK$measureTS_key, beginTS_value);
 		}
+		processedTuples++;
 	}       
 	
 	public synchronized void dumpInputEventslog(){
@@ -124,5 +101,9 @@ public class QueryListener implements UpdateListener {
 			System.out.println(key+" | "+inputEventsMapForElapsedTime.get(key));
 		}
 		System.out.println("EOD");
+	}
+
+	private double nanoToMilliSeconds(long nanoValue){
+		return (((double)nanoValue)/((double)1000000));
 	}
 }
