@@ -55,8 +55,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q12();	
 //		install_Q13();
 //		install_Q14();
-//		install_Q16();
-		install_Q17();
+		install_Q16();
+//		install_Q17();
 
 		//=== Query to be Executed ============
 	}
@@ -402,7 +402,6 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		String statement = 	"INSERT INTO _Q13_ExpectedConsumptionByMonthlyHourAvg "                                         +      
 							"SELECT  device_pk, "                                                                    		+
-									//TODO measure_timestamp_long AS measure_timestamp_long
 		        					"measure_timestamp, "                                                                   +         
 		        					"measure					 								AS current_measure, "		+
 		        					"avg(measure)                								AS expected_measure, "		+
@@ -410,7 +409,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"\"Current and Expected Power consumption given by last " 								+
 		        					"month average consumption of the current hour.\" 			AS measure_description, "  	+
 		        					"device_location "                                                                      +                          
-							"FROM _Q08_SquareMeterNormalization.win:time(1 month) "	/*TODO win:ext_timed(measure_timestamp_long, 1 month) */									+
+							"FROM _Q08_SquareMeterNormalization.win:ext_timed(measure_timestamp_long, 1 month)	"			+
 							"GROUP BY device_pk, DateTime.toDate(measure_timestamp, \"yyyy-MM-dd HH:mm:ss\").getHours()"; 
 		
 		esperEngine.installQuery(statement, addListener);
@@ -538,7 +537,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"\"WATT\" 																	AS measure_unit, "	 	 +
 									"\"Power consumption 20% above the average consumption of last 24 hours.\" 	AS measure_description, "+
 									"device_location "																					 +
-							"FROM _Q07_SmoothingConsumption.win:time(24 hours) "	/*TODO win:ext_timed(measure_timestamp_long, 24 hours) */ +
+							"FROM _Q07_SmoothingConsumption.win:ext_timed(measure_timestamp_long, 24 hours) " +
 							"GROUP BY device_pk "																						 +
 							"HAVING measure >= avg(measure)*0.0 ";
 							//Important: Universal condition required for worst case scenario
