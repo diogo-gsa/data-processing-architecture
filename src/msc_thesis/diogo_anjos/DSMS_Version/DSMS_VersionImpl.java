@@ -43,13 +43,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		//=== Query to be Executed ============
 //		install_Q0();
 //		install_Q1();
-//		install_Q3();
+		install_Q3();
 //		install_Q4();
 //		install_Q5();
 //		install_Q6();
 //		install_Q7();
 //		install_Q8();
-		install_Q9();
+//		install_Q9();
 //		install_Q10();
 //		install_Q11();
 //		install_Q12();	
@@ -341,11 +341,12 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 
 		String statement =	"INSERT INTO _Q08_SquareMeterNormalization "																+
 							"SELECT	 device_pk, "			 					   														+
-									"measure_timestamp, "+
-									"measure, "+
-									"measure_unit, "+
-									"measure_description, "+
-									"device_location "+							
+									"measure_timestamp_long, " 																			+
+									"measure_timestamp, "																				+
+									"measure, "																							+
+									"measure_unit, "																					+
+									"measure_description, "																				+
+									"device_location "																					+	
 							"FROM  _Q08_Aux_SquareMeterNormalization ";	
 
 		esperEngine.installQuery(subStatement1, false);
@@ -375,7 +376,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"\"WATT\" 															   AS measure_unit, "		+
 									"\"Descendig Ranking List of each Location by its power consumption.\" AS measure_description, "+
 									"device_location "																				+	
-							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "		/*TODO remove WIN:time*/+
+							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk) "												+
 							"OUTPUT SNAPSHOT EVERY 1 EVENTS "																		+
 							"ORDER BY measure DESC";
 		esperEngine.installQuery(statement, addListener);
@@ -488,7 +489,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
         							"device_location, "																				+
         							"min(measure)                         					AS min_last_hour_power_consumption, "	+
         							"max(measure)                         					AS max_last_hour_power_consumption "	+
-        					"FROM   _Q08_SquareMeterNormalization.win:time(60 min) "  /*TODO win:ext_timed(measure_timestamp_long, 60 min) */;
+        					"FROM   _Q08_SquareMeterNormalization.win:ext_timed(measure_timestamp_long, 60 min) " +
+        					"GROUP BY device_pk";
 		esperEngine.installQuery(statement, addListener);
 	}
 	
