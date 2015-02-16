@@ -646,8 +646,6 @@ public class DB_CRUD_Query_API {
 //	==========================================================================================
 //						End Of Case Study Queries Implementation Zone 
 //	==========================================================================================
-
-	
 	
 	private QueryEvaluationReport executeEvaluationQuery(String queryStatement){
 		ResultSet queryExecutionResultSet = null;

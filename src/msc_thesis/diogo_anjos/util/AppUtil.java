@@ -36,6 +36,4 @@ public class AppUtil {
 		  long MEGABYTE = 1024L * 1024L;
 		  return bytes / MEGABYTE;
 	  }
-
-	
 }

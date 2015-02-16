@@ -38,11 +38,14 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 //			C/ synch: SpeedTimeFactors Altos => Buffer Não enche demasiado  => tempo de simulação é muito maior do que o esperado.
 //			S/ synch: SpeedTimeFactors Altos => Buffer Enche demasiado  => tempo de simulação é igual ao esperado.
 	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
+		long insertIntoElapsedTime = 0;
 		
 		if(DUMP_PUSHED_INPUT){
 			System.out.println("Received: "+tuple); //DEBUG
 		}
+		long initTS = System.nanoTime();
 		this.insertInto_DatapointReadingTable(tuple);
+		insertIntoElapsedTime = System.nanoTime() - initTS;
 // ============= Query to be Executed ========================================================================= 
 //		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio();
@@ -55,10 +58,9 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 //		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter();
 //============================================================================================================= 
 		processedTuples = processedTuples + 3; //each tuple contains 3 datapoint readings = 3 phases
-		System.out.println("AllTuples = "+processedTuples);
-		//report.dump(dumpStatement, dumpResult, dumpElapsedTime)
-		System.out.println(report.dump(false, true, true));	//dumpStatement, dumpResult, dumpElapsedTime
-//		System.out.println(report.dumpElapsedTime());	//dumpStatement, dumpResult, dumpElapsedTime
+		System.out.println("AllTuples = "+processedTuples);		
+		System.out.println(report.dump(false, true, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
+
 	}
 	
 /* EOF Push Datastream and Queries execution ==============================================================*/

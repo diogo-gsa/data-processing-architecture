@@ -3,6 +3,7 @@ package msc_thesis.diogo_anjos.DBMS_Version;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 public class QueryEvaluationReport {
 
@@ -62,13 +63,15 @@ public class QueryEvaluationReport {
 		return (emptyRS == true) ? null : res;
 	}
 	
-	public String dump(boolean dumpStatement, boolean dumpResult, boolean dumpElapsedTime){
+	public String dump(boolean dumpStatement, boolean dumpResult, boolean dumpElapsedTime, long insertStreamNanoElapsedTime){
 		String res = "===== Query Evaluation Report =====\n";
 		if(dumpStatement){
 			res += "Statement: " 	+	getExecutedQueryStatement() + "\n";
 		}
 		if(dumpElapsedTime){
-			res += "ET= " + 	getQueryExecutionTime()     + " ms \n";
+			// ET = QueryExectionET + DatabaseInsertionTupleET
+			double ET = getQueryExecutionTime()+nanoToMilliSeconds(insertStreamNanoElapsedTime);
+			res += "ET= "+ET+" ms "+"("+nanoToMilliSeconds(insertStreamNanoElapsedTime)+" + "+getQueryExecutionTime()+")\n";
 		}
 		if(dumpResult){
 			res += getResultSetDump() + "\n";
@@ -87,6 +90,11 @@ public class QueryEvaluationReport {
 				"ElapsedTime: " + 	getQueryExecutionTime()     + " ms \n" +
 									getResultSetDump()        	+ "\n" +
 				"=========== End of Report =========\n";
+	}
+	private double nanoToMilliSeconds(long nanoValue){
+		// 1 nanoSecond / (10^6) = 1 milliSecond
+    	// measure with nano resolution, but present the result in milliseconds
+		return (((double)nanoValue)/((double)1000000));
 	}
 	
 }
