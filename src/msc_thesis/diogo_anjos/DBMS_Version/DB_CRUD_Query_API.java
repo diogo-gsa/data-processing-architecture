@@ -306,8 +306,8 @@ public class DB_CRUD_Query_API {
 										"max(r2.measure_timestamp) 																	AS measure_timestamp, " 	+  											
 										"count(r2.current_measure) 																	AS measure, " 				+
 										"'Positive Integer'::text																	AS measure_unit, " 			+ 
-										"'Counter of times that, in last hour, current consumption as exceeded the expected one. " 								+
-										" Being the counter limited by a min and max value.' 										AS measure_description, " 	+
+										"'Number of times that, in last hour, current consumption as exceeded the expected one. " 								+
+										" Where the counter limited by a min and max threshold.' 										AS measure_description, " 	+
 										"r2.device_location " 																									+
 								"FROM 	\"DBMS_EMS_Schema\".\"_Q14_ExpectedConsumptionByUDF\" r1 " 																+  	
 										"INNER JOIN "  																											+

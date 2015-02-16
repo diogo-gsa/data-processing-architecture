@@ -43,7 +43,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		//=== Query to be Executed ============
 //		install_Q0();
 //		install_Q1();
-		install_Q3();
+//		install_Q3();
 //		install_Q4();
 //		install_Q5();
 //		install_Q6();
@@ -56,7 +56,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q13();
 //		install_Q14();
 //		install_Q16();
-//		install_Q17();
+		install_Q17();
 
 		//=== Query to be Executed ============
 	}
@@ -386,7 +386,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q14_ExpectedConsumptionByUDF(boolean addListener){							
 		String statement =  "INSERT INTO _Q14_ExpectedConsumptionByUDF "                    	                   		+
 							"SELECT device_pk, "  																		+
-									//TODO measure_timestamp_long AS measure_timestamp_long
+									"measure_timestamp_long 								AS measure_timestamp_long, "+
 			       					"measure_timestamp, "                                                          		+                    
 			       					"measure                                                AS current_measure, "  		+
 			       					"getExpectedMeasure(device_pk, measure_timestamp)       AS expected_measure, "  	+
@@ -515,11 +515,11 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"measure_timestamp, " 																+
 		        					"count(current_measure) 								AS measure, " 				+
 		        					"\"Positive Integer\" 									AS measure_unit, " 			+
-		        					"\"Counter of times that, in last hour,  current " 									+
+		        					"\"Number of times that, in last hour,  current " 									+
 		        					"consumption as exceeded the expected one. " 										+
-		        					"Being the counter limited by a min and max value.\" 	AS measure_description, " 	+
+		        					"Being the counter limited by a min and max threshold.\" 	AS measure_description, " 	+
 		        					"device_location " 																	+ 
-		        			"FROM   _Q14_ExpectedConsumptionByUDF.win:time(60 min) " /*TODO win:ext_timed(measure_timestamp_long, 60 min) */	+
+		        			"FROM   _Q14_ExpectedConsumptionByUDF.win:ext_timed(measure_timestamp_long, 60 min) " 		+
 		        			"WHERE  current_measure >= expected_measure*0 " 											+	//Universal Condition
 //		        			"WHERE  current_measure > expected_measure " 												+	//Real condition
 		        			"GROUP BY device_pk " 																		+
