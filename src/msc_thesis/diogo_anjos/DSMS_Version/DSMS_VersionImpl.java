@@ -55,8 +55,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q12();	
 //		install_Q13();
 //		install_Q14();
-		install_Q16();
-//		install_Q17();
+//		install_Q16();
+		install_Q17();
 
 		//=== Query to be Executed ============
 	}

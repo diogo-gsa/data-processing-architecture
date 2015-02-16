@@ -315,9 +315,11 @@ public class DB_CRUD_Query_API {
 										"ON r1.device_pk = r2.device_pk "  																						+								
 										"AND r1.index = 1 " 																									+															
 										"AND r2.measure_timestamp > (r1.measure_timestamp - '01:00:00'::interval) " 											+  				 
-								"WHERE  r2.current_measure > r2.expected_measure "  																			+							 
+//								"WHERE  r2.current_measure > r2.expected_measure "  								/*Real-Condition*/							+
+								"WHERE  r2.current_measure >= r2.expected_measure*0 "  								/*Universal-Condition*/						+
 								"GROUP BY r2.device_pk, r2.expected_measure, r2.device_location "	 															+ 														
-								"HAVING 5 <= COUNT(r2.current_measure) AND COUNT(r2.current_measure) <= 10 ";
+//								"HAVING 5 <= COUNT(r2.current_measure) AND COUNT(r2.current_measure) <= 10 "; 		//Real-Condition
+								"HAVING 0 <= COUNT(r2.current_measure) AND COUNT(r2.current_measure) <= 99999999 "; //Universal-Condition
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
