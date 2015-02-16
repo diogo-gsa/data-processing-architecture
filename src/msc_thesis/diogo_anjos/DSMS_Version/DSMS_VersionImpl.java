@@ -217,6 +217,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 						
 		String statement = 	"INSERT INTO _Q00_DataAggregation "												+
 							"SELECT 	bd.device_pk 								AS device_pk, "				+
+										//TODO foo(stream.measureTS) AS measure_timestamp_long
 										"stream.measureTS          					AS measure_timestamp, "		+
 										"sum(stream.measure) 						AS measure, "				+
 										"\"WATT\"	 								AS measure_unit, "			+
@@ -266,14 +267,14 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		String statement = 	"INSERT INTO _Q11_InstantVariation " 										 													+
 							"SELECT 	device_pk 								  										AS device_pk, "		 				+
-										"measure_timestamp 						  										AS measure_timestamp, " 			+	
+										"measure_timestamp 						  										AS measure_timestamp, " 			+
 										"(measure/(avg(measure)+0.00001) - 1)*100 										AS measure, "		 				+
 										"measure 								  										AS current_power_consumption, "  	+
 										"\"Percentage%\" 						  										AS measure_unit, " 					+
 										"\"Variation between current and last 5 minutes average power consumption.\"	AS measure_description, " 			+
 										"device_location 						  										AS device_location, "	 			+
 										"location_area_m2 "																									+
-							"FROM		_Q00_DataAggregation.win:time(5 min) " 						 														+
+							"FROM		_Q00_DataAggregation.win:time(5 min) " 	/*TODO win:ext_timed(measure_timestamp_long, 5 min) */					+
 							"GROUP BY 	device_pk ";
 	
 		esperEngine.installQuery(statement, addListener);
@@ -305,7 +306,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"\"Smoothed Power Consumption through 10 minutes sliding average.\"	 AS measure_description, "	+
 									"device_location,  "																			+
 									"location_area_m2 "																				+
-							"FROM  _Q00_DataAggregation.win:time(10 min) " 															+
+							"FROM  _Q00_DataAggregation.win:time(10 min) " 	/*TODO win:ext_timed(measure_timestamp_long, 10 min) */	+
 							"GROUP BY device_pk";
 		esperEngine.installQuery(statement, addListener);
 	}
@@ -316,6 +317,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		String subStatement1 =	"INSERT INTO _Q08_Aux_SquareMeterNormalization "														+
 								"SELECT device_pk, "																					+
+										//TODO measure_timestamp_long AS measure_timestamp_long
 										"measure_timestamp, "																			+
 										"measure/location_area_m2											AS measure, "				+
 										"\"WATT/m^2\"	 													AS measure_unit, "			+
@@ -326,12 +328,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		String subStatement2 =	"INSERT INTO _Q08_Aux_SquareMeterNormalization "										+
 								"SELECT  0L	 																AS device_pk, "				+
+										//TODO min(measure_timestamp_long) AS measure_timestamp_long
 										"min(measure_timestamp)												AS measure_timestamp, " 	+
 										"sum(measure)/sum(location_area_m2) 								AS measure, " 				+
 										"\"WATT/m^2\"	 													AS measure_unit, " 			+
 										"\"Energy consumption Normalized by energy meter location area\"	AS measure_description, "	+
 										"\"ALL_BUILDING\" 													AS device_location " 		+					
-								"FROM 	_Q07_SmoothingConsumption.std:unique(device_pk).win:time(1 min) " 								+
+								"FROM 	_Q07_SmoothingConsumption.std:unique(device_pk).win:time(1 min) " /*TODO remove WIN:time*/		+
 								"HAVING count(device_pk) = 8 " 																			+
 								"OUTPUT LAST EVERY 8 EVENTS"; 
 
@@ -358,7 +361,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"\"Proportion of each location power consumption " 										+
 									"by comparation with all other locations.\"  		AS measure_description, "			+
 									"device_location "																		+
-							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "						+
+							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "	/*TODO remove WIN:time*/	+
 							"WHERE device_pk != 0 "																			+
 							"OUTPUT SNAPSHOT EVERY 1 EVENTS";
 		esperEngine.installQuery(statement, addListener);
@@ -371,7 +374,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"\"WATT\" 															   AS measure_unit, "		+
 									"\"Descendig Ranking List of each Location by its power consumption.\" AS measure_description, "+
 									"device_location "																				+	
-							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "								+
+							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "		/*TODO remove WIN:time*/+
 							"OUTPUT SNAPSHOT EVERY 1 EVENTS "																		+
 							"ORDER BY measure DESC";
 		esperEngine.installQuery(statement, addListener);
@@ -380,7 +383,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	public void install_Q14_ExpectedConsumptionByUDF(boolean addListener){							
 		String statement =  "INSERT INTO _Q14_ExpectedConsumptionByUDF "                    	                   		+
-							"SELECT device_pk, "  																		+	
+							"SELECT device_pk, "  																		+
+									//TODO measure_timestamp_long AS measure_timestamp_long
 			       					"measure_timestamp, "                                                          		+                    
 			       					"measure                                                AS current_measure, "  		+
 			       					"getExpectedMeasure(device_pk, measure_timestamp)       AS expected_measure, "  	+
@@ -396,6 +400,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		String statement = 	"INSERT INTO _Q13_ExpectedConsumptionByMonthlyHourAvg "                                         +      
 							"SELECT  device_pk, "                                                                    		+
+									//TODO measure_timestamp_long AS measure_timestamp_long
 		        					"measure_timestamp, "                                                                   +         
 		        					"measure					 								AS current_measure, "		+
 		        					"avg(measure)                								AS expected_measure, "		+
@@ -403,7 +408,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"\"Current and Expected Power consumption given by last " 								+
 		        					"month average consumption of the current hour.\" 			AS measure_description, "  	+
 		        					"device_location "                                                                      +                          
-							"FROM _Q08_SquareMeterNormalization.win:time(1 month) "											+
+							"FROM _Q08_SquareMeterNormalization.win:time(1 month) "	/*TODO win:ext_timed(measure_timestamp_long, 1 month) */									+
 							"GROUP BY device_pk, DateTime.toDate(measure_timestamp, \"yyyy-MM-dd HH:mm:ss\").getHours()"; 
 		
 		esperEngine.installQuery(statement, addListener);
@@ -484,7 +489,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
         							"device_location, "																				+
         							"min(measure)                         					AS min_last_hour_power_consumption, "	+
         							"max(measure)                         					AS max_last_hour_power_consumption "	+
-        					"FROM   _Q08_SquareMeterNormalization.win:time(60 min) "												;
+        					"FROM   _Q08_SquareMeterNormalization.win:time(60 min) "  /*TODO win:ext_timed(measure_timestamp_long, 60 min) */;
 		esperEngine.installQuery(statement, addListener);
 	}
 	
@@ -513,7 +518,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"consumption as exceeded the expected one. " 										+
 		        					"Being the counter limited by a min and max value.\" 	AS measure_description, " 	+
 		        					"device_location " 																	+ 
-		        			"FROM   _Q14_ExpectedConsumptionByUDF.win:time(60 min) " 									+
+		        			"FROM   _Q14_ExpectedConsumptionByUDF.win:time(60 min) " /*TODO win:ext_timed(measure_timestamp_long, 60 min) */	+
 		        			"WHERE  current_measure >= expected_measure*0 " 											+	//Universal Condition
 //		        			"WHERE  current_measure > expected_measure " 												+	//Real condition
 		        			"GROUP BY device_pk " 																		+
@@ -532,7 +537,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"\"WATT\" 																	AS measure_unit, "	 	 +
 									"\"Power consumption 20% above the average consumption of last 24 hours.\" 	AS measure_description, "+
 									"device_location "																					 +
-							"FROM _Q07_SmoothingConsumption.win:time(24 hours) "														 +
+							"FROM _Q07_SmoothingConsumption.win:time(24 hours) "	/*TODO win:ext_timed(measure_timestamp_long, 24 hours) */ +
 							"GROUP BY device_pk "																						 +
 							"HAVING measure >= avg(measure)*0.0 ";
 							//Important: Universal condition required for worst case scenario

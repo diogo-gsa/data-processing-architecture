@@ -3,6 +3,8 @@ package msc_thesis.diogo_anjos.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.sql.Timestamp;
 
 public class DSMS_UserDefinedFunctions {
 	
@@ -30,4 +32,12 @@ public class DSMS_UserDefinedFunctions {
 		
 		return reference_map[(int) device_pk][ts_hour];
 	}	
+
+	private static long convertStringTSformatToLong(String measure_timestamp) throws ParseException{
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date parsedDate = dateFormat.parse(measure_timestamp);
+		Timestamp timestamp = new Timestamp(parsedDate.getTime());
+		return timestamp.getTime(); //13digitsTS (micro TS)
+	}
+
 }

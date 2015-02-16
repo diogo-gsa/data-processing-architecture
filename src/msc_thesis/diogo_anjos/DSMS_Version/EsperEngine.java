@@ -47,6 +47,8 @@ public class EsperEngine {
         
         // import Single Row User Defined Function (UDF) - getExpectedMeasure(..) for Q14
         engineConfig.addPlugInSingleRowFunction("getExpectedMeasure", "msc_thesis.diogo_anjos.util.DSMS_UserDefinedFunctions", "getExpectedMeasure");
+        // long_unixTSlike13digits = convertStringTSformatToLong(String tsYYYY-MM-DD HH:mm:SSLike)
+        engineConfig.addPlugInSingleRowFunction("convertStringTSformatToLong", "msc_thesis.diogo_anjos.util.DSMS_UserDefinedFunctions", "convertStringTSformatToLong");
         
         esperEngine = EPServiceProviderManager.getDefaultProvider(engineConfig); 
   
