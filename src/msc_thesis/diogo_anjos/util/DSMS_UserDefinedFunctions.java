@@ -33,7 +33,7 @@ public class DSMS_UserDefinedFunctions {
 		return reference_map[(int) device_pk][ts_hour];
 	}	
 
-	private static long convertStringTSformatToLong(String measure_timestamp) throws ParseException{
+	public static long convertStringTSformatToLong(String measure_timestamp) throws ParseException{
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date parsedDate = dateFormat.parse(measure_timestamp);
 		Timestamp timestamp = new Timestamp(parsedDate.getTime());

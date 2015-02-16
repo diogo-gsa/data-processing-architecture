@@ -49,8 +49,8 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q6();
 //		install_Q7();
 //		install_Q8();
-//		install_Q9();
-		install_Q10();
+		install_Q9();
+//		install_Q10();
 //		install_Q11();
 //		install_Q12();	
 //		install_Q13();
@@ -215,19 +215,19 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 						       "OR dpd.datapoint_description_pk = 11 " 							 +
 						       "OR dpd.datapoint_description_pk = 12) " 						 ;
 						
-		String statement = 	"INSERT INTO _Q00_DataAggregation "												+
-							"SELECT 	bd.device_pk 								AS device_pk, "				+
-										//TODO foo(stream.measureTS) AS measure_timestamp_long
-										"stream.measureTS          					AS measure_timestamp, "		+
-										"sum(stream.measure) 						AS measure, "				+
-										"\"WATT\"	 								AS measure_unit, "			+
-										"\"Power Consumption: 3-Phase Aggregate.\" 	AS measure_description, "	+
-										"bd.device_location  						AS device_location, "		+		
-										"bd.location_area_m2        				AS location_area_m2 "		+
-							"FROM		Datastream.Measure 				AS stream , " 							+
-										"sql:database ['"+sqlQuery+"'] 	AS bd "									+
-							"GROUP BY	bd.device_pk," 															+
-										"stream.measureTS "														+
+		String statement = 	"INSERT INTO _Q00_DataAggregation "														+
+							"SELECT 	bd.device_pk 									AS device_pk, "				+
+										"convertStringTSformatToLong(stream.measureTS)	AS measure_timestamp_long, " + 
+										"stream.measureTS          						AS measure_timestamp, "		+
+										"sum(stream.measure) 							AS measure, "				+
+										"\"WATT\"	 									AS measure_unit, "			+
+										"\"Power Consumption: 3-Phase Aggregate.\" 		AS measure_description, "	+
+										"bd.device_location  							AS device_location, "		+		
+										"bd.location_area_m2        					AS location_area_m2 "		+
+							"FROM		Datastream.Measure 				AS stream , " 								+
+										"sql:database ['"+sqlQuery+"'] 	AS bd "										+
+							"GROUP BY	bd.device_pk," 																+
+										"stream.measureTS "															+
 							"HAVING		count(stream.measureTS) = 3"; //3 Phases
 		
 		esperEngine.installQuery(statement,addListener);
@@ -274,7 +274,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 										"\"Variation between current and last 5 minutes average power consumption.\"	AS measure_description, " 			+
 										"device_location 						  										AS device_location, "	 			+
 										"location_area_m2 "																									+
-							"FROM		_Q00_DataAggregation.win:time(5 min) " 	/*TODO win:ext_timed(measure_timestamp_long, 5 min) */					+
+							"FROM		_Q00_DataAggregation.win:ext_timed(measure_timestamp_long, 5 min) "													+
 							"GROUP BY 	device_pk ";
 	
 		esperEngine.installQuery(statement, addListener);
@@ -300,13 +300,14 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public void install_Q07_SmoothingConsumption(boolean addListener){
 		String statement = 	"INSERT INTO _Q07_SmoothingConsumption "	 															+
 							"SELECT device_pk, " 																					+
+									"measure_timestamp_long 											AS measure_timestamp_long, "+
 									"measure_timestamp, " 																			+
 									"avg(measure)														 AS measure, " 				+
-									"\"WATT\" 															 AS  measure_unit, "		+
+									"\"WATT\" 															 AS measure_unit, "			+
 									"\"Smoothed Power Consumption through 10 minutes sliding average.\"	 AS measure_description, "	+
 									"device_location,  "																			+
 									"location_area_m2 "																				+
-							"FROM  _Q00_DataAggregation.win:time(10 min) " 	/*TODO win:ext_timed(measure_timestamp_long, 10 min) */	+
+							"FROM  _Q00_DataAggregation.win:ext_timed(measure_timestamp_long, 10 min) "								+
 							"GROUP BY device_pk";
 		esperEngine.installQuery(statement, addListener);
 	}
@@ -317,7 +318,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		String subStatement1 =	"INSERT INTO _Q08_Aux_SquareMeterNormalization "														+
 								"SELECT device_pk, "																					+
-										//TODO measure_timestamp_long AS measure_timestamp_long
+										"measure_timestamp_long 											AS measure_timestamp_long, "+
 										"measure_timestamp, "																			+
 										"measure/location_area_m2											AS measure, "				+
 										"\"WATT/m^2\"	 													AS measure_unit, "			+
@@ -328,13 +329,13 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		
 		String subStatement2 =	"INSERT INTO _Q08_Aux_SquareMeterNormalization "										+
 								"SELECT  0L	 																AS device_pk, "				+
-										//TODO min(measure_timestamp_long) AS measure_timestamp_long
+										"min(measure_timestamp_long) 										AS measure_timestamp_long, "+
 										"min(measure_timestamp)												AS measure_timestamp, " 	+
 										"sum(measure)/sum(location_area_m2) 								AS measure, " 				+
 										"\"WATT/m^2\"	 													AS measure_unit, " 			+
 										"\"Energy consumption Normalized by energy meter location area\"	AS measure_description, "	+
 										"\"ALL_BUILDING\" 													AS device_location " 		+					
-								"FROM 	_Q07_SmoothingConsumption.std:unique(device_pk).win:time(1 min) " /*TODO remove WIN:time*/		+
+								"FROM 	_Q07_SmoothingConsumption.std:unique(device_pk) " 												+
 								"HAVING count(device_pk) = 8 " 																			+
 								"OUTPUT LAST EVERY 8 EVENTS"; 
 
@@ -361,7 +362,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 									"\"Proportion of each location power consumption " 										+
 									"by comparation with all other locations.\"  		AS measure_description, "			+
 									"device_location "																		+
-							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk).win:time(2 min) "	/*TODO remove WIN:time*/	+
+							"FROM _Q08_SquareMeterNormalization.std:unique(device_pk) "										+
 							"WHERE device_pk != 0 "																			+
 							"OUTPUT SNAPSHOT EVERY 1 EVENTS";
 		esperEngine.installQuery(statement, addListener);
@@ -439,8 +440,6 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 			//IMPORTANT: Use device_pk = X AND measure*0 >= 0 for universal condition
 		esperEngine.installQuery(statement, addListener);
 	}
-	
-	
 	
 	public void install_Q05_StreamPeriodicityOutOfRange(boolean addListener){
 		String statement = 	"SELECT device_pk, "							+
