@@ -11,6 +11,8 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
  * 
  */
 
+// First Commit after migration from GitHub to Bitbucket
+
 public class AppMainController {
 
 	public static void main(String args[]) throws Exception{
