@@ -64,19 +64,19 @@ public class QueryEvaluationReport {
 	}
 	
 	public String dump(boolean dumpStatement, boolean dumpResult, boolean dumpElapsedTime, long insertStreamNanoElapsedTime){
-		String res = "===== Query Evaluation Report =====\n";
+		String res = "  ";
 		if(dumpStatement){
 			res += "Statement: " 	+	getExecutedQueryStatement() + "\n";
 		}
 		if(dumpElapsedTime){
 			// ET = QueryExectionET + DatabaseInsertionTupleET
 			double ET = getQueryExecutionTime()+nanoToMilliSeconds(insertStreamNanoElapsedTime);
-			res += "ET= "+ET+" ms "+"("+nanoToMilliSeconds(insertStreamNanoElapsedTime)+" + "+getQueryExecutionTime()+")\n";
+			res += "ET="+ET+" ms "+"<"+nanoToMilliSeconds(insertStreamNanoElapsedTime)+" + "+getQueryExecutionTime()+">\n";
 		}
 		if(dumpResult){
-			res += getResultSetDump() + "\n";
+			res += getResultSetDump();
 		}
-		return res += "=========== End of Report =========\n"; 
+		return res; 
 	}
 	
 	public String dumpElapsedTime(){

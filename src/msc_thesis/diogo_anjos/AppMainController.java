@@ -13,9 +13,14 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 
 public class AppMainController {
 
+	 static int MINUTES = 1000*60;
+	
 	public static void main(String args[]) throws Exception{
-		execute_DSMS_experiment();
-//		execute_DBMS_experiment();	
+//		execute_DSMS_experiment();
+		execute_DBMS_experiment();	
+	
+		Thread.sleep(5*MINUTES);
+		
 	}	
 	
 	
@@ -67,23 +72,23 @@ public class AppMainController {
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.LAB_1_58_MIT);
 
 		//  Prepare Simulator  ====================================================
-		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-03-17  00:00:00", "2014-03-17  00:10:00");				
-		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-03-17  00:00:00", "2014-03-17  00:10:00");
-		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-03-17  00:00:00", "2014-03-17  00:10:00");
-		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-03-17  00:00:00", "2014-03-17  00:10:00");
-		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-03-17  00:00:00", "2014-03-17  00:10:00");
-		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-03-17  00:00:00", "2014-03-17  00:10:00");
-		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-03-17  00:00:00", "2014-03-17  00:10:00");
-		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-03-17  00:00:00", "2014-03-17  00:10:00");
+		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-05-01  00:00:00", "2014-07-30  00:00:00");				
+		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-05-01  00:00:00", "2014-07-30  00:00:00");
+		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-05-01  00:00:00", "2014-07-30  00:00:00");
+		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-05-01  00:00:00", "2014-07-30  00:00:00");
+		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-05-01  00:00:00", "2014-07-30  00:00:00");
+		Simulator simDEPT_14 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_14, 	"2014-05-01  00:00:00", "2014-07-30  00:00:00");
+		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	"2014-05-01  00:00:00", "2014-07-30  00:00:00");
+		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	"2014-05-01  00:00:00", "2014-07-30  00:00:00");
 //		
-		simLIB.setSpeedTimeFactor(100); 	 System.out.println(simLIB);
-		simA4.setSpeedTimeFactor(100);		 System.out.println(simA4);
-		simA5.setSpeedTimeFactor(100); 	 	 System.out.println(simA5);
-		sim1_17.setSpeedTimeFactor(100);	 System.out.println(sim1_17);
-		sim1_19.setSpeedTimeFactor(100); 	 System.out.println(sim1_19);
-		simDEPT_14.setSpeedTimeFactor(100);  System.out.println(simDEPT_14);
-		simDEPT_16.setSpeedTimeFactor(100);  System.out.println(simDEPT_16);
-		simMIT_LAB.setSpeedTimeFactor(100);  System.out.println(simMIT_LAB);
+		simLIB.setSpeedTimeFactor(1000); 	 	System.out.println(simLIB);
+		simA4.setSpeedTimeFactor(1000);		 	System.out.println(simA4);
+		simA5.setSpeedTimeFactor(1000); 		System.out.println(simA5);
+		sim1_17.setSpeedTimeFactor(1000);	 	System.out.println(sim1_17);
+		sim1_19.setSpeedTimeFactor(1000); 	 	System.out.println(sim1_19);
+		simDEPT_14.setSpeedTimeFactor(1000);  	System.out.println(simDEPT_14);
+		simDEPT_16.setSpeedTimeFactor(1000);  	System.out.println(simDEPT_16);
+		simMIT_LAB.setSpeedTimeFactor(1000);  	System.out.println(simMIT_LAB);
 		
 		
 		// Init Simulation  ====================================================
