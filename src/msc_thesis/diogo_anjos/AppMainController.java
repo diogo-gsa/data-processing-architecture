@@ -19,7 +19,7 @@ public class AppMainController {
 //		execute_DSMS_experiment();
 		execute_DBMS_experiment();	
 	
-		Thread.sleep(5*MINUTES);
+//		Thread.sleep(5*MINUTES);
 		
 	}	
 	

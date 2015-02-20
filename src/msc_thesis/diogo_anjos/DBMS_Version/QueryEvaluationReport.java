@@ -71,7 +71,7 @@ public class QueryEvaluationReport {
 		if(dumpElapsedTime){
 			// ET = QueryExectionET + DatabaseInsertionTupleET
 			double ET = getQueryExecutionTime()+nanoToMilliSeconds(insertStreamNanoElapsedTime);
-			res += "ET="+ET+" ms "+"<"+nanoToMilliSeconds(insertStreamNanoElapsedTime)+" + "+getQueryExecutionTime()+">\n";
+			res += "ET="+ET+" ms "+"< In:"+nanoToMilliSeconds(insertStreamNanoElapsedTime)+" + Q:"+getQueryExecutionTime()+">\n";
 		}
 		if(dumpResult){
 			res += getResultSetDump();

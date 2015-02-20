@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.postgresql.ssl.DbKeyStoreSocketFactory.DbKeyStoreSocketException;
+
 import msc_thesis.diogo_anjos.DBMS_Version.exceptions.ThereIsNoDataPoint_PKwithThisLocaionException;
 import msc_thesis.diogo_anjos.simulator.EnergyMeasureTupleDTO;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
@@ -18,7 +20,18 @@ public class DB_CRUD_Query_API {
 
 	private final String className = "BD_CRUD_Query_API"; //debug purposes
 	private final Connection database = DButil.connectToDB("localhost", "5432", "lumina_db", "postgres", "root", className);
-		
+
+	public void cluster_DatapointReadingTable(String indexName){
+		String sqlStatement = "CLUSTER VERBOSE \"DBMS_EMS_Schema\".\"DataPointReading\" USING \""+indexName+"\""; 
+		try {
+			DButil.executeUpdate(sqlStatement, database);
+		} catch (SQLException e) {
+			System.err.println("Error on Cluetering Index DPR Table");
+			e.printStackTrace();
+		}
+	}
+	
+	
 	/*
 	 *  INSERT a the given record into DBMS_EMS_Schema.DataPointReading
 	 */

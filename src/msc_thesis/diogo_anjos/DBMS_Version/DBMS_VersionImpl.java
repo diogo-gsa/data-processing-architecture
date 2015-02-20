@@ -45,6 +45,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		long initTS = System.nanoTime();
 		this.insertInto_DatapointReadingTable(tuple);
+		this.cluster_DatapointReadingTable("NotClusteredIndex_ON_DataPoint_AND_TS");
 		insertIntoElapsedTime = System.nanoTime() - initTS;
 // ============= Query to be Executed ========================================================================= 
 //		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
@@ -69,6 +70,10 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 /* ==========================================================================================================
  * 											Database CRUD operation
  * ========================================================================================================*/
+	
+	public void cluster_DatapointReadingTable(String indexName){
+		dbAPI.cluster_DatapointReadingTable(indexName);
+	}
 	
 	 // INSERT a the given record into DBMS_EMS_Schema.DataPointReading
 	public void insertInto_DatapointReadingTable(EnergyMeasureTupleDTO dto){
