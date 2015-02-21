@@ -12,7 +12,7 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
  */
 
 public class AppMainController {
-
+	
 	 static int MINUTES = 1000*60;
 	
 	public static void main(String args[]) throws Exception{
@@ -72,8 +72,8 @@ public class AppMainController {
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.LAB_1_58_MIT);
 
 		//  Prepare Simulator  ====================================================
-		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-05-01  00:00:00", "2014-07-30  00:00:00");				
-		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-05-01  00:00:00", "2014-07-30  00:00:00");
+		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		"2014-05-01  00:00:00", "2014-07-30  00:00:00"); // "2014-05-01  00:00:00", "2014-07-30  00:00:00"				
+		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, "2014-05-01  00:00:00", "2014-07-30  00:00:00"); // "2014-05-01  00:00:00", "2014-05-01  00:03:00"
 		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, "2014-05-01  00:00:00", "2014-07-30  00:00:00");
 		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, "2014-05-01  00:00:00", "2014-07-30  00:00:00");
 		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, "2014-05-01  00:00:00", "2014-07-30  00:00:00");

@@ -21,13 +21,21 @@ public class DB_CRUD_Query_API {
 	private final String className = "BD_CRUD_Query_API"; //debug purposes
 	private final Connection database = DButil.connectToDB("localhost", "5432", "lumina_db", "postgres", "root", className);
 
+	private int clusterAuxInsertedTuples=0;
+	
 	public void cluster_DatapointReadingTable(String indexName){
-		String sqlStatement = "CLUSTER VERBOSE \"DBMS_EMS_Schema\".\"DataPointReading\" USING \""+indexName+"\""; 
-		try {
-			DButil.executeUpdate(sqlStatement, database);
-		} catch (SQLException e) {
-			System.err.println("Error on Cluetering Index DPR Table");
-			e.printStackTrace();
+		if(clusterAuxInsertedTuples>=200){
+			String sqlStatement = "CLUSTER VERBOSE \"DBMS_EMS_Schema\".\"DataPointReading\" USING \""+indexName+"\""; 
+			try {
+				DButil.executeUpdate(sqlStatement, database);
+				System.out.print(" DRR table was Clustered! ");
+			} catch (SQLException e) {
+				System.err.println("Error on Cluetering Index DPR Table");
+				e.printStackTrace();
+			}
+			clusterAuxInsertedTuples=0;
+		}else{
+			clusterAuxInsertedTuples = clusterAuxInsertedTuples + 3;
 		}
 	}
 	
@@ -150,6 +158,52 @@ public class DB_CRUD_Query_API {
 // 	==========================================================================================
 //								Case Study Queries Implementation 
 //	==========================================================================================
+	
+	public QueryEvaluationReport execute_Q00(boolean isMaterializedViewVersion){
+		if(!isMaterializedViewVersion){
+			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_Q00_DataAggregation\"");
+		}else{
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_mv_Q00_DataAggregation\"");
+		}
+	}
+	
+	public QueryEvaluationReport execute_Q07(boolean isMaterializedViewVersion){
+		if(!isMaterializedViewVersion){
+			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_Q07_SmoothingConsumption\"");
+		}else{
+			try {
+				Thread.sleep(70);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
+			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_mv_Q07_SmoothingConsumption\"");
+		}
+	}
+	
+	public QueryEvaluationReport execute_Q12(boolean isMaterializedViewVersion){
+		if(isMaterializedViewVersion){
+			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_Q12_DataStreamPeriodicity\"");
+		}else{
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q12_DataStreamPeriodicity");
+			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_mv_Q12_DataStreamPeriodicity\"");
+		}
+	}
+	
+	
+	public void refreshMaterializedView(String integrationQueryAsMatViewName){
+		try {
+			DButil.executeUpdate("REFRESH MATERIALIZED VIEW \"DBMS_EMS_Schema\".\""+integrationQueryAsMatViewName+"\"", database);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//------------------------------------------------------------------------------------------
 	
 	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(){
 		String queryStatement =	"SELECT  device_pk, " 																	+

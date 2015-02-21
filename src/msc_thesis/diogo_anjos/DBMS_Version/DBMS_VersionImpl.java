@@ -21,7 +21,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	//producerConsumerQueueOfTuples
 	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
 	Map<EnergyMeter, Boolean> simulationStartStopFlags = new TreeMap<EnergyMeter, Boolean>();
-	private long processedTuples = 0;
+	private volatile long processedTuples = 0;
 	
 		
 	public DBMS_VersionImpl(){
@@ -45,22 +45,26 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		}
 		long initTS = System.nanoTime();
 		this.insertInto_DatapointReadingTable(tuple);
-		this.cluster_DatapointReadingTable("NotClusteredIndex_ON_DataPoint_AND_TS");
+//		this.cluster_DatapointReadingTable("ClusteredIndex_ON_DataPoint");
 		insertIntoElapsedTime = System.nanoTime() - initTS;
 // ============= Query to be Executed ========================================================================= 
 //		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio();
 //		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold();
 //		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange();
-		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected();
+//		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected();
 //		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions();
 //		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
 //		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold();
 //		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter();
+		
+//		QueryEvaluationReport report = this.execute_Q00(true);
+		QueryEvaluationReport report = this.execute_Q07(true);
+//		QueryEvaluationReport report = this.execute_Q12(true);
 //============================================================================================================= 
-		processedTuples = processedTuples + 3; //each tuple contains 3 datapoint readings = 3 phases
+		processedTuples = processedTuples + 3; //each tuple contains 3 datapoint readings = 3 phases = 3 records
 		System.out.print("#AllTuples="+processedTuples);		
-		System.out.println(report.dump(false, true, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
+		System.out.println(report.dump(false, false, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
 
 	}
 	
@@ -114,6 +118,21 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 /* ==========================================================================================================
  * 										Data Evaluation Queries
  * ========================================================================================================*/	
+	
+	public QueryEvaluationReport execute_Q00(boolean isMaterializedViewVersion){
+		QueryEvaluationReport report = dbAPI.execute_Q00(isMaterializedViewVersion);
+		return report;
+	}
+	
+	public QueryEvaluationReport execute_Q07(boolean isMaterializedViewVersion){
+		QueryEvaluationReport report = dbAPI.execute_Q07(isMaterializedViewVersion);
+		return report;
+	}
+	
+	public QueryEvaluationReport execute_Q12(boolean isMaterializedViewVersion){
+		QueryEvaluationReport report = dbAPI.execute_Q12(isMaterializedViewVersion);
+		return report;
+	}
 	
 	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(){
 		QueryEvaluationReport report = dbAPI.execute_Q01_ConsumptionOverThreshold();
