@@ -59,8 +59,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 //		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter();
 		
 //		QueryEvaluationReport report = this.execute_Q00(true);
-		QueryEvaluationReport report = this.execute_Q07(true);
-//		QueryEvaluationReport report = this.execute_Q12(true);
+//		QueryEvaluationReport report = this.execute_Q07(true);
+		QueryEvaluationReport report = this.execute_Q12(true);
 //============================================================================================================= 
 		processedTuples = processedTuples + 3; //each tuple contains 3 datapoint readings = 3 phases = 3 records
 		System.out.print("#AllTuples="+processedTuples);		
@@ -120,63 +120,105 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
  * ========================================================================================================*/	
 	
 	public QueryEvaluationReport execute_Q00(boolean isMaterializedViewVersion){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q00(isMaterializedViewVersion);
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q07(boolean isMaterializedViewVersion){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q07(isMaterializedViewVersion);
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q12(boolean isMaterializedViewVersion){
+		long initTS = System.nanoTime(); 
 		QueryEvaluationReport report = dbAPI.execute_Q12(isMaterializedViewVersion);
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q01_ConsumptionOverThreshold();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q03_MinMaxConsumptionRatio(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q03_MinMaxConsumptionRatio();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q04_InstantVariationAboveThreshold();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q05_StreamPeriodicityOutOfRange();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q06_ConsumptionAboveExpected(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q06_ConsumptionAboveExpected();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q09_ProportionsFromConsumptions(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q09_ProportionsFromConsumptions();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q10_ConsumptionsRankingList(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q10_ConsumptionsRankingList();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q16_ConsumptionAboveSlidingAvgThreshold(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q16_ConsumptionAboveSlidingAvgThreshold();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
 	
 	public QueryEvaluationReport execute_Q17_ConsumptionAboveExpectedCounter(){
+		long initTS = System.nanoTime();
 		QueryEvaluationReport report = dbAPI.execute_Q17_ConsumptionAboveExpectedCounter();
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
+	}
+	
+	private double nanoToMilliSeconds(long nanoValue){
+		// 1 nanoSecond / (10^6) = 1 milliSecond
+    	// measure with nano resolution, but present the result in milliseconds
+		return (((double)nanoValue)/((double)1000000));
 	}
 	
 	

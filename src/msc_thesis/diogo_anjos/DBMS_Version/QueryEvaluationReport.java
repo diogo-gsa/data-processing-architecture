@@ -11,10 +11,9 @@ public class QueryEvaluationReport {
 	private String resultSetDump = null;
 	private double queryExecutionTime = 0;
 
-	public QueryEvaluationReport(String queryStatement, ResultSet resultSet, double executionTime){
+	public QueryEvaluationReport(String queryStatement, ResultSet resultSet){
 		this.executedQueryStatement = queryStatement;
 		this.resultSetDump = buildResulSetDump(resultSet);
-		this.queryExecutionTime = executionTime;
 	}
 
 	public void setExecutedQueryStatement(String executedQueryStatement) {
@@ -26,7 +25,7 @@ public class QueryEvaluationReport {
 	}
 
 	
-	public void setQueryExecutionTime(long queryExecutionTime) {
+	public void setQueryExecutionTime(double queryExecutionTime) {
 		this.queryExecutionTime = queryExecutionTime;
 	}
 	

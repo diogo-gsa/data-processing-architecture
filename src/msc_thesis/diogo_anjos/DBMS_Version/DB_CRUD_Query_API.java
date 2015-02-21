@@ -172,12 +172,6 @@ public class DB_CRUD_Query_API {
 		if(!isMaterializedViewVersion){
 			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_Q07_SmoothingConsumption\"");
 		}else{
-			try {
-				Thread.sleep(70);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			refreshMaterializedView("_mv_Q00_DataAggregation");
 			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
 			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_mv_Q07_SmoothingConsumption\"");
@@ -185,7 +179,7 @@ public class DB_CRUD_Query_API {
 	}
 	
 	public QueryEvaluationReport execute_Q12(boolean isMaterializedViewVersion){
-		if(isMaterializedViewVersion){
+		if(!isMaterializedViewVersion){
 			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_Q12_DataStreamPeriodicity\"");
 		}else{
 			refreshMaterializedView("_mv_Q00_DataAggregation");
@@ -718,23 +712,13 @@ public class DB_CRUD_Query_API {
 	
 	private QueryEvaluationReport executeEvaluationQuery(String queryStatement){
 		ResultSet queryExecutionResultSet = null;
-		long elapsedTime = 0;
 		try{
-			long initTS = System.nanoTime();
 			queryExecutionResultSet = DButil.executeQuery(queryStatement, database);
-			elapsedTime = System.nanoTime() - initTS;
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-		return new QueryEvaluationReport(queryStatement, queryExecutionResultSet, nanoToMilliSeconds(elapsedTime));
+		return new QueryEvaluationReport(queryStatement, queryExecutionResultSet);
 	}
-	
-	private double nanoToMilliSeconds(long nanoValue){
-		// 1 nanoSecond / (10^6) = 1 milliSecond
-    	// measure with nano resolution, but present the result in milliseconds
-		return (((double)nanoValue)/((double)1000000));
-	}
-	
 	
 	private List<EnergyMeasureTupleDTO> buildDtoListFromResultSet(ResultSet rs) {
 		
