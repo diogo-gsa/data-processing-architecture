@@ -23,24 +23,7 @@ public class DB_CRUD_Query_API {
 	private final Connection database = DButil.connectToDB("localhost", "5432", "lumina_db", "postgres", "root", className);
 
 	private int clusterAuxInsertedTuples=0;
-	
-	public void cluster_DatapointReadingTable(String indexName){
-		if(clusterAuxInsertedTuples>=200){
-			String sqlStatement = "CLUSTER VERBOSE \"DBMS_EMS_Schema\".\"DataPointReading\" USING \""+indexName+"\""; 
-			try {
-				DButil.executeUpdate(sqlStatement, database);
-				System.out.print(" DRR table was Clustered! ");
-			} catch (SQLException e) {
-				System.err.println("Error on Cluetering Index DPR Table");
-				e.printStackTrace();
-			}
-			clusterAuxInsertedTuples=0;
-		}else{
-			clusterAuxInsertedTuples = clusterAuxInsertedTuples + 3;
-		}
-	}
-	
-	
+		
 	/*
 	 *  INSERT a the given record into DBMS_EMS_Schema.DataPointReading
 	 */
@@ -210,14 +193,23 @@ public class DB_CRUD_Query_API {
 	
 	//------------------------------------------------------------------------------------------
 	
-	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(){
+	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(boolean isMaterializedViewVersion){
+		String Q08_SquareMeterNormalization;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
+			refreshMaterializedView("_mv_Q08_SquareMeterNormalization");
+			Q08_SquareMeterNormalization = " \"DBMS_EMS_Schema\".\"_mv_Q08_SquareMeterNormalization\" ";
+		}else{
+			Q08_SquareMeterNormalization = " \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" ";
+		}
 		String queryStatement =	"SELECT  device_pk, " 																	+
 										"measure_timestamp, " 															+
 										"measure, " 																	+
 										"measure_unit, " 																+
 										"'Power consumption above a given threshold.'::text AS measure_description, " 	+
 										"device_location " 																+
-								"FROM   \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" " 						+
+								"FROM " + Q08_SquareMeterNormalization 													+ 
 								"WHERE   index = 1 " 																	+
 								  "AND 	((device_pk = 0 AND measure >= 00) " 											+
 								      "OR (device_pk = 1 AND measure >= 00) " 											+
@@ -232,7 +224,16 @@ public class DB_CRUD_Query_API {
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q03_MinMaxConsumptionRatio(){
+	public QueryEvaluationReport execute_Q03_MinMaxConsumptionRatio(boolean isMaterializedViewVersion){
+		String Q08_SquareMeterNormalization;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
+			refreshMaterializedView("_mv_Q08_SquareMeterNormalization");
+			Q08_SquareMeterNormalization = " \"DBMS_EMS_Schema\".\"_mv_Q08_SquareMeterNormalization\" ";
+		}else{
+			Q08_SquareMeterNormalization = " \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" ";
+		}
 		String queryStatement =	"SELECT  r1.device_pk, " 																					+                                         
 								        "r1.measure_timestamp, " 																			+                                     
 								        "min(r2.measure)/(max(r2.measure)+0.000001) AS measure, " 											+                           
@@ -241,12 +242,12 @@ public class DB_CRUD_Query_API {
 								        "r1.device_location, " 																				+
 								        "min(r2.measure) AS min_last_hour_power_consumption, " 												+                                 
 								        "max(r2.measure) AS max_last_hour_power_consumption "   											+                                  
-								"FROM  \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\"   AS r1 " 										+       
-								      "INNER JOIN "                                          												+
-								      "\"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\"   AS r2 " 										+            
+								"FROM " + Q08_SquareMeterNormalization + " AS r1 " 															+       
+								         "INNER JOIN "	                                          											+
+								         Q08_SquareMeterNormalization + "  AS r2 					" 										+            
 								      "ON r1.index        = 1 "      /* All Building most recent measure */            						+  
 								      "AND r2.device_pk   = r1.device_pk "                               									+
-								      "AND r2.measure_timestamp > r1.measure_timestamp - interval '60 minutes'  /*60min Time Window*/ " 	+
+								      "AND r2.measure_timestamp > r1.measure_timestamp - interval '60 minutes' "						 	+
 								"GROUP BY r1.device_pk, "                                        											+
 								         "r1.measure_timestamp, "                                 											+     
 								         "r1.measure_unit, "                                       											+
@@ -310,7 +311,17 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q06_ConsumptionAboveExpected(){
+	public QueryEvaluationReport execute_Q06_ConsumptionAboveExpected(boolean isMaterializedViewVersion){
+		String Q13_ExpectedConsumptionByMonthlyHourAvg;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
+			refreshMaterializedView("_mv_Q08_SquareMeterNormalization");
+			refreshMaterializedView("_mv_Q13_ExpectedConsumptionByMonthlyHourAvg");
+			Q13_ExpectedConsumptionByMonthlyHourAvg = " \"DBMS_EMS_Schema\".\"_mv_Q13_ExpectedConsumptionByMonthlyHourAvg\" ";
+		}else{
+			Q13_ExpectedConsumptionByMonthlyHourAvg = " \"DBMS_EMS_Schema\".\"_Q13_ExpectedConsumptionByMonthlyHourAvg\" ";
+		}		
 		String queryStatement = "SELECT	device_pk, " 																												+
 										"measure_timestamp, " 																										+
 										"(current_measure/(expecetd_measure+0.0001) - 1)*100                                 	   AS measure, " 					+                                                       
@@ -319,29 +330,47 @@ public class DB_CRUD_Query_API {
 										"device_location, " 																										+
 										"current_measure 									  										AS current_power_consumption, "	+                                                           
 										"expecetd_measure 									  										AS expected_power_consumption "	+
-								"FROM   \"DBMS_EMS_Schema\".\"_Q13_ExpectedConsumptionByMonthlyHourAvg\" " 															+
+								"FROM " + Q13_ExpectedConsumptionByMonthlyHourAvg																					+
 								"WHERE  index = 1 AND (current_measure/(expecetd_measure+0.0001) - 1)*00 >= 00 ";
 								/*IMPORTANT: (current_measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case*/
 		
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q09_ProportionsFromConsumptions(){	
+	public QueryEvaluationReport execute_Q09_ProportionsFromConsumptions(boolean isMaterializedViewVersion){
+		String Q08_SquareMeterNormalization;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
+			refreshMaterializedView("_mv_Q08_SquareMeterNormalization");
+			Q08_SquareMeterNormalization = " \"DBMS_EMS_Schema\".\"_mv_Q08_SquareMeterNormalization\" ";
+		}else{
+			Q08_SquareMeterNormalization = " \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" ";
+		}		
 		String queryStatement = "SELECT	device_pk, " 																											+
 										"measure_timestamp, " 																									+
 										"measure/sum(measure) OVER wintotal * 100::double precision 				   				AS measure, " 				+
 										"'Percentage%' 						   				   										AS measure_unit, " 			+
 										"'%Proportion of each location power consumption by comparation with all other locations.'  AS measure_description, " 	+
 										"device_location " 																										+
-								"FROM 	\"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" "																	+
+								"FROM " + Q08_SquareMeterNormalization																							+
 								"WHERE 	device_pk <> 0 AND index = 1 " 																							+
 								"WINDOW 	wintotal AS (PARTITION BY NULL::text) ";
-		//catch periods between measures out of [50,70] seconds range
+								//catch periods between measures out of [50,70] seconds range
 		
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q10_ConsumptionsRankingList(){	
+	public QueryEvaluationReport execute_Q10_ConsumptionsRankingList(boolean isMaterializedViewVersion){
+		String Q08_SquareMeterNormalization;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
+			refreshMaterializedView("_mv_Q08_SquareMeterNormalization");
+			Q08_SquareMeterNormalization = " \"DBMS_EMS_Schema\".\"_mv_Q08_SquareMeterNormalization\" ";
+		}else{
+			Q08_SquareMeterNormalization = " \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" ";
+		}
 		String queryStatement = "SELECT device_pk, " 																					+
 		    							"measure_timestamp, " 																			+
 		    							"rank() OVER sortedwindow AS measrure, " 														+
@@ -349,14 +378,23 @@ public class DB_CRUD_Query_API {
 		    							"'Ranking List Position' 											 AS measure_unit, " 		+ 
 		    							"'Descendig Ranking List of each Location by its power consumption.' AS measure_description, " 	+
 		    							"device_location " 																				+
-		    					"FROM \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\" "											+
+		    					"FROM " + Q08_SquareMeterNormalization																	+
 		    					"WHERE index = 1 " 																						+
 		    					"WINDOW sortedwindow AS (PARTITION BY NULL::text "														+  
 		    											"ORDER BY measure DESC) ";
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q16_ConsumptionAboveSlidingAvgThreshold(){
+	public QueryEvaluationReport execute_Q16_ConsumptionAboveSlidingAvgThreshold(boolean isMaterializedViewVersion){
+		String Q07_SmoothingConsumption;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
+			Q07_SmoothingConsumption = " \"DBMS_EMS_Schema\".\"_mv_Q07_SmoothingConsumption\" ";
+		}else{
+			Q07_SmoothingConsumption = " \"DBMS_EMS_Schema\".\"_Q07_SmoothingConsumption\" ";
+		}
+		
 		String queryStatement = "SELECT  device_pk, " 																									+
 										"measure_timestamp, " 																							+
 										"current_measure                AS measure, " 																	+
@@ -373,9 +411,9 @@ public class DB_CRUD_Query_API {
 												"all_measures.location_area_m2, " 																		+  																	                                                                
 												"avg(all_measures.measure) over w	AS measure_sliding24h_avg, " 										+ 
 												"rank()                    over w	AS index " 															+		
-									    "FROM  	\"DBMS_EMS_Schema\".\"_Q07_SmoothingConsumption\"  AS all_measures " 									+  				                                              
+									    "FROM " + Q07_SmoothingConsumption + " AS all_measures " 														+  				                                              
 												"INNER JOIN "  																							+	
-												"\"DBMS_EMS_Schema\".\"_Q07_SmoothingConsumption\"  AS most_recent_measure " 							+	  		
+												  Q07_SmoothingConsumption + " AS most_recent_measure " 												+	  		
 												"ON   most_recent_measure.index = 1 "																	+
 												"AND  most_recent_measure.device_pk = all_measures.device_pk "  										+										                                        
 												"AND  all_measures.measure_timestamp >= most_recent_measure.measure_timestamp  - interval '24 hours' " 	+  	             
@@ -388,17 +426,27 @@ public class DB_CRUD_Query_API {
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q17_ConsumptionAboveExpectedCounter(){
+	public QueryEvaluationReport execute_Q17_ConsumptionAboveExpectedCounter(boolean isMaterializedViewVersion){
+		String Q14_ExpectedConsumptionByUDF;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q07_SmoothingConsumption");
+			refreshMaterializedView("_mv_Q08_SquareMeterNormalization");
+			refreshMaterializedView("_mv_Q14_ExpectedConsumptionByUDF");
+			Q14_ExpectedConsumptionByUDF = " \"DBMS_EMS_Schema\".\"_mv_Q14_ExpectedConsumptionByUDF\" ";
+		}else{
+			Q14_ExpectedConsumptionByUDF = " \"DBMS_EMS_Schema\".\"_Q14_ExpectedConsumptionByUDF\" ";
+		}
 		String queryStatement =	"SELECT  r2.device_pk, " 																										+  																			
 										"max(r2.measure_timestamp) 																	AS measure_timestamp, " 	+  											
 										"count(r2.current_measure) 																	AS measure, " 				+
 										"'Positive Integer'::text																	AS measure_unit, " 			+ 
 										"'Number of times that, in last hour, current consumption as exceeded the expected one. " 								+
-										" Where the counter limited by a min and max threshold.' 										AS measure_description, " 	+
+										" Where the counter limited by a min and max threshold.' 									AS measure_description, " 	+
 										"r2.device_location " 																									+
-								"FROM 	\"DBMS_EMS_Schema\".\"_Q14_ExpectedConsumptionByUDF\" r1 " 																+  	
-										"INNER JOIN "  																											+
-										"\"DBMS_EMS_Schema\".\"_Q14_ExpectedConsumptionByUDF\" r2 " 															+  	
+								"FROM " + Q14_ExpectedConsumptionByUDF +" r1 " 																					+  	
+										 "INNER JOIN "  																										+
+										  Q14_ExpectedConsumptionByUDF +" r2 " 																					+  	
 										"ON r1.device_pk = r2.device_pk "  																						+								
 										"AND r1.index = 1 " 																									+															
 										"AND r2.measure_timestamp > (r1.measure_timestamp - '01:00:00'::interval) " 											+  				 
@@ -732,6 +780,22 @@ public class DB_CRUD_Query_API {
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
+	@Deprecated
+	public void cluster_DatapointReadingTable(String indexName){
+		if(clusterAuxInsertedTuples>=200){
+			String sqlStatement = "CLUSTER VERBOSE \"DBMS_EMS_Schema\".\"DataPointReading\" USING \""+indexName+"\""; 
+			try {
+				DButil.executeUpdate(sqlStatement, database);
+				System.out.print(" DRR table was Clustered! ");
+			} catch (SQLException e) {
+				System.err.println("Error on Cluetering Index DPR Table");
+				e.printStackTrace();
+			}
+			clusterAuxInsertedTuples=0;
+		}else{
+			clusterAuxInsertedTuples = clusterAuxInsertedTuples + 3;
+		}
+	}
 //	==========================================================================================
 //						End Of Case Study Queries Implementation Zone 
 //	==========================================================================================
