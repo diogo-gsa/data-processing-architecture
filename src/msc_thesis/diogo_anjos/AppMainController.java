@@ -75,8 +75,8 @@ public class AppMainController {
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.LAB_1_58_MIT);
 
 		//  Prepare Simulator  ====================================================
-		String beginTime = "2014-05-01  00:00:00";
-		String endTime	 = "2014-07-30  00:00:00";
+		String beginTime = "2014-05-01  00:00:00"; //"2014-05-01  00:00:00";
+		String endTime	 = "2014-05-01  00:15:00"; //"2014-07-30  00:00:00";
 		
 		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		beginTime, endTime); 				
 		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, beginTime, endTime); 

@@ -255,57 +255,47 @@ public class DB_CRUD_Query_API {
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(boolean isMaterializedViewVersion){
-		String queryStatement = "";
-		if(!isMaterializedViewVersion){
-			queryStatement =	"SELECT  device_pk, " 																					+
+	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(boolean isMaterializedViewVersion){		
+		String Q11_InstantVariation;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q11_InstantVariation");
+			Q11_InstantVariation = " \"DBMS_EMS_Schema\".\"_mv_Q11_InstantVariation\" ";
+		}else{
+			Q11_InstantVariation = " \"DBMS_EMS_Schema\".\"_Q11_InstantVariation\" ";
+		}
+		String queryStatement =	"SELECT  device_pk, " 																					+
 										"measure_timestamp, " 																			+
 										"measure, " 																					+
 										"current_power_consumption, " 																	+
 										"'Percentage%' 														AS measure_unit, " 			+
 										"'Variation between current and last 5 minutes average power " 									+
-											"consumption that exceeded a given threshold.' 					AS measure_description, " 	+
+										"consumption that exceeded a given threshold.' 					AS measure_description, " 		+
 										"device_location, " 																			+
 										"location_area_m2 " 																			+
-								"FROM \"DBMS_EMS_Schema\".\"_Q11_InstantVariation\" " 													+
+								"FROM " + Q11_InstantVariation																			+
 								"WHERE index = 1 " 																						+
-								  "AND ((device_pk = 1 AND measure*0 >= 0) " 															+
-								    "OR (device_pk = 2 AND measure*0 >= 0) " 															+
-								    "OR (device_pk = 3 AND measure*0 >= 0) " 															+
-								    "OR (device_pk = 4 AND measure*0 >= 0) " 															+
-								    "OR (device_pk = 5 AND measure*0 >= 0) " 															+
-								    "OR (device_pk = 6 AND measure*0 >= 0) " 															+		 	
-								    "OR (device_pk = 7 AND measure*0 >= 0) " 															+
-								    "OR (device_pk = 8 AND measure*0 >= 0)) ";
-									//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
-		}else{
-				refreshMaterializedView("_mv_Q00_DataAggregation");
-				refreshMaterializedView("_mv_Q11_InstantVariation");
-				queryStatement =	"SELECT  device_pk, " 																					+
-											"measure_timestamp, " 																			+
-											"measure, " 																					+
-											"current_power_consumption, " 																	+
-											"'Percentage%' 														AS measure_unit, " 			+
-											"'Variation between current and last 5 minutes average power " 									+
-												"consumption that exceeded a given threshold.' 					AS measure_description, " 	+
-											"device_location, " 																			+
-											"location_area_m2 " 																			+
-									"FROM \"DBMS_EMS_Schema\".\"_mv_Q11_InstantVariation\" " 													+
-									"WHERE index = 1 " 																						+
-									  "AND ((device_pk = 1 AND measure*0 >= 0) " 															+
-									    "OR (device_pk = 2 AND measure*0 >= 0) " 															+
-									    "OR (device_pk = 3 AND measure*0 >= 0) " 															+
-									    "OR (device_pk = 4 AND measure*0 >= 0) " 															+
-									    "OR (device_pk = 5 AND measure*0 >= 0) " 															+
-									    "OR (device_pk = 6 AND measure*0 >= 0) " 															+		 	
-									    "OR (device_pk = 7 AND measure*0 >= 0) " 															+
-									    "OR (device_pk = 8 AND measure*0 >= 0)) ";
-										//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
-		}
+									"AND ((device_pk = 1 AND measure*0 >= 0) " 															+
+									  "OR (device_pk = 2 AND measure*0 >= 0) " 															+
+									  "OR (device_pk = 3 AND measure*0 >= 0) " 															+
+									  "OR (device_pk = 4 AND measure*0 >= 0) " 															+
+									  "OR (device_pk = 5 AND measure*0 >= 0) " 															+
+									  "OR (device_pk = 6 AND measure*0 >= 0) " 															+		 	
+									  "OR (device_pk = 7 AND measure*0 >= 0) " 															+
+									  "OR (device_pk = 8 AND measure*0 >= 0)) ";
+							//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
 		return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(){	
+	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(boolean isMaterializedViewVersion){	
+		String Q12_DataStreamPeriodicity;
+		if(isMaterializedViewVersion){
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q12_DataStreamPeriodicity");
+			Q12_DataStreamPeriodicity = " \"DBMS_EMS_Schema\".\"_mv_Q12_DataStreamPeriodicity\" ";
+		}else{
+			Q12_DataStreamPeriodicity = " \"DBMS_EMS_Schema\".\"_Q12_DataStreamPeriodicity\" ";
+		}		
 		String queryStatement = "SELECT  device_pk, "																											+
 		        						"measure_timestamp, " 																									+
 		        						"measure, "																												+
@@ -313,11 +303,10 @@ public class DB_CRUD_Query_API {
 		        						"'Period between two last power consumption measurements is out of range: [55, 65] seconds.' AS meausre_description, " 	+
 		        						"device_location, " 																									+
 		        						"location_area_m2 " 																									+
-		        				"FROM    \"DBMS_EMS_Schema\".\"_Q12_DataStreamPeriodicity\" " 																	+
+		        				"FROM " + Q12_DataStreamPeriodicity 																							+
 		        				"WHERE   index = 1 "  																											+
-		        				    "AND NOT('00:00:55' <= measure  AND  measure <= '00:01:05') ";
-		//catch periods between measures out of [50,70] seconds range
-		
+//		        				    "AND NOT('00:00:55' <= measure  AND  measure <= '00:01:05') "; 	  //Real-Condition
+									"AND NOT('00:10:00' <= measure  AND  measure <= '00:20:00') ";    //UNIVERSAL-Condition
 		return executeEvaluationQuery(queryStatement);	
 	}
 	

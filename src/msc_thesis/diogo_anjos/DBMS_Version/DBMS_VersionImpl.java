@@ -50,8 +50,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 // ============= Query to be Executed ========================================================================= 
 //		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio();
-		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(true);
-//		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange();
+//		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(false);
+		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange(false);
 //		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected();
 //		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions();
 //		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList();	
@@ -65,7 +65,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 //============================================================================================================= 
 		processedTuples = processedTuples + 3; //each tuple contains 3 datapoint readings = 3 phases = 3 records
 		System.out.print("#AllTuples="+processedTuples);		
-		System.out.println(report.dump(false, false, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
+		System.out.println(report.dump(false, true, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
 
 	}
 	
@@ -177,9 +177,9 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		return report;
 	}
 	
-	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(){
+	public QueryEvaluationReport execute_Q05_StreamPeriodicityOutOfRange(boolean isMaterializedViewVersion){
 		long initTS = System.nanoTime();
-		QueryEvaluationReport report = dbAPI.execute_Q05_StreamPeriodicityOutOfRange();
+		QueryEvaluationReport report = dbAPI.execute_Q05_StreamPeriodicityOutOfRange(isMaterializedViewVersion);
 		long elapsedTime = System.nanoTime() - initTS;
 		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
