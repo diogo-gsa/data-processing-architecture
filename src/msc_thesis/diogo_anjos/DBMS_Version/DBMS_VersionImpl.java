@@ -50,7 +50,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 // ============= Query to be Executed ========================================================================= 
 //		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold();
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio();
-//		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold();
+		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(true);
 //		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange();
 //		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected();
 //		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions();
@@ -60,7 +60,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		
 //		QueryEvaluationReport report = this.execute_Q00(true);
 //		QueryEvaluationReport report = this.execute_Q07(true);
-		QueryEvaluationReport report = this.execute_Q12(true);
+//		QueryEvaluationReport report = this.execute_Q12(true);
+//		QueryEvaluationReport report = this.execute_Q11(true);
 //============================================================================================================= 
 		processedTuples = processedTuples + 3; //each tuple contains 3 datapoint readings = 3 phases = 3 records
 		System.out.print("#AllTuples="+processedTuples);		
@@ -142,6 +143,15 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;
 	}
+
+	public QueryEvaluationReport execute_Q11(boolean isMaterializedViewVersion){
+		long initTS = System.nanoTime(); 
+		QueryEvaluationReport report = dbAPI.execute_Q11(isMaterializedViewVersion);
+		long elapsedTime = System.nanoTime() - initTS;
+		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
+		return report;
+	}
+	
 	
 	public QueryEvaluationReport execute_Q01_ConsumptionOverThreshold(){
 		long initTS = System.nanoTime();
@@ -159,9 +169,9 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		return report;
 	}
 	
-	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(){
+	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(boolean isMaterializedViewVersion){
 		long initTS = System.nanoTime();
-		QueryEvaluationReport report = dbAPI.execute_Q04_InstantVariationAboveThreshold();
+		QueryEvaluationReport report = dbAPI.execute_Q04_InstantVariationAboveThreshold(isMaterializedViewVersion);
 		long elapsedTime = System.nanoTime() - initTS;
 		report.setQueryExecutionTime(nanoToMilliSeconds(elapsedTime));
 		return report;

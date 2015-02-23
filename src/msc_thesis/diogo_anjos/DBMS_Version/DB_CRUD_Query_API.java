@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutionException;
 
 import org.postgresql.ssl.DbKeyStoreSocketFactory.DbKeyStoreSocketException;
 
@@ -188,6 +189,16 @@ public class DB_CRUD_Query_API {
 		}
 	}
 	
+	public QueryEvaluationReport execute_Q11(boolean isMaterializedViewVersion){
+		if(!isMaterializedViewVersion){
+			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_Q11_InstantVariation\"");
+		}else{
+			refreshMaterializedView("_mv_Q00_DataAggregation");
+			refreshMaterializedView("_mv_Q11_InstantVariation");
+			return executeEvaluationQuery("SELECT * FROM \"DBMS_EMS_Schema\".\"_mv_Q11_InstantVariation\"");
+		}
+	}
+	
 	
 	public void refreshMaterializedView(String integrationQueryAsMatViewName){
 		try {
@@ -224,7 +235,7 @@ public class DB_CRUD_Query_API {
 	public QueryEvaluationReport execute_Q03_MinMaxConsumptionRatio(){
 		String queryStatement =	"SELECT  r1.device_pk, " 																					+                                         
 								        "r1.measure_timestamp, " 																			+                                     
-								        "min(r2.measure)/(max(r2.measure)+0.000001) AS measure, " 														+                           
+								        "min(r2.measure)/(max(r2.measure)+0.000001) AS measure, " 											+                           
 								        "'Ratio = [0,1]' AS measure_unit, "             													+                           
 								        "'Min/Max Power Consumption Ratio during last hour.'::text AS measure_description, " 				+              
 								        "r1.device_location, " 																				+
@@ -233,7 +244,7 @@ public class DB_CRUD_Query_API {
 								"FROM  \"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\"   AS r1 " 										+       
 								      "INNER JOIN "                                          												+
 								      "\"DBMS_EMS_Schema\".\"_Q08_SquareMeterNormalization\"   AS r2 " 										+            
-								      "ON r1.index        = 1 "      /* All Building most recent measure */            					+  
+								      "ON r1.index        = 1 "      /* All Building most recent measure */            						+  
 								      "AND r2.device_pk   = r1.device_pk "                               									+
 								      "AND r2.measure_timestamp > r1.measure_timestamp - interval '60 minutes'  /*60min Time Window*/ " 	+
 								"GROUP BY r1.device_pk, "                                        											+
@@ -244,8 +255,10 @@ public class DB_CRUD_Query_API {
 		 return executeEvaluationQuery(queryStatement);	
 	}
 	
-	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(){
-		String queryStatement =	"SELECT  device_pk, " 																					+
+	public QueryEvaluationReport execute_Q04_InstantVariationAboveThreshold(boolean isMaterializedViewVersion){
+		String queryStatement = "";
+		if(!isMaterializedViewVersion){
+			queryStatement =	"SELECT  device_pk, " 																					+
 										"measure_timestamp, " 																			+
 										"measure, " 																					+
 										"current_power_consumption, " 																	+
@@ -256,15 +269,39 @@ public class DB_CRUD_Query_API {
 										"location_area_m2 " 																			+
 								"FROM \"DBMS_EMS_Schema\".\"_Q11_InstantVariation\" " 													+
 								"WHERE index = 1 " 																						+
-								  "AND ((device_pk = 1 AND measure >= -100) " 															+
-								    "OR (device_pk = 2 AND measure >= -100) " 															+
-								    "OR (device_pk = 3 AND measure >= -100) " 															+
-								    "OR (device_pk = 4 AND measure >= -100) " 															+
-								    "OR (device_pk = 5 AND measure >= -100) " 															+
-								    "OR (device_pk = 6 AND measure >= -100) " 															+		 	
-								    "OR (device_pk = 7 AND measure >= -100) " 															+
-								    "OR (device_pk = 8 AND measure >= -100)) ";
-							//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
+								  "AND ((device_pk = 1 AND measure*0 >= 0) " 															+
+								    "OR (device_pk = 2 AND measure*0 >= 0) " 															+
+								    "OR (device_pk = 3 AND measure*0 >= 0) " 															+
+								    "OR (device_pk = 4 AND measure*0 >= 0) " 															+
+								    "OR (device_pk = 5 AND measure*0 >= 0) " 															+
+								    "OR (device_pk = 6 AND measure*0 >= 0) " 															+		 	
+								    "OR (device_pk = 7 AND measure*0 >= 0) " 															+
+								    "OR (device_pk = 8 AND measure*0 >= 0)) ";
+									//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
+		}else{
+				refreshMaterializedView("_mv_Q00_DataAggregation");
+				refreshMaterializedView("_mv_Q11_InstantVariation");
+				queryStatement =	"SELECT  device_pk, " 																					+
+											"measure_timestamp, " 																			+
+											"measure, " 																					+
+											"current_power_consumption, " 																	+
+											"'Percentage%' 														AS measure_unit, " 			+
+											"'Variation between current and last 5 minutes average power " 									+
+												"consumption that exceeded a given threshold.' 					AS measure_description, " 	+
+											"device_location, " 																			+
+											"location_area_m2 " 																			+
+									"FROM \"DBMS_EMS_Schema\".\"_mv_Q11_InstantVariation\" " 													+
+									"WHERE index = 1 " 																						+
+									  "AND ((device_pk = 1 AND measure*0 >= 0) " 															+
+									    "OR (device_pk = 2 AND measure*0 >= 0) " 															+
+									    "OR (device_pk = 3 AND measure*0 >= 0) " 															+
+									    "OR (device_pk = 4 AND measure*0 >= 0) " 															+
+									    "OR (device_pk = 5 AND measure*0 >= 0) " 															+
+									    "OR (device_pk = 6 AND measure*0 >= 0) " 															+		 	
+									    "OR (device_pk = 7 AND measure*0 >= 0) " 															+
+									    "OR (device_pk = 8 AND measure*0 >= 0)) ";
+										//IMPORTANT: Use device_pk = X AND variation >= -1000 for universal condition
+		}
 		return executeEvaluationQuery(queryStatement);	
 	}
 	

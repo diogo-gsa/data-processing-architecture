@@ -78,8 +78,8 @@ public class AppMainController {
 		String beginTime = "2014-05-01  00:00:00";
 		String endTime	 = "2014-07-30  00:00:00";
 		
-		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		beginTime, endTime); // "2014-05-01  00:00:00", "2014-07-30  00:00:00"				
-		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, beginTime, endTime); // "2014-05-01  00:00:00", "2014-05-01  00:03:00"
+		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		beginTime, endTime); 				
+		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, beginTime, endTime); 
 		Simulator simA5 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A5, beginTime, endTime);
 		Simulator sim1_17 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_17, beginTime, endTime);
 		Simulator sim1_19 		= new SimulatorImpl(EnergyMeter.CLASSROOM_1_19, beginTime, endTime);
