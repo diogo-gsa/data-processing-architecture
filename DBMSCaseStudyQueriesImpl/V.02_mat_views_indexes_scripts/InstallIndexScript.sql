@@ -65,8 +65,9 @@ CREATE INDEX "Q0_NotClusteredIndex_ON_TS_AND_Device"
   ON "DBMS_EMS_Schema"."_mv_Q00_DataAggregation" USING btree (measure_timestamp DESC, device_pk);
 
 -- INDEX Q11
-CREATE INDEX "Q11_NotClusteredIndex_ON_Device"
-  ON "DBMS_EMS_Schema"."_mv_Q12_DataStreamPeriodicity" USING btree (device_pk);
+--DROP INDEX "DBMS_EMS_Schema"."Q11_NotClusteredIndex_ON_Device";
+CREATE INDEX "Q11_NotClusteredIndex_ON_Index"
+  ON "DBMS_EMS_Schema"."_mv_Q11_InstantVariation" USING btree (index DESC);
 
 -- INDEX Q12
 CREATE INDEX "Q12_NotClusteredIndex_ON_Index"

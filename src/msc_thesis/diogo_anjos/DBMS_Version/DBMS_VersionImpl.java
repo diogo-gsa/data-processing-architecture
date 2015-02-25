@@ -51,18 +51,21 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 		insertIntoElapsedTime = System.nanoTime() - initTS;
 // ============= Query to be Executed ========================================================================= 
 //		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold(true);
-//		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio(false);
+//		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio(true);
 //		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(true);
 //		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange(true);
-//		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected(true);
-//		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions(false);
-//		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList(false);	
-		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold(false);
-//		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter(false);
+		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected(false);
+//		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions(true);
+//		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList(true);	
+//		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold(true);
+//		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter(true);
+		
+//		QueryEvaluationReport report = this.execute_Q11(false);
+		
 //============================================================================================================= 
 		processedTuples = processedTuples + 3; //each tuple contains 3 datapoint readings = 3 phases = 3 records
 		System.out.print("#AllTuples="+processedTuples);		
-		System.out.println(report.dump(false, true, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
+		System.out.println(report.dump(false, false, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
 
 	}
 	

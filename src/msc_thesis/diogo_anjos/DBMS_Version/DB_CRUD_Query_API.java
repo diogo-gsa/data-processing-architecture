@@ -331,7 +331,7 @@ public class DB_CRUD_Query_API {
 										"current_measure 									  										AS current_power_consumption, "	+                                                           
 										"expecetd_measure 									  										AS expected_power_consumption "	+
 								"FROM " + Q13_ExpectedConsumptionByMonthlyHourAvg																					+
-								"WHERE  index = 1 AND (current_measure/(expecetd_measure+0.0001) - 1)*00 >= 00 ";
+								"WHERE  index = 1 AND (current_measure/(expecetd_measure+0.0001) - 1)*00 >= 00 "; //Universal condition
 								/*IMPORTANT: (current_measure/(expecetd_measure+0.0001) - 1)*0 >= 0 Universal Condition/Worst Case*/
 		
 		 return executeEvaluationQuery(queryStatement);	
