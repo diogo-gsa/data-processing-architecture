@@ -18,9 +18,7 @@ public class AppMainController {
 	public static void main(String args[]) throws Exception{
 //		execute_DSMS_experiment();
 		execute_DBMS_experiment();	
-	
-//		Thread.sleep(5*MINUTES);
-		
+			
 	}	
 	
 	
@@ -29,8 +27,8 @@ public class AppMainController {
 		DSMS_VersionImpl dsms_versionImpl = new DSMS_VersionImpl();
 		
 		//  Prepare Simulator  ====================================================
-		String beginTime = "2014-03-17  00:00:00";
-		String endTime	 = "2014-03-17  00:10:00";
+		String beginTime = "2014-05-01  00:00:00";
+		String endTime	 = "2014-07-30  00:00:00";
 		
 		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		beginTime, endTime);			
 		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, beginTime, endTime);			
@@ -41,14 +39,14 @@ public class AppMainController {
 		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16,	beginTime, endTime);			
 		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT, 	beginTime, endTime);			
 		
-		simLIB.setSpeedTimeFactor(100);
-		simA4.setSpeedTimeFactor(100);
-		simA5.setSpeedTimeFactor(100);
-		sim1_17.setSpeedTimeFactor(100);
-		sim1_19.setSpeedTimeFactor(100);
-		simDEPT_14.setSpeedTimeFactor(100);
-		simDEPT_16.setSpeedTimeFactor(100);
-		simMIT_LAB.setSpeedTimeFactor(100);
+		simLIB.setSpeedTimeFactor(1000);
+		simA4.setSpeedTimeFactor(1000);
+		simA5.setSpeedTimeFactor(1000);
+		sim1_17.setSpeedTimeFactor(1000);
+		sim1_19.setSpeedTimeFactor(1000);
+		simDEPT_14.setSpeedTimeFactor(1000);
+		simDEPT_16.setSpeedTimeFactor(1000);
+		simMIT_LAB.setSpeedTimeFactor(1000);
 
 		// Init Simulation  ====================================================
 		simLIB.registerNewClient(dsms_versionImpl); 	simLIB.start();
