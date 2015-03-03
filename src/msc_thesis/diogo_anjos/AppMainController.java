@@ -29,6 +29,7 @@ public class AppMainController {
 		//  Prepare Simulator  ====================================================
 		String beginTime = "2014-05-01  00:00:00";
 		String endTime	 = "2014-07-30  00:00:00";
+		int simulatorSpeedFactor = 10000;
 		
 		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		beginTime, endTime);			
 		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, beginTime, endTime);			
@@ -39,14 +40,14 @@ public class AppMainController {
 		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16,	beginTime, endTime);			
 		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT, 	beginTime, endTime);			
 		
-		simLIB.setSpeedTimeFactor(1000);
-		simA4.setSpeedTimeFactor(1000);
-		simA5.setSpeedTimeFactor(1000);
-		sim1_17.setSpeedTimeFactor(1000);
-		sim1_19.setSpeedTimeFactor(1000);
-		simDEPT_14.setSpeedTimeFactor(1000);
-		simDEPT_16.setSpeedTimeFactor(1000);
-		simMIT_LAB.setSpeedTimeFactor(1000);
+		simLIB.setSpeedTimeFactor(simulatorSpeedFactor);
+		simA4.setSpeedTimeFactor(simulatorSpeedFactor);
+		simA5.setSpeedTimeFactor(simulatorSpeedFactor);
+		sim1_17.setSpeedTimeFactor(simulatorSpeedFactor);
+		sim1_19.setSpeedTimeFactor(simulatorSpeedFactor);
+		simDEPT_14.setSpeedTimeFactor(simulatorSpeedFactor);
+		simDEPT_16.setSpeedTimeFactor(simulatorSpeedFactor);
+		simMIT_LAB.setSpeedTimeFactor(simulatorSpeedFactor);
 
 		// Init Simulation  ====================================================
 		simLIB.registerNewClient(dsms_versionImpl); 	simLIB.start();
@@ -76,6 +77,7 @@ public class AppMainController {
 		//TODO Dataset of All Night Long Tests
 		String beginTime = "2014-05-01  00:00:00";
 		String endTime	 = "2014-07-30  00:00:00";
+		int simulatorSpeedFactor = 4;
 		// Dataset de testes normais
 //		String beginTime = "2014-05-01  00:00:00"; //"2014-05-01  00:00:00"; //TODO Dataset of All Night Long Tests
 //		String endTime	 = "2014-05-01  00:15:00"; //"2014-07-30  00:00:00"; //TODO Dataset of All Night Long Tests
@@ -89,14 +91,14 @@ public class AppMainController {
 		Simulator simDEPT_16 	= new SimulatorImpl(EnergyMeter.DEPARTMENT_16, 	beginTime, endTime);
 		Simulator simMIT_LAB 	= new SimulatorImpl(EnergyMeter.LAB_1_58_MIT,	beginTime, endTime);
 
-		simLIB.setSpeedTimeFactor(1000); 	 	System.out.println(simLIB);
-		simA4.setSpeedTimeFactor(1000);		 	System.out.println(simA4);
-		simA5.setSpeedTimeFactor(1000); 		System.out.println(simA5);
-		sim1_17.setSpeedTimeFactor(1000);	 	System.out.println(sim1_17);
-		sim1_19.setSpeedTimeFactor(1000); 	 	System.out.println(sim1_19);
-		simDEPT_14.setSpeedTimeFactor(1000);  	System.out.println(simDEPT_14);
-		simDEPT_16.setSpeedTimeFactor(1000);  	System.out.println(simDEPT_16);
-		simMIT_LAB.setSpeedTimeFactor(1000);  	System.out.println(simMIT_LAB);		
+		simLIB.setSpeedTimeFactor(simulatorSpeedFactor); 	 	System.out.println(simLIB);
+		simA4.setSpeedTimeFactor(simulatorSpeedFactor);		 	System.out.println(simA4);
+		simA5.setSpeedTimeFactor(simulatorSpeedFactor); 		System.out.println(simA5);
+		sim1_17.setSpeedTimeFactor(simulatorSpeedFactor);	 	System.out.println(sim1_17);
+		sim1_19.setSpeedTimeFactor(simulatorSpeedFactor); 	 	System.out.println(sim1_19);
+		simDEPT_14.setSpeedTimeFactor(simulatorSpeedFactor);  	System.out.println(simDEPT_14);
+		simDEPT_16.setSpeedTimeFactor(simulatorSpeedFactor);  	System.out.println(simDEPT_16);
+		simMIT_LAB.setSpeedTimeFactor(simulatorSpeedFactor);  	System.out.println(simMIT_LAB);		
 		
 		// Init Simulation  ====================================================
 		simLIB.registerNewClient(dbms_versionImpl); 	simLIB.start();

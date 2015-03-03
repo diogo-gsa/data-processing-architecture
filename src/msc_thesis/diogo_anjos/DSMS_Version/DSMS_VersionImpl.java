@@ -66,7 +66,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //			preenche o byffer seja completamente independente da velocidade do Esper para processar esses tuplos.
 //			C/ synch: SpeedTimeFactors Altos => Buffer Não enche demasiado  => tempo de simulação é muito maior do que o esperado.
 //			S/ synch: SpeedTimeFactors Altos => Buffer Enche demasiado  => tempo de simulação é igual ao esperado.
-	private synchronized void processConsumedTuple(EnergyMeasureTupleDTO tuple){
+	private /*synchronized*/ void processConsumedTuple(EnergyMeasureTupleDTO tuple){
 		List<Measure> datastreamTuples = inputAdapter(tuple);
 		for(Measure m : datastreamTuples){
 			if(DUMP_PUSHED_INPUT){
@@ -936,11 +936,11 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 					}
 				}
 				tuple = bufferOfTuples.pollFirst();
-				if(DUMP_INPUTBUFFER_LENGTH){
-					System.out.print("Input_Buffer(remaining events)= "+bufferOfTuples.size()+" | ");
-				}
 			}
 			processConsumedTuple(tuple);
+			if(DUMP_INPUTBUFFER_LENGTH){
+				System.out.print("Input_Buffer(remaining events)= "+bufferOfTuples.size()+" | ");
+			}
 		}
 	}
 	
