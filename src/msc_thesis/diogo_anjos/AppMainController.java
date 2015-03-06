@@ -5,6 +5,7 @@ import msc_thesis.diogo_anjos.DSMS_Version.DSMS_VersionImpl;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
 import msc_thesis.diogo_anjos.simulator.Simulator;
 import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
+import msc_thesis.diogo_anjos.util.AppUtil;
 
 /*
  * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
@@ -13,23 +14,24 @@ import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 
 public class AppMainController {
 	
-	 static int MINUTES = 1000*60;
-	
 	public static void main(String args[]) throws Exception{
-//		execute_DSMS_experiment();
-		execute_DBMS_experiment();	
-			
+
+		execute_DSMS_experiment(true);
+		execute_DBMS_experiment(true);
+		
+		doMemoryMonitoring(10);
+		
 	}	
 	
-	
-	public static void execute_DSMS_experiment() throws Exception{
+	public static void execute_DSMS_experiment(boolean checkMemorySettings) throws Exception{
+		if(checkMemorySettings){checkMemorySettings("DSMS");}
 		// Prepare DSMS	===========================================================
 		DSMS_VersionImpl dsms_versionImpl = new DSMS_VersionImpl();
 		
 		//  Prepare Simulator  ====================================================
 		String beginTime = "2014-05-01  00:00:00";
 		String endTime	 = "2014-07-30  00:00:00";
-		int simulatorSpeedFactor = 10000;
+		int simulatorSpeedFactor = 4;
 		
 		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		beginTime, endTime);			
 		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, beginTime, endTime);			
@@ -60,7 +62,8 @@ public class AppMainController {
 		simMIT_LAB.registerNewClient(dsms_versionImpl); simMIT_LAB.start();
 	}
 
-	public static void execute_DBMS_experiment() throws Exception{
+	public static void execute_DBMS_experiment(boolean checkMemorySettings) throws Exception{
+		if(checkMemorySettings){checkMemorySettings("DBMS");}
 		// Prepare Database  ====================================================
 		DBMS_VersionImpl dbms_versionImpl = new DBMS_VersionImpl();		
 		dbms_versionImpl.truncateAll_DatapointReadingTable();
@@ -77,7 +80,7 @@ public class AppMainController {
 		//TODO Dataset of All Night Long Tests
 		String beginTime = "2014-05-01  00:00:00";
 		String endTime	 = "2014-07-30  00:00:00";
-		int simulatorSpeedFactor = 4;
+		int simulatorSpeedFactor = 8000;
 		// Dataset de testes normais
 //		String beginTime = "2014-05-01  00:00:00"; //"2014-05-01  00:00:00"; //TODO Dataset of All Night Long Tests
 //		String endTime	 = "2014-05-01  00:15:00"; //"2014-07-30  00:00:00"; //TODO Dataset of All Night Long Tests
@@ -111,4 +114,32 @@ public class AppMainController {
 		simMIT_LAB.registerNewClient(dbms_versionImpl); simMIT_LAB.start();
 	}
 
+	
+	
+	private static void doMemoryMonitoring(int monitoringPeriodInSeconds){
+		System.err.println("MaxMemory:" + AppUtil.getMaxMemory() +" MB");
+		while(true){
+			System.err.println(AppUtil.getMemoryStatus());
+			try {
+				Thread.sleep(1000*monitoringPeriodInSeconds);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private static void checkMemorySettings(String solution){
+		int dsmsJVMlimit = 512; //512MB max memory allowed per query engine
+		if(solution.equals("DSMS") && AppUtil.getMaxMemory() > dsmsJVMlimit){
+			System.err.println("ERROR: DSMS is beeing started with wrong memory settings: "+AppUtil.getMaxMemory()+" MB");
+			System.err.println("\t Adjust memory settings as follow: RunConfigurations >> VMarguments(heapMaxSize setting) >> add flag -Xmx512m");
+			System.exit(1);
+		}
+		if(solution.equals("DBMS") && AppUtil.getMaxMemory() < dsmsJVMlimit){
+			System.err.println("ERROR: DBMS is beeing started with wrong memory settings: "+AppUtil.getMaxMemory()+" MB");
+			System.err.println("\t Adjust memory settings as follow: RunConfigurations >> VMarguments(heapMaxSize setting) >> remove flag -Xmx512m");
+			System.exit(1);
+		}	
+	}
+	
 }

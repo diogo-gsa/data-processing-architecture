@@ -12,6 +12,14 @@ public class AppUtil {
 		return bytesToMegabytes(rt.totalMemory());
 	}
 	
+	public static long getTotalMemory(){
+		return bytesToMegabytes(Runtime.getRuntime().totalMemory());
+	}
+	
+	public static long getMaxMemory(){
+		return bytesToMegabytes(Runtime.getRuntime().maxMemory());
+	}
+	
 	public static long getFreeMemory(boolean preRunGarbageCollector){
 		Runtime rt = getRuntimeAndRunGC(preRunGarbageCollector);
 		return bytesToMegabytes(rt.freeMemory());
@@ -20,6 +28,10 @@ public class AppUtil {
 	public static String getMemoryStatus(boolean preRunGarbageCollector){
 		getRuntimeAndRunGC(preRunGarbageCollector);
 		return "Memory(MB): Total="+getTotalMemory(false)+", Used="+getConsumedMemory(false)+", Free="+getFreeMemory(false); 
+	}
+	
+	public static String getMemoryStatus(){
+		return "Memory(MB): MaxMem="+getMaxMemory()+", Used="+getConsumedMemory(false); 
 	}	
 
 	private static Runtime getRuntimeAndRunGC(boolean preRunGarbageCollector){

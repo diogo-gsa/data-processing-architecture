@@ -52,9 +52,9 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 // ============= Query to be Executed ========================================================================= 
 //		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold(true);
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio(true);
-//		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(true);
+		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(true);  			//Scenario 1
 //		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange(true);
-		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected(true);
+//		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected(true);					//Scenario 6
 //		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions(true);
 //		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList(true);	
 //		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold(true);
