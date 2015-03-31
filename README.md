@@ -2,10 +2,10 @@
 
 ###### Prototype implementation of the proposed solution for a Real-Time Data Processing Architecture for Energy Management Systems
 
-This software package is part of the research work that was developed under the scope of the Master Thesis stated bellow and, for auditing purposes, the implementation code of the proposed Data Processing Architecture is made available through this repository. 
+This software package is part of the research work that was developed under the scope of the Master Thesis stated bellow and, for auditing purposes, the implementation code of proposed Data Processing Architecture is made available through this repository. 
 
 For validation purposes there was developed two parallel implementations of the Data Processing Arch., each one supported by a different Query Engine: one uses a Data Stream Management System (ESPER 5.0.0), and the other uses a Relational Database Management System (PostgreSQL 9.3). 
-This was our approach to study the feasibility of DSMSs to support Energy Management Systems (EMS), and point out how to implement an EMS capable of real-time data processing.
+This was our approach to study the feasibility of DSMSs to support Energy Management Systems (EMSs), and point out how to implement an EMS capable of real-time data processing.
 
 ---
 **Instituto Superior Técnico -  Univerisade de Lisboa, Portugal**
