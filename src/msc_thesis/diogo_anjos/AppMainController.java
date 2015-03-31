@@ -1,5 +1,11 @@
 package msc_thesis.diogo_anjos;
 
+/*
+ * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
+ */
+
 import msc_thesis.diogo_anjos.DBMS_Version.DBMS_VersionImpl;
 import msc_thesis.diogo_anjos.DSMS_Version.DSMS_VersionImpl;
 import msc_thesis.diogo_anjos.simulator.EnergyMeter;
@@ -7,19 +13,14 @@ import msc_thesis.diogo_anjos.simulator.Simulator;
 import msc_thesis.diogo_anjos.simulator.impl.SimulatorImpl;
 import msc_thesis.diogo_anjos.util.AppUtil;
 
-/*
- * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
- * 
- */
-
 public class AppMainController {
 	
 	public static void main(String args[]) throws Exception{
 
 		execute_DSMS_experiment(true);
-		execute_DBMS_experiment(true);
+//		execute_DBMS_experiment(true);
 		
-		doMemoryMonitoring(10);
+		doMemoryMonitoring(60);
 		
 	}	
 	
@@ -62,6 +63,9 @@ public class AppMainController {
 		simMIT_LAB.registerNewClient(dsms_versionImpl); simMIT_LAB.start();
 	}
 
+	
+	
+	
 	public static void execute_DBMS_experiment(boolean checkMemorySettings) throws Exception{
 		if(checkMemorySettings){checkMemorySettings("DBMS");}
 		// Prepare Database  ====================================================
@@ -80,7 +84,7 @@ public class AppMainController {
 		//TODO Dataset of All Night Long Tests
 		String beginTime = "2014-05-01  00:00:00";
 		String endTime	 = "2014-07-30  00:00:00";
-		int simulatorSpeedFactor = 8000;
+		int simulatorSpeedFactor = 4;
 		// Dataset de testes normais
 //		String beginTime = "2014-05-01  00:00:00"; //"2014-05-01  00:00:00"; //TODO Dataset of All Night Long Tests
 //		String endTime	 = "2014-05-01  00:15:00"; //"2014-07-30  00:00:00"; //TODO Dataset of All Night Long Tests

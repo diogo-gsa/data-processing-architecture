@@ -1,5 +1,11 @@
 package msc_thesis.diogo_anjos.DBMS_Version.exceptions;
 
+/*
+ * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
+ */
+
 public class ThereIsNoDataPoint_PKwithThisLocaionException extends Exception {
 
 	private String errorLocation = null;

@@ -2,6 +2,8 @@ package Datastream;
 
 /*
  * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
  */
 
 public class Measure{

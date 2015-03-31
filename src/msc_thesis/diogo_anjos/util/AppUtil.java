@@ -1,5 +1,11 @@
 package msc_thesis.diogo_anjos.util;
 
+/*
+ * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
+ */
+
 public class AppUtil {
 	  
 	public static long getConsumedMemory(boolean preRunGarbageCollector){

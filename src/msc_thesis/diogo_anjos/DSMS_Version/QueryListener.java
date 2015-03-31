@@ -1,5 +1,11 @@
 package msc_thesis.diogo_anjos.DSMS_Version;
 
+/*
+ * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
+ */
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -9,14 +15,10 @@ import Datastream.Measure;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.UpdateListener;
 
-/*
- * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
- */
-
 public class QueryListener implements UpdateListener {
 	// DUMP Configuration Flags ======================================
 		private boolean DUMP_ELAPSED_TIME = true;
-		private boolean DUMP_QUERY_RESULT = true;
+		private boolean DUMP_QUERY_RESULT = false;
 	//=================================================================
 
     // contains all events that entered in engine but had not yet left the engine

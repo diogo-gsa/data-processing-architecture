@@ -1,5 +1,11 @@
 package msc_thesis.diogo_anjos.DSMS_Version;
 
+/*
+ * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +21,6 @@ import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EPStatementException;
-
-/*
- * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
- * 
- */
 
 public class EsperEngine {
 

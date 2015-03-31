@@ -1,5 +1,11 @@
 package msc_thesis.diogo_anjos.DSMS_Version;
 
+/*
+ * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
+ */
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,11 +52,11 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 //		install_Q3();
 //		install_Q4();
 //		install_Q5();
-		install_Q6();
+//		install_Q6();
 //		install_Q7();
 //		install_Q8();
 //		install_Q9();
-//		install_Q10();
+		install_Q10();
 //		install_Q11();
 //		install_Q12();	
 //		install_Q13();

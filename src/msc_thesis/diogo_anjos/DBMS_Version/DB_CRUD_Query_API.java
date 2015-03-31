@@ -1,5 +1,11 @@
 package msc_thesis.diogo_anjos.DBMS_Version;
 
+/*
+ * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
+ */
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -310,7 +316,7 @@ public class DB_CRUD_Query_API {
 		        				"FROM " + Q12_DataStreamPeriodicity 																							+
 		        				"WHERE   index = 1 "  																											+
 //		        				    "AND NOT('00:00:55' <= measure  AND  measure <= '00:01:05') "; 	  //Real-Condition
-									"AND NOT('00:10:00' <= measure  AND  measure <= '00:20:00') ";    //UNIVERSAL-Condition
+									"AND ('00:00:00' <= measure  AND  measure <= '9999:59:59') ";    //UNIVERSAL-Condition
 		return executeEvaluationQuery(queryStatement);	
 	}
 	

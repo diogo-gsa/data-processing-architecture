@@ -1,5 +1,11 @@
 package msc_thesis.diogo_anjos.DBMS_Version;
 
+/*
+ * @author Diogo Anjos (diogo.silva.anjos@tecnico.ulisboa.pt)
+ * MScThesis Solution:  Real-Time Data Processing Architecture 
+ * 						for Energy Management Applications
+ */
+
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -50,13 +56,16 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 //		this.cluster_DatapointReadingTable("ClusteredIndex_ON_DataPoint"); //NOT TO BE USED
 		insertIntoElapsedTime = System.nanoTime() - initTS;
 // ============= Query to be Executed ========================================================================= 
+// 		TRUE = Run with Mat.Views = Run With Indexes. 
+//		FALSE = NO without Mat.Views = NO Indexes
+		
 //		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold(true);
 //		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio(true);
-		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(true);  			//Scenario 1
+//		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(true);  			//Scenario 1
 //		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange(true);
 //		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected(true);					//Scenario 6
 //		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions(true);
-//		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList(true);	
+		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList(true);	
 //		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold(true);
 //		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter(true);
 		
