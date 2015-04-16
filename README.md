@@ -30,7 +30,7 @@ This was our approach to study the feasibility of DSMSs to support Energy Manage
 
 #### Contacts
 
-Please fell free to contact me if there is any question related with the code made available in this repository or any other aspect related with my Master Thesis work.
+Please fell free to contact me if there is any question related with the code made available in this repository, or any other aspect related with my Master Thesis work.
 
 Email:	diogo.silva.anjos@tecnico.ulisboa.pt
 
