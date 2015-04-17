@@ -2,7 +2,7 @@
 
 ###### Prototype implementation of the proposed solution for a Real-Time Data Processing Architecture for Energy Management Systems. (Please, check [this publication](http://web.ist.utl.pt/~ist162490/publications/anjos14real-time.pdf "2014 IEEE International Congress on Big Data") for details.)
 
-This software package is part of the research work that was developed under the scope of the Master Thesis stated bellow and--**for auditing purposes**--the implementation code of proposed Data Processing Architecture is made available through this repository. 
+This software package is part of the research work that was developed under the scope of the Master Thesis stated bellow, and--**for auditing purposes**--the implementation code of proposed Data Processing Architecture is made available through this repository. 
 
 ![alt tag](http://web.ist.utl.pt/~ist162490/publications/DataProcessingArchGitHubPic.png)
 
