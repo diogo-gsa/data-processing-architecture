@@ -20,8 +20,6 @@ This was our approach to study the feasibility of DSMSs to support Energy Manage
 
 **Advisor.** Prof. Paulo Jorge Fernandes Carreira
 
-**Co-advisor.** Prof. Alexandre Paulo Lourenço Francisco
-
 **Course.** Information Systems and Computer Engineering (MEIC)
 
 **Campus.** Alameda
