@@ -57,8 +57,9 @@ public class QueryListener implements UpdateListener {
     		for (EventBean eb : events) {
     			res += "\n| " + eb.getUnderlying();
     		}
+    	  System.out.println(res);
     	}
-        System.out.println(res);
+        
     }
 
     private synchronized void computeElapsedTime(EventBean[] events){
@@ -75,7 +76,11 @@ public class QueryListener implements UpdateListener {
     			elapsedTime = endTS - beginTS;
     			inputEventsMapForElapsedTime.remove(devicePK$measureTS_key);
     			if(matchCounter==0){
-    				System.out.println("ET = "+nanoToMilliSeconds(elapsedTime)+" ms ("+devicePK$measureTS_key+") | AllTuples = "+processedTuples);
+    				//System.out.println("ScenarioLatency="+nanoToMilliSeconds(elapsedTime)+"ms ("+devicePK$measureTS_key+") | ProcessedTuples = "+processedTuples); // debug
+    				System.out.println("ScenarioLatency="+nanoToMilliSeconds(elapsedTime)+"ms"
+    								  +" | ProcessedTuples="+processedTuples
+    								  +" | ProcessedMeasurements="+(processedTuples/3)
+    								  );
     				matchCounter++;
     			}else{
     				System.err.println("??ERROR?? - Have found more than 1 match between ElapsedTimeLog and output resultset rows, is that normal?");

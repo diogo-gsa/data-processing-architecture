@@ -17,8 +17,8 @@ public class AppMainController {
 	
 	public static void main(String args[]) throws Exception{
 
-		execute_DSMS_experiment(true);
-//		execute_DBMS_experiment(true);
+//		execute_DSMS_experiment(true);
+		execute_DBMS_experiment(true);
 		
 		doMemoryMonitoring(60);
 		
@@ -30,6 +30,7 @@ public class AppMainController {
 		DSMS_VersionImpl dsms_versionImpl = new DSMS_VersionImpl();
 		
 		//  Prepare Simulator  ====================================================
+		// TestDataset with much more than 10hours os sensor data (but we stop the experiment at the end of 10hrs)
 		String beginTime = "2014-05-01  00:00:00";
 		String endTime	 = "2014-07-30  00:00:00";
 		int simulatorSpeedFactor = 4;
@@ -81,13 +82,10 @@ public class AppMainController {
 //		dbms_versionImpl.insertInto_DatapointReadingTable_BatchMode("2014-03-17  00:55:00", "2014-03-17  01:05:00", EnergyMeter.LAB_1_58_MIT);
 
 		//  Prepare Simulator  ====================================================
-		//TODO Dataset of All Night Long Tests
+		// TestDataset with much more than 10hours os sensor data (but we stop the experiment at the end of 10hrs)
 		String beginTime = "2014-05-01  00:00:00";
 		String endTime	 = "2014-07-30  00:00:00";
 		int simulatorSpeedFactor = 4;
-		// Dataset de testes normais
-//		String beginTime = "2014-05-01  00:00:00"; //"2014-05-01  00:00:00"; //TODO Dataset of All Night Long Tests
-//		String endTime	 = "2014-05-01  00:15:00"; //"2014-07-30  00:00:00"; //TODO Dataset of All Night Long Tests
 		
 		Simulator simLIB 		= new SimulatorImpl(EnergyMeter.LIBRARY, 		beginTime, endTime); 				
 		Simulator simA4 		= new SimulatorImpl(EnergyMeter.LECTUREHALL_A4, beginTime, endTime); 
@@ -121,7 +119,7 @@ public class AppMainController {
 	
 	
 	private static void doMemoryMonitoring(int monitoringPeriodInSeconds){
-		System.err.println("MaxMemory:" + AppUtil.getMaxMemory() +" MB");
+		System.err.println("# MaxMemory:" + AppUtil.getMaxMemory() +" MB");
 		while(true){
 			System.err.println(AppUtil.getMemoryStatus());
 			try {

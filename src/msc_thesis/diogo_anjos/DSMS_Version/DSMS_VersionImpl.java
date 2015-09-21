@@ -33,6 +33,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	private EsperEngine esperEngine = new EsperEngine();
 	private volatile boolean simulationHasFinished = false;
+	private int simulatedMeasurements = 0;
 
 	
 	//producerConsumerQueueOfTuples
@@ -46,25 +47,29 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	public DSMS_VersionImpl(){
 		Thread bufferConsumerThread = new Thread(this);
 		bufferConsumerThread.start();
-		//=== Query to be Executed ============
-//		install_Q0();
-//		install_Q1();
-//		install_Q3();
-//		install_Q4();
-//		install_Q5();
-//		install_Q6();
+
+//=== Scenario to be Executed ============
+//
+// 		OLD/DEPRECATED Notation (Scenarios IDs) 	NEW Notation (Scenarios IDs)
+//
+//		install_Q0();									
+//		install_Q1();								//Scenario 7 
+//		install_Q3();								//Scenario 6
+//		install_Q4();								//Scenario 1
+//		install_Q5();								//Scenario 2
+//		install_Q6();								//Scenario 9
 //		install_Q7();
 //		install_Q8();
-//		install_Q9();
-		install_Q10();
+//		install_Q9();								//Scenario 4
+//		install_Q10();								//Scenario 5
 //		install_Q11();
 //		install_Q12();	
 //		install_Q13();
 //		install_Q14();
-//		install_Q16();
-//		install_Q17();
-
-		//=== Query to be Executed ============
+//		install_Q16();								//Scenario 3
+//		install_Q17();								//Scenario 8
+//
+//=== Query to be Executed ============
 	}
 	
 	
@@ -522,7 +527,7 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		        					"\"Positive Integer\" 									AS measure_unit, " 			+
 		        					"\"Number of times that, in last hour,  current " 									+
 		        					"consumption as exceeded the expected one. " 										+
-		        					"Being the counter limited by a min and max threshold.\" 	AS measure_description, " 	+
+		        					"Being the counter limited by a min and max threshold.\" 	AS measure_description, " +
 		        					"device_location " 																	+ 
 		        			"FROM   _Q14_ExpectedConsumptionByUDF.win:ext_timed(measure_timestamp_long, 60 min) " 		+
 		        			"WHERE  current_measure >= expected_measure*0 " 											+	//Universal Condition
@@ -921,7 +926,19 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 	
 	
 	private synchronized void produceTuple(EnergyMeasureTupleDTO tuple){
-		bufferOfTuples.addLast(tuple);
+		
+		// Mark the instant the measurement has entered in the queue
+		tuple.setEnteringInQueueTS(); 
+		
+		// 57500 = MaxQuantity of measurements that we want to receive from simulator
+		//	        for performance validation purposes  
+		if(simulatedMeasurements < 19200){
+			++simulatedMeasurements;
+			//System.out.println("# Meaurements sent by simulator="+(++simulatedMeasurements));
+			bufferOfTuples.addLast(tuple);
+		}else{
+			System.out.println("# Not accepting more Measurements from the simulator, total="+simulatedMeasurements);
+		}
 		notifyAll();
 	}
 	
@@ -943,10 +960,19 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 				}
 				tuple = bufferOfTuples.pollFirst();
 			}
-			processConsumedTuple(tuple);
+			
+			
+			long queueWaitingTimeMilli = (long) nanoToMilliSeconds(System.nanoTime() - tuple.getEnteringInQueueTS());
+			double queueWaitingTimeMinutes = ((double)queueWaitingTimeMilli)/((double)60000);
+			
 			if(DUMP_INPUTBUFFER_LENGTH){
-				System.out.print("Input_Buffer(remaining events)= "+bufferOfTuples.size()+" | ");
+				System.out.print("QueuedMeasurements="+bufferOfTuples.size()
+								+" | QueueWaitingTime="+queueWaitingTimeMilli+"ms"
+								+" | QueueWaitingTime="+queueWaitingTimeMinutes+"minutes | ");
 			}
+			
+			processConsumedTuple(tuple);
+			
 		}
 	}
 	
@@ -994,6 +1020,12 @@ public class DSMS_VersionImpl implements SimulatorClient, Runnable{
 		measures.add(new Measure(dto.getMeasureTS(), dto.getPh3Consumption(), dpPK.getPh3_PK()));
 	
 		return measures;
+	}
+	
+	private double nanoToMilliSeconds(long nanoValue){
+		// 1 nanoSecond / (10^6) = 1 milliSecond
+    	// measure with nano resolution, but present the result in milliseconds
+		return (((double)nanoValue)/((double)1000000));
 	}
 /* EOF Producer and Consumer Buffer Code ====================================================*/
 

@@ -33,11 +33,11 @@ public class AppUtil {
 
 	public static String getMemoryStatus(boolean preRunGarbageCollector){
 		getRuntimeAndRunGC(preRunGarbageCollector);
-		return "Memory(MB): Total="+getTotalMemory(false)+", Used="+getConsumedMemory(false)+", Free="+getFreeMemory(false); 
+		return "# Memory(MB): Total="+getTotalMemory(false)+", Used="+getConsumedMemory(false)+", Free="+getFreeMemory(false); 
 	}
 	
 	public static String getMemoryStatus(){
-		return "Memory(MB): MaxMem="+getMaxMemory()+", Used="+getConsumedMemory(false); 
+		return "# Memory(MB): MaxMem="+getMaxMemory()+", Used="+getConsumedMemory(false); 
 	}	
 
 	private static Runtime getRuntimeAndRunGC(boolean preRunGarbageCollector){

@@ -29,7 +29,8 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	//producerConsumerQueueOfTuples
 	private LinkedList<EnergyMeasureTupleDTO> bufferOfTuples = new LinkedList<EnergyMeasureTupleDTO>(); 
 	Map<EnergyMeter, Boolean> simulationStartStopFlags = new TreeMap<EnergyMeter, Boolean>();
-	private volatile long processedTuples = 0;
+	private volatile long processedTuples 	= 0;
+	private int simulatedMeasurements		= 0;
 	
 		
 	public DBMS_VersionImpl(){
@@ -42,7 +43,7 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
  *=========================================================================================================*/	
 	
 //	TODO: Attention: remover *synchronized* deste metodo para que a "velocidade" com que o simulator
-//			preenche o byffer seja completamente independente da velocidade do DBMS para processar esses tuplos.
+//			preenche o buffer seja completamente independente da velocidade do DBMS para processar esses tuplos.
 //			C/ synch: SpeedTimeFactors Altos => Buffer Não enche demasiado  => tempo de simulação é muito maior do que o esperado.
 //			S/ synch: SpeedTimeFactors Altos => Buffer Enche demasiado  => tempo de simulação é igual ao esperado.
 	private /*synchronized*/ void processConsumedTuple(EnergyMeasureTupleDTO tuple){
@@ -58,24 +59,24 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 // ============= Query to be Executed ========================================================================= 
 // 		TRUE = Run with Mat.Views = Run With Indexes. 
 //		FALSE = NO without Mat.Views = NO Indexes
-		
-//		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold(true);
-//		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio(true);
+												// OLD/DEPRECATED Notation (Scenarios IDs) 				NEW Notation (Scenarios IDs)	
+//		QueryEvaluationReport report = this.execute_Q01_ConsumptionOverThreshold(true);					//Scenario 7
+//		QueryEvaluationReport report = this.execute_Q03_MinMaxConsumptionRatio(true);					//Scenario 6
 //		QueryEvaluationReport report = this.execute_Q04_InstantVariationAboveThreshold(true);  			//Scenario 1
-//		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange(true);
-//		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected(true);					//Scenario 6
-//		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions(true);
-		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList(true);	
-//		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold(true);
-//		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter(true);
+//		QueryEvaluationReport report = this.execute_Q05_StreamPeriodicityOutOfRange(true);				//Scenario 2
+//		QueryEvaluationReport report = this.execute_Q06_ConsumptionAboveExpected(true);					//Scenario 9
+//		QueryEvaluationReport report = this.execute_Q09_ProportionsFromConsumptions(true);				//Scenario 4
+//		QueryEvaluationReport report = this.execute_Q10_ConsumptionsRankingList(true);					//Scenario 5					
+//		QueryEvaluationReport report = this.execute_Q16_ConsumptionAboveSlidingAvgThreshold(true);		//Scenario 3		
+		QueryEvaluationReport report = this.execute_Q17_ConsumptionAboveExpectedCounter(true);			//Scenario 8
 		
 //		QueryEvaluationReport report = this.execute_Q11(false);
 		
 //============================================================================================================= 
 		processedTuples = processedTuples + 3; //each tuple contains 3 datapoint readings = 3 phases = 3 records
-		System.out.print("#AllTuples="+processedTuples);		
-		System.out.println(report.dump(false, false, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
-
+		System.out.print("ProcessedMeaurements="+processedTuples/3+" | "+"ProcessedTuples="+processedTuples);		
+		System.out.print(report.dump(false, false, true, insertIntoElapsedTime));	//dumpStatement, dumpResult, dumpElapsedTime
+		
 	}
 	
 /* EOF Push Datastream and Queries execution ==============================================================*/
@@ -413,7 +414,18 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 	}
 	
 	private synchronized void produceTuple(EnergyMeasureTupleDTO tuple){
-		bufferOfTuples.addLast(tuple);
+		
+		// Mark the instant the measurement has entered in the queue
+		tuple.setEnteringInQueueTS(); 
+		
+		// 57500 = MaxQuantity of measurements that we want to receive from simulator
+		//	        for performance validation purposes  
+		if(simulatedMeasurements < 19200){
+			System.out.println("# Meaurements sent by simulator="+(++simulatedMeasurements));
+			bufferOfTuples.addLast(tuple);
+		}else{
+			System.out.println("# Not accepting more Measurements from the simulator, total="+simulatedMeasurements);
+		}
 		notifyAll();
 	}
 	
@@ -432,12 +444,21 @@ public class DBMS_VersionImpl implements SimulatorClient, Runnable {
 						e.printStackTrace();
 					}
 				}
+				
 				tuple = bufferOfTuples.pollFirst();
-			}
+			}		
+			
+			long queueWaitingTimeMilli = (long) nanoToMilliSeconds(System.nanoTime() - tuple.getEnteringInQueueTS());
+			double queueWaitingTimeMinutes = ((double)queueWaitingTimeMilli)/((double)60000);
+			
 			processConsumedTuple(tuple);
+			
 			if(DUMP_INPUTBUFFER_LENGTH){
-				System.out.print("Input_Buffer(remaining events): "+bufferOfTuples.size()+" | ");
+				System.out.println(" | QueuedMeasurements="+bufferOfTuples.size()
+								  +" | QueueWaitingTime="+queueWaitingTimeMilli+"ms"
+								  +" | QueueWaitingTime="+queueWaitingTimeMinutes+"minutes");
 			}
+			
 		}
 	}
 	
